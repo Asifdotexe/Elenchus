@@ -64,6 +64,19 @@ def parse_args() -> argparse.Namespace:
         help=f"Window opacity between 0.2 and 1.0 (default: {DEFAULT_CONFIG.opacity}).",
     )
     parser.add_argument(
+        "--auto",
+        action="store_true",
+        help="Enable continuous auto VAD silence-cut mode instead of manual button mode.",
+    )
+    parser.add_argument(
+        "--test-device",
+        type=int,
+        nargs="?",
+        const=-1,
+        default=None,
+        help="Test live audio input level with an ASCII volume meter for 5 seconds.",
+    )
+    parser.add_argument(
         "--verbose", "-v",
         action="store_true",
         help="Enable detailed debug logging.",
@@ -72,12 +85,74 @@ def parse_args() -> argparse.Namespace:
 
 
 def print_devices() -> None:
-    """Print available audio input devices formatted neatly."""
+    """Print available audio input devices cleanly categorized."""
+    if hasattr(sys.stdout, "reconfigure"):
+        try:
+            sys.stdout.reconfigure(encoding="utf-8")
+        except Exception:
+            pass
+
     devs = list_audio_devices()
-    print("\n--- Available Audio Input Devices ---")
-    for d in devs:
-        print(f"[{d['index']:2d}] {d['name']} ({d['channels']} in, rate: {d['default_samplerate']}Hz)")
-    print("-------------------------------------\n")
+    mics = [d for d in devs if "MIC" in d["category"]]
+    loopbacks = [d for d in devs if "LOOPBACK" in d["category"]]
+    others = [d for d in devs if d not in mics and d not in loopbacks]
+
+    print("\n================== AUDIO DEVICE DIRECTORY ==================")
+    print(">> YOUR MICROPHONE (Physical Voice / Room):")
+    for d in mics:
+        rec = " [RECOMMENDED]" if "WASAPI" in d["hostapi"] else ""
+        print(f"   [{d['index']:2d}] {d['name']} ({d['hostapi']}){rec}")
+
+    print("\n>> SYSTEM AUDIO / DISCORD LOOPBACK (Opponent Speech):")
+    if loopbacks:
+        for d in loopbacks:
+            print(f"   [{d['index']:2d}] {d['name']} ({d['hostapi']})")
+    else:
+        print("   (No virtual loopback detected. Install VB-Audio Cable to record Discord directly)")
+
+    if others:
+        print("\n>> OTHER INPUTS:")
+        for d in others:
+            print(f"   [{d['index']:2d}] {d['name']} ({d['hostapi']})")
+    print("============================================================\n")
+    print("TIP: Run 'uv run aenf --test-device <ID>' to see live volume meter before launching!\n")
+
+
+def test_audio_device(device_idx: int | None = None) -> None:
+    """Listen to device for 5 seconds and display live ASCII volume meter."""
+    if hasattr(sys.stdout, "reconfigure"):
+        try:
+            sys.stdout.reconfigure(encoding="utf-8")
+        except Exception:
+            pass
+
+    import sounddevice as sd
+    import numpy as np
+    import time
+    from config import DEFAULT_CONFIG
+
+    target = None if (device_idx is None or device_idx < 0) else device_idx
+    print(f"\n--- Testing Device [{target if target is not None else 'DEFAULT'}] for 5 seconds ---")
+    print("Speak into mic or play Discord/YouTube audio now...")
+    try:
+        dev_info = sd.query_devices(target if target is not None else sd.default.device[0])
+        native_rate = int(dev_info.get("default_samplerate", DEFAULT_CONFIG.sample_rate))
+        blocksize = int(native_rate * 0.1)
+        with sd.InputStream(device=target, channels=1, samplerate=native_rate, blocksize=blocksize) as stream:
+            for _ in range(50):
+                data, _ = stream.read(blocksize)
+                rms = float(np.sqrt(np.mean(data**2)))
+                pct = min(100, int((rms / 0.08) * 100))
+                bars = int(pct / 5)
+                meter = "#" * bars + "-" * (20 - bars)
+                status = "SOUND DETECTED" if rms >= DEFAULT_CONFIG.vad_rms_threshold else "QUIET"
+                print(f"\r  [{meter}] {pct:3d}% | {status}  ", end="", flush=True)
+                time.sleep(0.1)
+    except KeyboardInterrupt:
+        pass
+    except Exception as e:
+        print(f"\nError capturing device: {e}")
+    print("\n--- Test Complete ---\n")
 
 
 def build_config(args: argparse.Namespace) -> Config:
@@ -92,6 +167,8 @@ def build_config(args: argparse.Namespace) -> Config:
     cfg.whisper_model = args.whisper_model
     cfg.vad_rms_threshold = args.rms
     cfg.opacity = max(0.2, min(1.0, args.opacity))
+    if args.auto:
+        cfg.manual_mode = False
     return cfg
 
 
@@ -101,6 +178,10 @@ def main() -> None:
 
     if args.list_devices:
         print_devices()
+        sys.exit(0)
+
+    if args.test_device is not None:
+        test_audio_device(args.test_device)
         sys.exit(0)
 
     config = build_config(args)
@@ -122,10 +203,13 @@ def main() -> None:
         y = 60
         overlay.move(x, y)
 
+    app.setQuitOnLastWindowClosed(True)
     overlay.show()
     pipeline.start()
 
-    sys.exit(app.exec())
+    exit_code = app.exec()
+    pipeline.stop()
+    sys.exit(exit_code)
 
 
 if __name__ == "__main__":

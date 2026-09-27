@@ -13,15 +13,28 @@ logger = logging.getLogger(__name__)
 
 
 def list_audio_devices() -> list[dict[str, Any]]:
-    """Return all available audio input devices."""
+    """Return all available audio input devices with categories and host APIs."""
     devices = sd.query_devices()
+    hostapis = {i: h.get("name", "") for i, h in enumerate(sd.query_hostapis())}
     input_devs = []
     for idx, dev in enumerate(devices):
         if dev.get("max_input_channels", 0) > 0:
+            name = dev.get("name", "")
+            h_name = hostapis.get(dev.get("hostapi"), "")
+            name_lower = name.lower()
+
+            if any(term in name_lower for term in ["cable", "stereo mix", "wave", "loopback", "what u hear"]):
+                category = "LOOPBACK (System/Discord audio)"
+            elif any(term in name_lower for term in ["mic", "headset", "array"]):
+                category = "MIC (Your physical voice)"
+            else:
+                category = "INPUT"
+
             input_devs.append({
                 "index": idx,
-                "name": dev.get("name"),
-                "hostapi": dev.get("hostapi"),
+                "name": name,
+                "hostapi": h_name,
+                "category": category,
                 "channels": dev.get("max_input_channels"),
                 "default_samplerate": dev.get("default_samplerate"),
             })
@@ -29,14 +42,16 @@ def list_audio_devices() -> list[dict[str, Any]]:
 
 
 class AudioCapture:
-    """Manages audio stream capture into a thread-safe queue."""
+    """Manages audio stream capture into a thread-safe queue with auto-resampling."""
 
     def __init__(self, config: Config):
         self.config = config
         self.queue: queue.Queue[np.ndarray] = queue.Queue(maxsize=100)
         self.stream: sd.InputStream | None = None
         self.running = False
-        self.blocksize = int(self.config.sample_rate * (self.config.chunk_ms / 1000.0))
+        self.target_rate = self.config.sample_rate  # 16000
+        self.target_blocksize = int(self.target_rate * (self.config.chunk_ms / 1000.0))
+        self.actual_sample_rate = self.target_rate
 
     def _audio_callback(self, indata: np.ndarray, frames: int, time_info: Any, status: sd.CallbackFlags) -> None:
         """Callback executed in PortAudio thread for incoming audio blocks."""
@@ -45,12 +60,20 @@ class AudioCapture:
         if not self.running:
             return
 
-        # indata is shape (frames, channels), float32
         chunk = indata[:, 0].copy() if indata.ndim > 1 else indata.copy()
+
+        # Resample to 16kHz if device requires different native sample rate (e.g. 48kHz on WASAPI)
+        if self.actual_sample_rate != self.target_rate and len(chunk) > 0:
+            orig_len = len(chunk)
+            chunk = np.interp(
+                np.linspace(0.0, 1.0, self.target_blocksize, endpoint=False),
+                np.linspace(0.0, 1.0, orig_len, endpoint=False),
+                chunk,
+            ).astype(np.float32)
+
         try:
             self.queue.put_nowait(chunk)
         except queue.Full:
-            # Drop older audio chunk to maintain real-time responsiveness
             try:
                 self.queue.get_nowait()
                 self.queue.put_nowait(chunk)
@@ -58,15 +81,30 @@ class AudioCapture:
                 pass
 
     def start(self) -> None:
-        """Initialize and start the sounddevice InputStream."""
+        """Initialize and start InputStream with native device samplerate support."""
         self.running = True
         device = self.config.audio_device
-        logger.info("Opening audio stream on device %s (rate=%d, blocksize=%d)", device, self.config.sample_rate, self.blocksize)
+
+        # Determine native sample rate for selected device
+        try:
+            dev_info = sd.query_devices(device if device is not None else sd.default.device[0])
+            self.actual_sample_rate = int(dev_info.get("default_samplerate", self.target_rate))
+        except Exception:
+            self.actual_sample_rate = self.target_rate
+
+        blocksize = int(self.actual_sample_rate * (self.config.chunk_ms / 1000.0))
+        logger.info(
+            "Opening audio stream on device %s (native_rate=%d, target_rate=%d, blocksize=%d)",
+            device,
+            self.actual_sample_rate,
+            self.target_rate,
+            blocksize,
+        )
 
         try:
             self.stream = sd.InputStream(
-                samplerate=self.config.sample_rate,
-                blocksize=self.blocksize,
+                samplerate=self.actual_sample_rate,
+                blocksize=blocksize,
                 device=device,
                 channels=self.config.channels,
                 dtype="float32",
@@ -74,11 +112,11 @@ class AudioCapture:
             )
             self.stream.start()
         except sd.PortAudioError as e:
-            logger.error("PortAudio error during stream startup: %s. Attempting fallback to default device.", e)
-            # Fallback to system default input device
+            logger.error("PortAudio error on device %s: %s. Attempting fallback to default device.", device, e)
+            self.actual_sample_rate = self.target_rate
             self.stream = sd.InputStream(
-                samplerate=self.config.sample_rate,
-                blocksize=self.blocksize,
+                samplerate=self.target_rate,
+                blocksize=self.target_blocksize,
                 device=None,
                 channels=self.config.channels,
                 dtype="float32",

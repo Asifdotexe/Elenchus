@@ -52,12 +52,12 @@ uv run aenf --model qwen2.5-coder:3b --whisper-model base.en
 
 ---
 
-## Features & Controls
-
+- **Manual Button Trigger (Default):** Click `🎙️ Start Listening` (or press **Space**) when opponent begins speaking. Click `⏹️ Stop & Analyze Now` the moment they finish. Cuts immediately with zero silence wait.
+- **Auto VAD Toggle:** Click `[Manual]` in header (or run with `--auto`) to switch to automatic continuous silence-cutting mode.
 - **Draggable Window:** Click and drag the card anywhere on screen.
 - **Always on Top:** Frameless translucent overlay stays pinned over Discord, Zoom, browsers, or games.
 - **Minimize / Expand:** Click the `—` button on the top right to collapse to a minimal status bar or restore full view.
-- **Live VU Activity:** Bottom green/cyan progress bar indicates audio level and speech detection.
+- **Live VU Activity:** Bottom progress bar reflects incoming mic/system audio level in real time.
 - **Instant Fallacy Breakdown:** Displays opponent quotation, identified logical fallacy, and 1-sentence counter-argument in under 3 seconds.
 - **Pre-warmed GPU Pipeline:** Pre-warms the local model in VRAM at startup to eliminate cold-start spikes.
 

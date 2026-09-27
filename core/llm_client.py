@@ -8,6 +8,28 @@ from config import Config
 logger = logging.getLogger(__name__)
 
 
+def is_substantive_argument(text: str) -> tuple[bool, str]:
+    """Check if speech possesses minimal structure to form a debate claim/argument."""
+    words = text.strip().split()
+    if len(words) < 4:
+        return False, "Statement too short to contain premise and conclusion."
+
+    last_word = words[-1].lower().rstrip(".,!?")
+    trailing_connectors = {
+        "because", "and", "or", "so", "that", "when", "if", "while",
+        "as", "the", "a", "an", "at", "to", "with", "for", "about", "of",
+    }
+    if last_word in trailing_connectors or text.rstrip().endswith("..."):
+        return False, "Trailing fragment. Opponent cut off mid-thought."
+
+    unique_words = set(w.lower().rstrip(".,!?") for w in words)
+    filler_words = {"oh", "ah", "um", "uh", "yeah", "yes", "no", "okay", "ok", "hey", "like", "well"}
+    if unique_words.issubset(filler_words):
+        return False, "Conversational filler / interjection."
+
+    return True, ""
+
+
 class OllamaClient:
     """Interfaces with Ollama REST API for low-latency debate reasoning."""
 
@@ -24,12 +46,10 @@ class OllamaClient:
             if resp.status_code == 200:
                 data = resp.json()
                 models = [m.get("name", "") for m in data.get("models", [])]
-                # Exact or prefix match
                 for m in models:
                     if self.config.ollama_model in m or m.startswith(self.config.ollama_model.split(":")[0]):
                         logger.info("Found matching Ollama model: %s", m)
                         return m
-                # If preferred not found, use first available 3b/small model if any
                 if models:
                     logger.warning(
                         "Configured model '%s' not found. Available: %s. Using '%s'.",
@@ -56,13 +76,20 @@ class OllamaClient:
             logger.warning("Ollama warmup failed: %s", e)
             return False
 
-
     def analyze(self, transcript: str) -> tuple[str, str]:
         """
         Analyze opponent transcript for logical fallacies and generate rebuttal.
         Returns:
             (flaw_text, counter_argument)
         """
+        is_arg, reason = is_substantive_argument(transcript)
+        if not is_arg:
+            logger.info("Dropping non-argument: '%s' (%s)", transcript, reason)
+            return (
+                "None (Incomplete / Non-Argument)",
+                f"Cannot evaluate: {reason}",
+            )
+
         payload = {
             "model": self.model,
             "prompt": transcript,
@@ -116,7 +143,6 @@ class OllamaClient:
         if counter_match:
             counter = counter_match.group(1).strip()
 
-        # Clean trailing extra lines or bullets
         counter = re.sub(r"^\s*[•\-*]\s*", "", counter).strip()
 
         return flaw, counter

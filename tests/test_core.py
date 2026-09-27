@@ -111,5 +111,27 @@ class TestOllamaClientParsing(unittest.TestCase):
         self.assertEqual(counter, "The proposal never called for abolishing private healthcare, only expanding public coverage.")
 
 
+class TestArgumentFilter(unittest.TestCase):
+    def test_filter_incomplete_and_filler(self):
+        from core.llm_client import is_substantive_argument
+
+        # Repetitive interjections
+        valid, _ = is_substantive_argument("Oh, oh, oh, oh.")
+        self.assertFalse(valid)
+
+        # Trailing cutoff
+        valid, _ = is_substantive_argument("Because when you look at the other day...")
+        self.assertFalse(valid)
+
+        # Too short
+        valid, _ = is_substantive_argument("I think so")
+        self.assertFalse(valid)
+
+        # Substantive claim
+        valid, _ = is_substantive_argument("We should ban electric vehicles because battery recycling is not yet feasible.")
+        self.assertTrue(valid)
+
+
 if __name__ == "__main__":
     unittest.main()
+
