@@ -29,27 +29,25 @@ Designed strictly for an 8 GB RAM / 4 GB VRAM hardware profile with zero VRAM th
 
 ### 2. Environment Setup
 ```bash
-uv venv --python 3.12 .venv
-.venv\Scripts\activate
-uv pip install -r requirements.txt
+uv sync
 ```
 
 ### 3. Check Audio Devices
 List all available input devices (microphones and loopback devices like *Stereo Mix* or *VB-Audio Cable*):
 ```bash
-python main.py --list-devices
+uv run aenf --list-devices
 ```
 
 ### 4. Run `aenf`
 ```bash
 # Launch with default input device
-python main.py
+uv run aenf
 
 # Or specify a device index (e.g., Stereo Mix or headset mic)
-python main.py --device 1
+uv run aenf --device 17
 
 # Launch with custom Ollama model or Whisper model
-python main.py --model qwen2.5-coder:3b --whisper-model base.en
+uv run aenf --model qwen2.5-coder:3b --whisper-model base.en
 ```
 
 ---
@@ -69,8 +67,8 @@ python main.py --model qwen2.5-coder:3b --whisper-model base.en
 
 ```bash
 # Unit tests
-python -m unittest tests/test_core.py
+uv run python -m unittest tests/test_core.py
 
 # End-to-end integration test (requires Ollama running)
-python -m unittest tests/test_integration.py
+uv run python -m unittest tests/test_integration.py
 ```
