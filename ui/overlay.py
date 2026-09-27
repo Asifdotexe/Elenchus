@@ -22,6 +22,11 @@ class AenfOverlay(QWidget):
     """Draggable, frameless, translucent HUD overlay displaying live debate rebuttals."""
 
     def __init__(self, config: Config, pipeline: PipelineWorker):
+        """Initialize the HUD overlay window and widgets.
+
+        :param config: Application configuration instance.
+        :param pipeline: Pipeline worker instance providing signals.
+        """
         super().__init__()
         self.config = config
         self.pipeline = pipeline
@@ -319,7 +324,10 @@ class AenfOverlay(QWidget):
         self.pipeline.toggle_manual_capture()
 
     def _on_recording_state_changed(self, is_recording: bool) -> None:
-        """Update button text and styling based on recording state."""
+        """Update button text and styling based on recording state.
+
+        :param is_recording: True if audio is actively recording, False otherwise.
+        """
         if is_recording:
             self._apply_recording_button_style()
         else:
@@ -346,7 +354,11 @@ class AenfOverlay(QWidget):
             self._apply_idle_button_style()
 
     def _on_status_changed(self, text: str, level: str) -> None:
-        """Update status label and dot color."""
+        """Update status label and dot color.
+
+        :param text: Status description string.
+        :param level: Status level indicator ('ok', 'busy', or 'error').
+        """
         self.status_label.setText(text)
         if level == "ok":
             self.status_dot.setStyleSheet("color: #00FFA3; font-size: 11px;")
@@ -356,7 +368,11 @@ class AenfOverlay(QWidget):
             self.status_dot.setStyleSheet("color: #FF5C5C; font-size: 11px;")
 
     def _on_audio_level(self, rms: float, is_speaking: bool) -> None:
-        """Update VU meter progress bar."""
+        """Update VU meter progress bar.
+
+        :param rms: Current audio energy level.
+        :param is_speaking: True if speech is actively detected, False otherwise.
+        """
         val = min(100, int((rms / 0.08) * 100))
         self.audio_bar.setValue(val)
         if is_speaking:
@@ -371,11 +387,19 @@ class AenfOverlay(QWidget):
             """)
 
     def _on_transcript_received(self, text: str) -> None:
-        """Display incoming speech transcript."""
+        """Display incoming speech transcript.
+
+        :param text: Transcribed speech text from opponent.
+        """
         self.transcript_label.setText(f'"{text}"')
 
     def _on_rebuttal_received(self, flaw: str, counter: str, latency: float) -> None:
-        """Display extracted flaw, counter rebuttal, and latency with dynamic styling."""
+        """Display extracted flaw, counter rebuttal, and latency with dynamic styling.
+
+        :param flaw: Detected logical flaw or category label.
+        :param counter: Generated counter-argument or explanatory note.
+        :param latency: End-to-end processing latency in seconds.
+        """
         self.flaw_label.setText(flaw)
         self.counter_label.setText(counter)
         self.latency_label.setText(f"⚡ {latency:.1f}s")
@@ -435,6 +459,10 @@ class AenfOverlay(QWidget):
 
     # Keyboard shortcut (Space toggles listening)
     def keyPressEvent(self, event: QKeyEvent) -> None:
+        """Handle keyboard shortcut events.
+
+        :param event: Key event triggered by user.
+        """
         if event.key() == Qt.Key.Key_Space:
             self._on_action_button_clicked()
             event.accept()
@@ -443,17 +471,28 @@ class AenfOverlay(QWidget):
 
     # Window drag events
     def mousePressEvent(self, event: QMouseEvent) -> None:
+        """Record window position offset when left mouse button is pressed for dragging.
+
+        :param event: Mouse press event.
+        """
         if event.button() == Qt.MouseButton.LeftButton:
             self.drag_position = event.globalPosition().toPoint() - self.frameGeometry().topLeft()
             event.accept()
 
     def mouseMoveEvent(self, event: QMouseEvent) -> None:
+        """Reposition window during mouse drag operations.
+
+        :param event: Mouse move event.
+        """
         if event.buttons() == Qt.MouseButton.LeftButton and not self.drag_position.isNull():
             self.move(event.globalPosition().toPoint() - self.drag_position)
             event.accept()
 
     def closeEvent(self, event) -> None:
-        """Clean shutdown of worker threads and application."""
+        """Clean shutdown of worker threads and application.
+
+        :param event: Window close event.
+        """
         self.pipeline.stop()
         event.accept()
         app = QApplication.instance()

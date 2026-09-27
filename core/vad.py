@@ -6,7 +6,11 @@ from config import Config
 
 
 def compute_rms(audio_chunk: np.ndarray) -> float:
-    """Calculate Root Mean Square (RMS) energy of an audio chunk."""
+    """Calculate Root Mean Square (RMS) energy of an audio chunk.
+
+    :param audio_chunk: 1D array of audio samples.
+    :return: RMS energy magnitude as a float.
+    """
     if audio_chunk.size == 0:
         return 0.0
     return float(np.sqrt(np.mean(np.square(audio_chunk, dtype=np.float32))))
@@ -16,6 +20,10 @@ class DynamicVAD:
     """Buffers stream slices and yields completed speech segments using sample-accurate timing."""
 
     def __init__(self, config: Config):
+        """Initialize DynamicVAD parameters and buffers.
+
+        :param config: Application configuration instance containing VAD thresholds.
+        """
         self.config = config
         self.sample_rate = config.sample_rate
         self.rms_threshold = config.vad_rms_threshold
@@ -34,10 +42,10 @@ class DynamicVAD:
         self.total_speech_s = 0.0
 
     def process_chunk(self, chunk: np.ndarray) -> tuple[np.ndarray | None, float, bool]:
-        """
-        Process incoming audio chunk (float32 array).
-        Returns:
-            (completed_speech_segment or None, current_rms, is_speaking)
+        """Process incoming audio chunk and segment speech based on energy and silence duration.
+
+        :param chunk: Audio slice to evaluate.
+        :return: A tuple of (completed_speech_segment or None, current_rms, is_speaking).
         """
         rms = compute_rms(chunk)
         chunk_s = len(chunk) / float(self.sample_rate) if self.sample_rate > 0 else 0.0

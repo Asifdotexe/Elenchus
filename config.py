@@ -6,6 +6,8 @@ from dataclasses import dataclass
 
 @dataclass
 class Config:
+    """Runtime configuration settings for audio capture, VAD, transcription, LLM reasoning, and UI overlay."""
+
     # Audio capture
     sample_rate: int = 16000
     channels: int = 1

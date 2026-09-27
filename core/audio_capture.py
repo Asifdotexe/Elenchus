@@ -13,7 +13,10 @@ logger = logging.getLogger(__name__)
 
 
 def list_audio_devices() -> list[dict[str, Any]]:
-    """Return all available audio input devices with categories and host APIs."""
+    """Return all available audio input devices with categories and host APIs.
+
+    :return: List of device dictionaries containing index, name, hostapi, category, channels, and default samplerate.
+    """
     devices = sd.query_devices()
     hostapis = {i: h.get("name", "") for i, h in enumerate(sd.query_hostapis())}
     input_devs = []
@@ -50,6 +53,10 @@ class AudioCapture:
     """Manages audio stream capture into a thread-safe queue with auto-resampling."""
 
     def __init__(self, config: Config):
+        """Initialize the audio capture manager.
+
+        :param config: Application configuration instance with audio settings.
+        """
         self.config = config
         self.queue: queue.Queue[np.ndarray] = queue.Queue(maxsize=100)
         self.stream: sd.InputStream | None = None
@@ -61,7 +68,13 @@ class AudioCapture:
     def _audio_callback(
         self, indata: np.ndarray, frames: int, time_info: Any, status: sd.CallbackFlags
     ) -> None:
-        """Callback executed in PortAudio thread for incoming audio blocks."""
+        """Process incoming audio blocks from the PortAudio thread and push into queue.
+
+        :param indata: Buffer containing input audio samples.
+        :param frames: Number of frames in buffer.
+        :param time_info: Dictionary-like object containing ADC and DAC timestamps.
+        :param status: PortAudio callback status flags indicating underflow or overflow.
+        """
         if status:
             logger.warning("Audio callback status warning: %s", status)
         if not self.running:
@@ -88,7 +101,10 @@ class AudioCapture:
                 pass
 
     def start(self) -> None:
-        """Initialize and start InputStream with native device samplerate support."""
+        """Initialize and start the PortAudio InputStream with native device samplerate support.
+
+        :raises sd.PortAudioError: If stream fails to open on primary and fallback devices.
+        """
         self.running = True
         device = self.config.audio_device
 
@@ -136,7 +152,11 @@ class AudioCapture:
             self.stream.start()
 
     def get_chunk(self, timeout: float = 0.2) -> np.ndarray | None:
-        """Fetch next audio chunk from queue."""
+        """Fetch next audio chunk from queue.
+
+        :param timeout: Maximum time in seconds to wait before returning None.
+        :return: Float32 audio chunk array, or None if queue is empty.
+        """
         try:
             return self.queue.get(timeout=timeout)
         except queue.Empty:

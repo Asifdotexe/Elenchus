@@ -14,7 +14,10 @@ from ui.overlay import AenfOverlay
 
 
 def setup_logging(verbose: bool = False) -> None:
-    """Configure console logging level and format."""
+    """Configure console logging level and format.
+
+    :param verbose: If True, set logging level to DEBUG; otherwise INFO.
+    """
     level = logging.DEBUG if verbose else logging.INFO
     logging.basicConfig(
         level=level,
@@ -24,7 +27,10 @@ def setup_logging(verbose: bool = False) -> None:
 
 
 def parse_args() -> argparse.Namespace:
-    """Parse command line options."""
+    """Parse command line options.
+
+    :return: Parsed command line arguments namespace.
+    """
     cfg = Config()
     parser = argparse.ArgumentParser(
         prog="aenf",
@@ -88,7 +94,7 @@ def parse_args() -> argparse.Namespace:
 
 
 def print_devices() -> None:
-    """Print available audio input devices cleanly categorized."""
+    """Print available audio input devices cleanly categorized into microphones and loopbacks."""
     if hasattr(sys.stdout, "reconfigure"):
         try:
             sys.stdout.reconfigure(encoding="utf-8")
@@ -124,7 +130,10 @@ def print_devices() -> None:
 
 
 def test_audio_device(device_idx: int | None = None) -> None:
-    """Listen to device for 5 seconds and display live ASCII volume meter."""
+    """Listen to device for 5 seconds and display live ASCII volume meter.
+
+    :param device_idx: Optional audio device index to test, or None for system default.
+    """
     if hasattr(sys.stdout, "reconfigure"):
         try:
             sys.stdout.reconfigure(encoding="utf-8")
@@ -166,7 +175,11 @@ def test_audio_device(device_idx: int | None = None) -> None:
 
 
 def build_config(args: argparse.Namespace) -> Config:
-    """Build Config dataclass instance from CLI args."""
+    """Build Config dataclass instance from CLI arguments.
+
+    :param args: Parsed command line arguments namespace.
+    :return: Configured application Config instance.
+    """
     cfg = Config()
     if args.device is not None:
         try:
@@ -183,6 +196,7 @@ def build_config(args: argparse.Namespace) -> Config:
 
 
 def main() -> None:
+    """Launch the Qt application, initialize the overlay HUD, and start the processing pipeline."""
     args = parse_args()
     setup_logging(args.verbose)
 
