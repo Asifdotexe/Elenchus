@@ -4,16 +4,20 @@ import argparse
 import logging
 import signal
 import sys
+
 from PyQt6.QtWidgets import QApplication
 
-from config import DEFAULT_CONFIG, Config
+from config import Config
 from core.audio_capture import list_audio_devices
 from core.pipeline import PipelineWorker
 from ui.overlay import AenfOverlay
 
 
 def setup_logging(verbose: bool = False) -> None:
-    """Configure console logging level and format."""
+    """Configure console logging level and format.
+
+    :param verbose: If True, set logging level to DEBUG; otherwise INFO.
+    """
     level = logging.DEBUG if verbose else logging.INFO
     logging.basicConfig(
         level=level,
@@ -23,7 +27,11 @@ def setup_logging(verbose: bool = False) -> None:
 
 
 def parse_args() -> argparse.Namespace:
-    """Parse command line options."""
+    """Parse command line options.
+
+    :return: Parsed command line arguments namespace.
+    """
+    cfg = Config()
     parser = argparse.ArgumentParser(
         prog="aenf",
         description="Real-time heads-up display overlay for debate flaw detection and instant counter-arguments.",
@@ -42,26 +50,26 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--model",
         type=str,
-        default=DEFAULT_CONFIG.ollama_model,
-        help=f"Ollama model name (default: {DEFAULT_CONFIG.ollama_model}).",
+        default=cfg.ollama_model,
+        help=f"Ollama model name (default: {cfg.ollama_model}).",
     )
     parser.add_argument(
         "--whisper-model",
         type=str,
-        default=DEFAULT_CONFIG.whisper_model,
-        help=f"faster-whisper model (default: {DEFAULT_CONFIG.whisper_model}).",
+        default=cfg.whisper_model,
+        help=f"faster-whisper model (default: {cfg.whisper_model}).",
     )
     parser.add_argument(
         "--rms",
         type=float,
-        default=DEFAULT_CONFIG.vad_rms_threshold,
-        help=f"VAD RMS energy threshold (default: {DEFAULT_CONFIG.vad_rms_threshold}).",
+        default=cfg.vad_rms_threshold,
+        help=f"VAD RMS energy threshold (default: {cfg.vad_rms_threshold}).",
     )
     parser.add_argument(
         "--opacity",
         type=float,
-        default=DEFAULT_CONFIG.opacity,
-        help=f"Window opacity between 0.2 and 1.0 (default: {DEFAULT_CONFIG.opacity}).",
+        default=cfg.opacity,
+        help=f"Window opacity between 0.2 and 1.0 (default: {cfg.opacity}).",
     )
     parser.add_argument(
         "--auto",
@@ -77,7 +85,8 @@ def parse_args() -> argparse.Namespace:
         help="Test live audio input level with an ASCII volume meter for 5 seconds.",
     )
     parser.add_argument(
-        "--verbose", "-v",
+        "--verbose",
+        "-v",
         action="store_true",
         help="Enable detailed debug logging.",
     )
@@ -85,7 +94,7 @@ def parse_args() -> argparse.Namespace:
 
 
 def print_devices() -> None:
-    """Print available audio input devices cleanly categorized."""
+    """Print available audio input devices cleanly categorized into microphones and loopbacks."""
     if hasattr(sys.stdout, "reconfigure"):
         try:
             sys.stdout.reconfigure(encoding="utf-8")
@@ -108,7 +117,9 @@ def print_devices() -> None:
         for d in loopbacks:
             print(f"   [{d['index']:2d}] {d['name']} ({d['hostapi']})")
     else:
-        print("   (No virtual loopback detected. Install VB-Audio Cable to record Discord directly)")
+        print(
+            "   (No virtual loopback detected. Install VB-Audio Cable to record Discord directly)"
+        )
 
     if others:
         print("\n>> OTHER INPUTS:")
@@ -119,33 +130,41 @@ def print_devices() -> None:
 
 
 def test_audio_device(device_idx: int | None = None) -> None:
-    """Listen to device for 5 seconds and display live ASCII volume meter."""
+    """Listen to device for 5 seconds and display live ASCII volume meter.
+
+    :param device_idx: Optional audio device index to test, or None for system default.
+    """
     if hasattr(sys.stdout, "reconfigure"):
         try:
             sys.stdout.reconfigure(encoding="utf-8")
         except Exception:
             pass
 
-    import sounddevice as sd
-    import numpy as np
     import time
-    from config import DEFAULT_CONFIG
 
+    import numpy as np
+    import sounddevice as sd
+
+    from config import Config
+
+    cfg = Config()
     target = None if (device_idx is None or device_idx < 0) else device_idx
     print(f"\n--- Testing Device [{target if target is not None else 'DEFAULT'}] for 5 seconds ---")
     print("Speak into mic or play Discord/YouTube audio now...")
     try:
         dev_info = sd.query_devices(target if target is not None else sd.default.device[0])
-        native_rate = int(dev_info.get("default_samplerate", DEFAULT_CONFIG.sample_rate))
+        native_rate = int(dev_info.get("default_samplerate", cfg.sample_rate))
         blocksize = int(native_rate * 0.1)
-        with sd.InputStream(device=target, channels=1, samplerate=native_rate, blocksize=blocksize) as stream:
+        with sd.InputStream(
+            device=target, channels=1, samplerate=native_rate, blocksize=blocksize
+        ) as stream:
             for _ in range(50):
                 data, _ = stream.read(blocksize)
                 rms = float(np.sqrt(np.mean(data**2)))
                 pct = min(100, int((rms / 0.08) * 100))
                 bars = int(pct / 5)
                 meter = "#" * bars + "-" * (20 - bars)
-                status = "SOUND DETECTED" if rms >= DEFAULT_CONFIG.vad_rms_threshold else "QUIET"
+                status = "SOUND DETECTED" if rms >= cfg.vad_rms_threshold else "QUIET"
                 print(f"\r  [{meter}] {pct:3d}% | {status}  ", end="", flush=True)
                 time.sleep(0.1)
     except KeyboardInterrupt:
@@ -156,7 +175,11 @@ def test_audio_device(device_idx: int | None = None) -> None:
 
 
 def build_config(args: argparse.Namespace) -> Config:
-    """Build Config dataclass instance from CLI args."""
+    """Build Config dataclass instance from CLI arguments.
+
+    :param args: Parsed command line arguments namespace.
+    :return: Configured application Config instance.
+    """
     cfg = Config()
     if args.device is not None:
         try:
@@ -173,6 +196,7 @@ def build_config(args: argparse.Namespace) -> Config:
 
 
 def main() -> None:
+    """Launch the Qt application, initialize the overlay HUD, and start the processing pipeline."""
     args = parse_args()
     setup_logging(args.verbose)
 

@@ -3,8 +3,11 @@
 import os
 from dataclasses import dataclass
 
+
 @dataclass
 class Config:
+    """Runtime configuration settings for audio capture, VAD, transcription, LLM reasoning, and UI overlay."""
+
     # Audio capture
     sample_rate: int = 16000
     channels: int = 1
@@ -72,6 +75,3 @@ class Config:
     window_width: int = 420
     window_height: int = 280
     opacity: float = 0.94
-
-
-DEFAULT_CONFIG = Config()

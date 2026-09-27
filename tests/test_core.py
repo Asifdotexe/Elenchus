@@ -1,12 +1,13 @@
 """Unit tests for aenf core components."""
 
 import unittest
+
 import numpy as np
 
 from config import Config
-from core.vad import compute_rms, DynamicVAD
-from core.transcriber import Transcriber
 from core.llm_client import OllamaClient
+from core.transcriber import Transcriber
+from core.vad import DynamicVAD, compute_rms
 
 
 class TestVAD(unittest.TestCase):
@@ -99,7 +100,10 @@ class TestOllamaClientParsing(unittest.TestCase):
         )
         flaw, counter = self.client._parse_debate_output(raw)
         self.assertEqual(flaw, "False Equivalence")
-        self.assertEqual(counter, "Nuclear energy has far lower mortality rates per kilowatt-hour than coal or gas.")
+        self.assertEqual(
+            counter,
+            "Nuclear energy has far lower mortality rates per kilowatt-hour than coal or gas.",
+        )
 
     def test_parse_colon_format(self):
         raw = (
@@ -108,7 +112,10 @@ class TestOllamaClientParsing(unittest.TestCase):
         )
         flaw, counter = self.client._parse_debate_output(raw)
         self.assertEqual(flaw, "Straw Man Argument")
-        self.assertEqual(counter, "The proposal never called for abolishing private healthcare, only expanding public coverage.")
+        self.assertEqual(
+            counter,
+            "The proposal never called for abolishing private healthcare, only expanding public coverage.",
+        )
 
 
 class TestArgumentFilter(unittest.TestCase):
@@ -128,10 +135,11 @@ class TestArgumentFilter(unittest.TestCase):
         self.assertFalse(valid)
 
         # Substantive claim
-        valid, _ = is_substantive_argument("We should ban electric vehicles because battery recycling is not yet feasible.")
+        valid, _ = is_substantive_argument(
+            "We should ban electric vehicles because battery recycling is not yet feasible."
+        )
         self.assertTrue(valid)
 
 
 if __name__ == "__main__":
     unittest.main()
-

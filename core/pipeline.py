@@ -3,14 +3,15 @@
 import logging
 import threading
 import time
+
 import numpy as np
 from PyQt6.QtCore import QThread, pyqtSignal
 
 from config import Config
 from core.audio_capture import AudioCapture
-from core.vad import DynamicVAD, compute_rms
-from core.transcriber import Transcriber
 from core.llm_client import OllamaClient
+from core.transcriber import Transcriber
+from core.vad import DynamicVAD, compute_rms
 
 logger = logging.getLogger(__name__)
 
@@ -29,6 +30,10 @@ class PipelineWorker(QThread):
     recording_state_changed = pyqtSignal(bool)  # True = recording, False = idle
 
     def __init__(self, config: Config):
+        """Initialize pipeline worker thread and sub-components.
+
+        :param config: Application configuration instance.
+        """
         super().__init__()
         self.config = config
         self.running = False
@@ -45,10 +50,9 @@ class PipelineWorker(QThread):
         self._flush_requested = False
 
     def toggle_manual_capture(self) -> bool:
-        """
-        Toggle manual listening on or off.
-        Returns:
-            True if recording started, False if recording stopped & sent to analyze.
+        """Toggle manual listening on or off.
+
+        :return: True if recording started, False if recording stopped and queued for analysis.
         """
         with self._lock:
             if not self.is_manual_recording:
@@ -67,7 +71,10 @@ class PipelineWorker(QThread):
                 return False
 
     def set_mode(self, manual: bool) -> None:
-        """Switch between Manual Button mode and Auto VAD mode."""
+        """Switch between Manual Button mode and Auto VAD mode.
+
+        :param manual: True for manual push-to-listen button mode, False for automatic VAD.
+        """
         with self._lock:
             self.manual_mode = manual
             self.is_manual_recording = False
@@ -77,7 +84,10 @@ class PipelineWorker(QThread):
             self.status_changed.emit(f"Mode: {mode_str}", "ok")
 
     def _process_audio_segment(self, audio_segment: np.ndarray) -> None:
-        """Run STT and LLM reasoning on an audio segment."""
+        """Run STT and LLM reasoning on an audio segment.
+
+        :param audio_segment: Audio buffer to transcribe and analyze.
+        """
         if audio_segment is None or len(audio_segment) < int(self.config.sample_rate * 0.3):
             self.status_changed.emit("Audio segment too short", "ok")
             return
@@ -105,7 +115,7 @@ class PipelineWorker(QThread):
         self.status_changed.emit("Ready", "ok")
 
     def run(self) -> None:
-        """Pipeline thread loop."""
+        """Execute the main pipeline audio ingestion loop."""
         self.running = True
         self.status_changed.emit("Initializing speech models...", "busy")
 
@@ -120,7 +130,9 @@ class PipelineWorker(QThread):
             self.status_changed.emit(f"Init Error: {e}", "error")
             return
 
-        init_status = "Ready (Manual Mode)" if self.manual_mode else f"Listening ({self.llm_client.model})"
+        init_status = (
+            "Ready (Manual Mode)" if self.manual_mode else f"Listening ({self.llm_client.model})"
+        )
         self.status_changed.emit(init_status, "ok")
         logger.info("Pipeline worker active.")
 
@@ -159,7 +171,7 @@ class PipelineWorker(QThread):
         logger.info("Pipeline worker stopped.")
 
     def stop(self) -> None:
-        """Signal worker to terminate and wait."""
+        """Signal worker to terminate and wait for thread completion."""
         self.running = False
         self.audio_capture.stop()
         self.wait(1500)

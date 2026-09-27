@@ -1,12 +1,16 @@
 """Voice Activity Detection and dynamic speech segmentation using energy RMS."""
 
-import time
 import numpy as np
+
 from config import Config
 
 
 def compute_rms(audio_chunk: np.ndarray) -> float:
-    """Calculate Root Mean Square (RMS) energy of an audio chunk."""
+    """Calculate Root Mean Square (RMS) energy of an audio chunk.
+
+    :param audio_chunk: 1D array of audio samples.
+    :return: RMS energy magnitude as a float.
+    """
     if audio_chunk.size == 0:
         return 0.0
     return float(np.sqrt(np.mean(np.square(audio_chunk, dtype=np.float32))))
@@ -16,6 +20,10 @@ class DynamicVAD:
     """Buffers stream slices and yields completed speech segments using sample-accurate timing."""
 
     def __init__(self, config: Config):
+        """Initialize DynamicVAD parameters and buffers.
+
+        :param config: Application configuration instance containing VAD thresholds.
+        """
         self.config = config
         self.sample_rate = config.sample_rate
         self.rms_threshold = config.vad_rms_threshold
@@ -34,10 +42,10 @@ class DynamicVAD:
         self.total_speech_s = 0.0
 
     def process_chunk(self, chunk: np.ndarray) -> tuple[np.ndarray | None, float, bool]:
-        """
-        Process incoming audio chunk (float32 array).
-        Returns:
-            (completed_speech_segment or None, current_rms, is_speaking)
+        """Process incoming audio chunk and segment speech based on energy and silence duration.
+
+        :param chunk: Audio slice to evaluate.
+        :return: A tuple of (completed_speech_segment or None, current_rms, is_speaking).
         """
         rms = compute_rms(chunk)
         chunk_s = len(chunk) / float(self.sample_rate) if self.sample_rate > 0 else 0.0
@@ -64,7 +72,10 @@ class DynamicVAD:
                 self.total_speech_s += chunk_s
 
                 # Check if silence exceeded threshold or max length reached
-                if self.consecutive_silence_s >= self.silence_duration_s or self.total_speech_s >= self.max_speech_duration_s:
+                if (
+                    self.consecutive_silence_s >= self.silence_duration_s
+                    or self.total_speech_s >= self.max_speech_duration_s
+                ):
                     if self.total_speech_s >= self.min_speech_duration_s and self.active_buffer:
                         completed_segment = np.concatenate(self.active_buffer, axis=0)
                     # Reset state

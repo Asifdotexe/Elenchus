@@ -2,6 +2,7 @@
 
 import logging
 import re
+
 import numpy as np
 from faster_whisper import WhisperModel
 
@@ -14,6 +15,10 @@ class Transcriber:
     """CPU-only INT8 faster-whisper transcriber."""
 
     def __init__(self, config: Config):
+        """Load the faster-whisper model on CPU.
+
+        :param config: Application configuration instance containing model settings.
+        """
         self.config = config
         logger.info(
             "Loading faster-whisper model '%s' on %s (%s)...",
@@ -30,9 +35,10 @@ class Transcriber:
         self.last_transcript = ""
 
     def transcribe(self, audio: np.ndarray) -> str | None:
-        """
-        Transcribe speech audio segment (float32, 16kHz).
-        Returns validated transcript or None if invalid/hallucinated.
+        """Transcribe speech audio segment using faster-whisper.
+
+        :param audio: Speech audio segment (float32 array, 16kHz).
+        :return: Cleaned and validated transcript string, or None if invalid or hallucinated.
         """
         if audio is None or len(audio) < int(self.config.sample_rate * 0.3):
             return None
@@ -51,7 +57,11 @@ class Transcriber:
             return None
 
     def _validate_and_clean(self, text: str) -> str | None:
-        """Validate transcript length, strip hallucinations and formatting artifacts."""
+        """Validate transcript length, strip hallucinations and formatting artifacts.
+
+        :param text: Raw speech-to-text output text.
+        :return: Cleaned transcript string, or None if discarded.
+        """
         if not text:
             return None
 
@@ -61,7 +71,11 @@ class Transcriber:
 
         # Check minimum character length
         if len(cleaned) < self.config.min_transcript_len:
-            logger.debug("Discarding short transcript (<%d chars): '%s'", self.config.min_transcript_len, cleaned)
+            logger.debug(
+                "Discarding short transcript (<%d chars): '%s'",
+                self.config.min_transcript_len,
+                cleaned,
+            )
             return None
 
         # Discard known hallucination phrases
