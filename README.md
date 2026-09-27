@@ -17,20 +17,32 @@ Designed strictly for an 8 GB RAM / 4 GB VRAM hardware profile with zero VRAM th
 
 ---
 
-## Quickstart
+## 1-Click Reproducible Setup
 
-### 1. Prerequisites
-- Python 3.12+
-- [Ollama](https://ollama.com) running locally:
-  ```bash
-  ollama run qwen2.5-coder:3b
-  # or: ollama run qwen2.5:3b
-  ```
-
-### 2. Environment Setup
-```bash
-uv sync
+### Windows (PowerShell)
+```powershell
+.\setup.ps1
 ```
+*(Automatically ensures `uv`, Python 3.12, pinned dependencies, Ollama model, Whisper weights, and runs health tests).*
+
+### Linux / macOS / WSL
+```bash
+chmod +x setup.sh && ./setup.sh
+```
+
+---
+
+## Quickstart & Launching
+
+### 1. Launch the HUD
+- **Windows:** Double-click `run.bat` or run:
+  ```bash
+  uv run aenf
+  ```
+- Or with specific device:
+  ```bash
+  uv run aenf --device 17
+  ```
 
 ### 3. Check Audio Devices
 List all available input devices (microphones and loopback devices like *Stereo Mix* or *VB-Audio Cable*):

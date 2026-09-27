@@ -73,5 +73,3 @@ class Config:
     window_height: int = 280
     opacity: float = 0.94
 
-
-DEFAULT_CONFIG = Config()

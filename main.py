@@ -6,7 +6,7 @@ import signal
 import sys
 from PyQt6.QtWidgets import QApplication
 
-from config import DEFAULT_CONFIG, Config
+from config import Config
 from core.audio_capture import list_audio_devices
 from core.pipeline import PipelineWorker
 from ui.overlay import AenfOverlay
@@ -24,6 +24,7 @@ def setup_logging(verbose: bool = False) -> None:
 
 def parse_args() -> argparse.Namespace:
     """Parse command line options."""
+    cfg = Config()
     parser = argparse.ArgumentParser(
         prog="aenf",
         description="Real-time heads-up display overlay for debate flaw detection and instant counter-arguments.",
@@ -42,26 +43,26 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--model",
         type=str,
-        default=DEFAULT_CONFIG.ollama_model,
-        help=f"Ollama model name (default: {DEFAULT_CONFIG.ollama_model}).",
+        default=cfg.ollama_model,
+        help=f"Ollama model name (default: {cfg.ollama_model}).",
     )
     parser.add_argument(
         "--whisper-model",
         type=str,
-        default=DEFAULT_CONFIG.whisper_model,
-        help=f"faster-whisper model (default: {DEFAULT_CONFIG.whisper_model}).",
+        default=cfg.whisper_model,
+        help=f"faster-whisper model (default: {cfg.whisper_model}).",
     )
     parser.add_argument(
         "--rms",
         type=float,
-        default=DEFAULT_CONFIG.vad_rms_threshold,
-        help=f"VAD RMS energy threshold (default: {DEFAULT_CONFIG.vad_rms_threshold}).",
+        default=cfg.vad_rms_threshold,
+        help=f"VAD RMS energy threshold (default: {cfg.vad_rms_threshold}).",
     )
     parser.add_argument(
         "--opacity",
         type=float,
-        default=DEFAULT_CONFIG.opacity,
-        help=f"Window opacity between 0.2 and 1.0 (default: {DEFAULT_CONFIG.opacity}).",
+        default=cfg.opacity,
+        help=f"Window opacity between 0.2 and 1.0 (default: {cfg.opacity}).",
     )
     parser.add_argument(
         "--auto",
@@ -129,14 +130,15 @@ def test_audio_device(device_idx: int | None = None) -> None:
     import sounddevice as sd
     import numpy as np
     import time
-    from config import DEFAULT_CONFIG
+    from config import Config
 
+    cfg = Config()
     target = None if (device_idx is None or device_idx < 0) else device_idx
     print(f"\n--- Testing Device [{target if target is not None else 'DEFAULT'}] for 5 seconds ---")
     print("Speak into mic or play Discord/YouTube audio now...")
     try:
         dev_info = sd.query_devices(target if target is not None else sd.default.device[0])
-        native_rate = int(dev_info.get("default_samplerate", DEFAULT_CONFIG.sample_rate))
+        native_rate = int(dev_info.get("default_samplerate", cfg.sample_rate))
         blocksize = int(native_rate * 0.1)
         with sd.InputStream(device=target, channels=1, samplerate=native_rate, blocksize=blocksize) as stream:
             for _ in range(50):
@@ -145,7 +147,7 @@ def test_audio_device(device_idx: int | None = None) -> None:
                 pct = min(100, int((rms / 0.08) * 100))
                 bars = int(pct / 5)
                 meter = "#" * bars + "-" * (20 - bars)
-                status = "SOUND DETECTED" if rms >= DEFAULT_CONFIG.vad_rms_threshold else "QUIET"
+                status = "SOUND DETECTED" if rms >= cfg.vad_rms_threshold else "QUIET"
                 print(f"\r  [{meter}] {pct:3d}% | {status}  ", end="", flush=True)
                 time.sleep(0.1)
     except KeyboardInterrupt:

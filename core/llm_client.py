@@ -1,11 +1,23 @@
-"""Ollama LLM REST client for real-time debate analysis and fallacy detection."""
+"""Ollama LLM client for real-time debate analysis and fallacy detection using stdlib urllib."""
 
+import json
 import logging
 import re
-import requests
+import socket
+import urllib.error
+import urllib.request
 from config import Config
 
 logger = logging.getLogger(__name__)
+
+
+def _http_json(url: str, payload: dict | None = None, timeout: float = 10.0) -> dict:
+    """Execute JSON HTTP request using standard library urllib."""
+    body = json.dumps(payload).encode("utf-8") if payload is not None else None
+    headers = {"Content-Type": "application/json"} if body else {}
+    req = urllib.request.Request(url, data=body, headers=headers)
+    with urllib.request.urlopen(req, timeout=timeout) as resp:
+        return json.loads(resp.read().decode("utf-8"))
 
 
 def is_substantive_argument(text: str) -> tuple[bool, str]:
@@ -42,22 +54,20 @@ class OllamaClient:
     def _resolve_model(self) -> str:
         """Verify model availability in Ollama; fallback gracefully if possible."""
         try:
-            resp = requests.get(self.tags_url, timeout=2.0)
-            if resp.status_code == 200:
-                data = resp.json()
-                models = [m.get("name", "") for m in data.get("models", [])]
-                for m in models:
-                    if self.config.ollama_model in m or m.startswith(self.config.ollama_model.split(":")[0]):
-                        logger.info("Found matching Ollama model: %s", m)
-                        return m
-                if models:
-                    logger.warning(
-                        "Configured model '%s' not found. Available: %s. Using '%s'.",
-                        self.config.ollama_model,
-                        models,
-                        models[0],
-                    )
-                    return models[0]
+            data = _http_json(self.tags_url, timeout=2.0)
+            models = [m.get("name", "") for m in data.get("models", [])]
+            for m in models:
+                if self.config.ollama_model in m or m.startswith(self.config.ollama_model.split(":")[0]):
+                    logger.info("Found matching Ollama model: %s", m)
+                    return m
+            if models:
+                logger.warning(
+                    "Configured model '%s' not found. Available: %s. Using '%s'.",
+                    self.config.ollama_model,
+                    models,
+                    models[0],
+                )
+                return models[0]
         except Exception as e:
             logger.warning("Could not query Ollama tags (%s). Using '%s'.", e, self.config.ollama_model)
         return self.config.ollama_model
@@ -66,12 +76,12 @@ class OllamaClient:
         """Pre-warm model into VRAM to eliminate cold-start latency."""
         try:
             logger.info("Warming up Ollama model '%s'...", self.model)
-            resp = requests.post(
+            _http_json(
                 self.generate_url,
-                json={"model": self.model, "prompt": "ready", "stream": False, "options": {"num_predict": 1}},
+                payload={"model": self.model, "prompt": "ready", "stream": False, "options": {"num_predict": 1}},
                 timeout=25.0,
             )
-            return resp.status_code == 200
+            return True
         except Exception as e:
             logger.warning("Ollama warmup failed: %s", e)
             return False
@@ -102,26 +112,20 @@ class OllamaClient:
         }
 
         try:
-            resp = requests.post(
-                self.generate_url,
-                json=payload,
-                timeout=self.config.ollama_timeout_s,
-            )
-            resp.raise_for_status()
-            data = resp.json()
+            data = _http_json(self.generate_url, payload=payload, timeout=self.config.ollama_timeout_s)
             raw_response = data.get("response", "").strip()
             return self._parse_debate_output(raw_response)
-        except requests.exceptions.ConnectionError:
-            logger.error("Ollama connection failed at %s", self.config.ollama_url)
-            return (
-                "Ollama Offline",
-                f"Start Ollama service. Command: ollama run {self.model}",
-            )
-        except requests.exceptions.Timeout:
+        except (TimeoutError, socket.timeout):
             logger.warning("Ollama request timed out (>%.1fs)", self.config.ollama_timeout_s)
             return (
                 "Latency Warning",
                 "Ollama took > 8s to respond. Inference dropped to maintain real-time sync.",
+            )
+        except urllib.error.URLError as e:
+            logger.error("Ollama connection failed at %s: %s", self.config.ollama_url, e)
+            return (
+                "Ollama Offline",
+                f"Start Ollama service. Command: ollama run {self.model}",
             )
         except Exception as e:
             logger.error("Error analyzing transcript with Ollama: %s", e)
