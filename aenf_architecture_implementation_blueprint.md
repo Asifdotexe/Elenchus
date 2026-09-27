@@ -1,167 +1,119 @@
-# Product & Technical Blueprint: `aenf` (all ears no foul)
+# Technical blueprint: aenf (all ears no foul)
 
-> **Role & Purpose for AI Implementation Agent:**  
-> You are tasked with generating a production-ready, lightweight, standalone desktop HUD application named **`aenf` (all ears no foul)** in Python.  
-> Read this complete architectural and hardware profile carefully. Adhere strictly to the memory constraints, threading model, and user interface specifications provided below.
+## 1. Project overview and objective
 
----
+`aenf` is a lightweight desktop overlay that listens to live debate audio, transcribes speech locally, and flags logical flaws with an immediate counter-argument using a local quantized language model. The interface is a frameless, translucent card that stays pinned on top of other windows.
 
-## 1. Project Overview & Objective
+### Hardware constraints
+- Host memory: 8 GB system RAM.
+- GPU: 4 GB dedicated VRAM (NVIDIA CUDA).
+- Target latency: Under 3 seconds from speech end to displayed rebuttal.
+- Memory isolation: Whisper and the language model cannot both reside in GPU memory on a 4 GB card without triggering swap thrashing. Speech transcription runs on the CPU in INT8; the language model runs on the GPU in 4-bit quantization.
 
-`aenf` is a minimal, non-intrusive desktop overlay that listens to live incoming discussion/debate audio (either from a virtual loopback device like Discord/Zoom/YouTube or an input mic), automatically detects speech, transcribes it on the fly, and uses a local quantized Large Language Model (LLM) to detect logical fallacies, rhetorical flaws, and supply immediate counter-arguments on a transparent, draggable heads-up display (HUD).
+## 2. Resource budget
 
-### Key Constraints
-- **Hardware Profile:** 8 GB Total System RAM, 4 GB Dedicated VRAM (NVIDIA CUDA preferred).
-- **Cost:** 100% Free and open-source (FOSS) / local-first.
-- **Latency Target:** $< 3$ seconds total end-to-end (Audio End $\to$ Displayed Rebuttal).
-- **Zero VRAM Collision:** VRAM cannot be shared equally between Whisper and LLM without triggering system swap thrashing. Strict hardware partition is required.
+Target allocations for an 8 GB RAM and 4 GB VRAM system:
 
----
-
-## 2. Resource Partitioning & Hardware Budget
-
-To operate reliably on 8 GB RAM / 4 GB VRAM without Out-Of-Memory (OOM) crashes:
-
-| Subsystem | Engine / Library | Execution Device | Target Footprint |
+| Subsystem | Library or engine | Hardware | Target footprint |
 | :--- | :--- | :--- | :--- |
-| **Operating System & Overhead** | Host OS (Windows / Linux) | Host | ~3.0 - 3.5 GB RAM / ~500 MB VRAM |
-| **Speech-to-Text (STT)** | `faster-whisper` (`base.en` or `small.en`) | **CPU (INT8)** | ~500 MB – 1.0 GB RAM / **0 MB VRAM** |
-| **Debate Reasoning Engine** | `Qwen2.5-3B-Instruct` or `Phi-4-mini` via Ollama | **GPU (4-bit / Q4_K_M)** | ~2.2 – 2.6 GB VRAM |
-| **Audio Capture & VAD** | `sounddevice` + `numpy` RMS / `silero-vad` | CPU | ~40 MB RAM |
-| **Overlay UI** | `PyQt6` (Frameless, translucent) | CPU / OS Compositor | ~80 MB RAM |
+| Host operating system | Windows or Linux | CPU / host | 3.0 to 3.5 GB RAM, 500 MB VRAM |
+| Speech-to-text | faster-whisper (base.en) | CPU (INT8) | 500 MB to 1.0 GB RAM, 0 MB VRAM |
+| Debate reasoning engine | qwen2.5-coder:3b via Ollama | GPU (4-bit Q4_K_M) | 2.0 to 2.4 GB VRAM |
+| Audio capture and VAD | sounddevice and numpy RMS | CPU | 40 MB RAM |
+| Overlay interface | PyQt6 frameless widget | CPU / compositor | 80 MB RAM |
 
----
-
-## 3. Core Architecture Pipeline
+## 3. Data flow
 
 ```text
-[Audio Stream: Loopback / Mic]
-             │
-             ▼
-[Voice Activity Detection (RMS threshold or Silero-VAD)]
-             │ (Speech segment detected & padded)
-             ▼
-[faster-whisper Worker (CPU, INT8)]
-             │ (Outputs transcribed string)
-             ▼
-[Debate Filter & Formatter]
-             │ (Discards trivial filler, handles dedup)
-             ▼
-[Ollama Local REST API: http://localhost:11434]
-             │ (Runs Qwen2.5:3b with strict JSON/Bullet format)
-             ▼
-[PyQt6 HUD Controller]
-             │ (Dispatches to GUI thread via Qt Signals)
-             ▼
-[Draggable, Click-Through, Translucent Overlay UI]
+[Audio stream: loopback or mic]
+              │
+              ▼
+[RMS voice activity detection and sample buffer]
+              │ (speech slice extracted)
+              ▼
+[faster-whisper worker (CPU INT8)]
+              │ (clean transcript string)
+              ▼
+[Argument pre-filter]
+              │ (drops filler, checks premise and claim)
+              ▼
+[Ollama local REST API (localhost:11434)]
+              │ (extracts flaw and one-sentence counter)
+              ▼
+[PyQt6 pipeline controller]
+              │ (dispatches via Qt signals)
+              ▼
+[HUD card overlay]
 ```
 
----
+## 4. Subsystem design
 
-## 4. Subsystem Specifications
+### 4.1 Audio ingestion
+- Capture mono float32 audio at 16,000 Hz using `sounddevice`.
+- Inspect the device native sample rate (often 44.1 kHz or 48 kHz on Windows WASAPI) and resample to 16 kHz in memory.
+- Dynamic chunking: Read 100 ms audio slices into a thread-safe queue. In automatic mode, cut the segment when silence lasts at least 600 to 800 ms or the buffer reaches 5 seconds. In manual mode, accumulate chunks on button press and cut immediately on release.
 
-### 4.1 Audio Ingestion & Capture
-- Use `sounddevice` with configurable sample rate ($16000\text{ Hz}$, mono, 16-bit float32).
-- Audio device selection:
-  - If a loopback driver (e.g., *VB-Audio Cable*, *Stereo Mix*, or *PulseAudio monitor*) is present, allow selecting it via a config/CLI flag. Default to `default_input`.
-- **Chunking / VAD:**
-  - Avoid sending fixed raw intervals that cut words in half.
-  - Implement dynamic chunking: read small slices (e.g., $100\text{ ms}$), buffer them, and inspect energy (RMS) or run a lightweight VAD.
-  - Trigger transcription once silence exceeds $600\text{ ms} - 800\text{ ms}$ or buffer reaches a max of $5\text{ seconds}$.
+### 4.2 Transcription
+- Engine: `faster-whisper` using `base.en` with `compute_type="int8"` and `beam_size=1` on CPU.
+- Filtering: Discard transcripts under 15 characters, repeated identical phrases, and common silence hallucinations like "thank you for watching" or "[music]".
 
-### 4.2 Transcription (STT)
-- **Library:** `faster-whisper`.
-- **Model:** `base.en` (fastest) or `small.en` (slightly better vocabulary).
-- **Parameters:**
-  - `device="cpu"`
-  - `compute_type="int8"`
-  - `beam_size=1` (greedy decoding for minimal CPU overhead).
-- **Validation:**
-  - Ignore transcripts with length $< 15$ characters or common hallucination artifacts (e.g., `"Thank you for watching"`, `"[Music]"`).
+### 4.3 Debate reasoning backend
+- Endpoint: Ollama REST API (`/api/generate`).
+- Model: `qwen2.5-coder:3b` or `qwen2.5:3b`.
+- Parameters: Temperature 0.2 to 0.25, max tokens 60 to 80.
+- System prompt rules:
+  1. An argument requires a premise and an inferred conclusion.
+  2. If the statement is incomplete, an interjection, or conversational filler, output `Flaw: None (Incomplete / Non-Argument)` and note the missing premise.
+  3. If the statement is valid and logical, output `Flaw: None (Valid claim)` and provide counter-evidence.
+  4. If a fallacy exists, name the exact fallacy and write a direct one-sentence counter-argument.
+  5. Keep total output under 30 words without conversational filler.
 
-### 4.3 LLM Reasoning Backend
-- **Endpoint:** Ollama REST API (`POST http://localhost:11434/api/generate` or `/api/chat`).
-- **Target Model:** `qwen2.5:3b` (Default) or `phi4-mini`.
-- **Inference Constraints:**
-  - `temperature`: `0.2` to `0.3` (deterministic, low latency).
-  - `num_predict`: `60` to `80` tokens max.
-- **System Prompt Specification:**
-  ```text
-  You are an expert, real-time debate analysis engine named aenf. 
-  Your job is to identify logical fallacies, faulty premises, or rhetorical tricks in the user's opponent's speech and formulate an immediate, razor-sharp rebuttal.
+### 4.4 HUD overlay
+- Window flags: `FramelessWindowHint`, `WindowStaysOnTopHint`, and `Tool`.
+- Translucent background with a dark card style (`rgba(18, 18, 24, 0.93)`), rounded borders, and drop shadow.
+- Controls: Click-and-drag positioning, collapse toggle, close button, live audio VU progress bar, and mode toggle between manual push-to-talk and automatic silence detection.
+- Dynamic tags: Red or amber badge for logical flaws; neutral blue badge for incomplete statements or valid claims.
 
-  RULES:
-  1. Do NOT summarize or engage in conversational filler.
-  2. Maximum 35 words total.
-  3. Output strictly in the following format:
-     • Flaw: <Name of fallacy or factual/logical gap>
-     • Counter: <Direct, impactful 1-sentence counter-argument>
-  ```
-
-### 4.4 HUD Overlay (PyQt6)
-- **Window Flags:**
-  - `Qt.WindowType.FramelessWindowHint`
-  - `Qt.WindowType.WindowStaysOnTopHint`
-  - `Qt.WindowType.Tool` or `SubWindow` (to avoid taskbar clutter).
-- **Attributes:**
-  - `Qt.WidgetAttribute.WA_TranslucentBackground`
-- **Visual Design:**
-  - Dark glassmorphism card (`background-color: rgba(18, 18, 24, 0.88)`).
-  - Subtle glowing border (`border: 1px solid rgba(255, 255, 255, 0.12)`).
-  - Rounded corners (`border-radius: 10px`).
-  - Text: High-contrast monospace or clean sans-serif (e.g., `#A0A0B0` for transcript, `#00FFA3` or `#FF5C5C` for detected flaws).
-- **Interactions:**
-  - Draggable via mouse click-and-drag.
-  - Collapse / Minimize toggle button.
-  - Optional opacity slider or toggle for hotkey click-through.
-
----
-
-## 5. Implementation Code Structure
-
-When implementing the application into a single file or modular repository, follow this directory and module structure:
+## 5. Code layout
 
 ```text
 aenf/
-├── README.md
-├── requirements.txt
-├── config.py             # Audio device settings, Ollama endpoint, model name
+├── pyproject.toml        # Pinned dependencies and CLI script entrypoint
+├── uv.lock               # Reproducible lockfile
+├── setup.ps1             # Automated Windows setup
+├── setup.sh              # Automated Unix setup
+├── run.bat               # Desktop launcher
+├── config.py             # Configuration dataclass
 ├── core/
-│   ├── __init__.py
-│   ├── audio_capture.py  # sounddevice callback + thread-safe queue
-│   ├── vad.py            # RMS silence/speech detection
+│   ├── audio_capture.py  # sounddevice stream with auto-resampling
+│   ├── vad.py            # Sample-accurate RMS VAD
 │   ├── transcriber.py    # faster-whisper CPU worker
-│   └── llm_client.py     # Ollama REST query worker
-└── ui/
-    ├── __init__.py
-    └── overlay.py        # PyQt6 HUD interface and signal handlers
+│   ├── llm_client.py     # Ollama client and argument pre-filter
+│   └── pipeline.py       # Background QThread coordinator
+├── ui/
+│   └── overlay.py        # PyQt6 glassmorphic HUD
+└── tests/
+    ├── test_core.py      # Unit tests
+    └── test_integration.py # End-to-end integration test
 ```
 
-*(Alternatively, for single-file deployment, consolidate all modules into `aenf.py` using Qt's `QThread` or Python `threading.Thread` with thread-safe `pyqtSignal` events).*
+## 6. Threading model
 
----
+1. GUI thread (Thread 0): Handles Qt rendering, paint events, window dragging, and button interactions. Does not execute network or inference calls.
+2. Audio recorder thread: Continuously pulls audio blocks from `sounddevice` and places them into a thread-safe queue.
+3. Pipeline QThread: Pops audio chunks, runs VAD, executes CPU transcription, queries Ollama, and delivers structured results to the UI thread via `pyqtSignal`.
 
-## 6. Threading & Concurrency Invariants
+## 7. Edge cases and failure recovery
 
-1. **GUI Thread (Thread 0):** Only handles PyQt rendering, paint events, and window movement. Never perform network requests or inference here.
-2. **Audio Recorder Thread:** Continuously reads audio buffers from `sounddevice` and pushes frames into a thread-safe `queue.Queue()`.
-3. **STT & LLM Pipeline Thread:** Pops audio buffers, runs `faster-whisper` transcription, sends HTTP requests to Ollama, and dispatches UI updates via `pyqtSignal(str, str)`.
+- Ollama offline: Catch connection errors and display an offline warning on the HUD with the command to start the model.
+- Inference latency: If Ollama takes longer than 10 seconds, drop the request gracefully with a warning to keep real-time sync.
+- Audio sample rate mismatch: Query the host device native sample rate and resample to 16 kHz using linear interpolation.
+- Window close hang: Explicitly call `QApplication.quit()` in `closeEvent` and stop worker streams so the process exits cleanly without leaving zombie threads.
 
----
+## 8. Verification checklist
 
-## 7. Edge Cases & Safeguards
-
-- **OLLAMA Not Running:** Catch `requests.exceptions.ConnectionError`. Display a clear warning on the HUD (`"Ollama offline. Run: ollama run qwen2.5:3b"`).
-- **Audio Device Disconnect:** Catch `sounddevice.PortAudioError` and retry initialization gracefully.
-- **Model Hallucination on Silence:** Enforce RMS thresholding before invoking Whisper. Discard audio frames with energy lower than baseline background noise.
-- **Context Flooding:** Discard previous uncompleted LLM requests if a new distinct argument arrives, or use a queue with `maxsize=1` (drop older frames to preserve real-time responsiveness).
-
----
-
-## 8. Verification Checklist for the AI Builder
-
-- [ ] Does STT run exclusively on CPU with INT8 compute?
-- [ ] Does the overlay stay on top when focusing other windows (e.g., browser, Discord)?
-- [ ] Is total VRAM consumption strictly under 3.0 GB during active inference?
-- [ ] Does the system recover cleanly without hanging if Ollama takes $> 5$ seconds to respond?
-- [ ] Is speech correctly parsed without blocking the UI frame rate?
+- [ ] STT runs on CPU using INT8 with 0 MB GPU VRAM allocation.
+- [ ] Overlay remains visible on top when focusing third-party apps like Discord or a web browser.
+- [ ] Total VRAM usage stays under 3.0 GB during active inference.
+- [ ] System handles connection dropouts or slow Ollama responses without freezing the GUI.
+- [ ] The application exits cleanly when the close button is clicked.
