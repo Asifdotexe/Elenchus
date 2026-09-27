@@ -4,6 +4,7 @@ import argparse
 import logging
 import signal
 import sys
+
 from PyQt6.QtWidgets import QApplication
 
 from config import Config
@@ -78,7 +79,8 @@ def parse_args() -> argparse.Namespace:
         help="Test live audio input level with an ASCII volume meter for 5 seconds.",
     )
     parser.add_argument(
-        "--verbose", "-v",
+        "--verbose",
+        "-v",
         action="store_true",
         help="Enable detailed debug logging.",
     )
@@ -109,7 +111,9 @@ def print_devices() -> None:
         for d in loopbacks:
             print(f"   [{d['index']:2d}] {d['name']} ({d['hostapi']})")
     else:
-        print("   (No virtual loopback detected. Install VB-Audio Cable to record Discord directly)")
+        print(
+            "   (No virtual loopback detected. Install VB-Audio Cable to record Discord directly)"
+        )
 
     if others:
         print("\n>> OTHER INPUTS:")
@@ -127,9 +131,11 @@ def test_audio_device(device_idx: int | None = None) -> None:
         except Exception:
             pass
 
-    import sounddevice as sd
-    import numpy as np
     import time
+
+    import numpy as np
+    import sounddevice as sd
+
     from config import Config
 
     cfg = Config()
@@ -140,7 +146,9 @@ def test_audio_device(device_idx: int | None = None) -> None:
         dev_info = sd.query_devices(target if target is not None else sd.default.device[0])
         native_rate = int(dev_info.get("default_samplerate", cfg.sample_rate))
         blocksize = int(native_rate * 0.1)
-        with sd.InputStream(device=target, channels=1, samplerate=native_rate, blocksize=blocksize) as stream:
+        with sd.InputStream(
+            device=target, channels=1, samplerate=native_rate, blocksize=blocksize
+        ) as stream:
             for _ in range(50):
                 data, _ = stream.read(blocksize)
                 rms = float(np.sqrt(np.mean(data**2)))

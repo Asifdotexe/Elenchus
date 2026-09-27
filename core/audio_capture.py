@@ -2,8 +2,8 @@
 
 import logging
 import queue
-import time
 from typing import Any
+
 import numpy as np
 import sounddevice as sd
 
@@ -23,21 +23,26 @@ def list_audio_devices() -> list[dict[str, Any]]:
             h_name = hostapis.get(dev.get("hostapi"), "")
             name_lower = name.lower()
 
-            if any(term in name_lower for term in ["cable", "stereo mix", "wave", "loopback", "what u hear"]):
+            if any(
+                term in name_lower
+                for term in ["cable", "stereo mix", "wave", "loopback", "what u hear"]
+            ):
                 category = "LOOPBACK (System/Discord audio)"
             elif any(term in name_lower for term in ["mic", "headset", "array"]):
                 category = "MIC (Your physical voice)"
             else:
                 category = "INPUT"
 
-            input_devs.append({
-                "index": idx,
-                "name": name,
-                "hostapi": h_name,
-                "category": category,
-                "channels": dev.get("max_input_channels"),
-                "default_samplerate": dev.get("default_samplerate"),
-            })
+            input_devs.append(
+                {
+                    "index": idx,
+                    "name": name,
+                    "hostapi": h_name,
+                    "category": category,
+                    "channels": dev.get("max_input_channels"),
+                    "default_samplerate": dev.get("default_samplerate"),
+                }
+            )
     return input_devs
 
 
@@ -53,7 +58,9 @@ class AudioCapture:
         self.target_blocksize = int(self.target_rate * (self.config.chunk_ms / 1000.0))
         self.actual_sample_rate = self.target_rate
 
-    def _audio_callback(self, indata: np.ndarray, frames: int, time_info: Any, status: sd.CallbackFlags) -> None:
+    def _audio_callback(
+        self, indata: np.ndarray, frames: int, time_info: Any, status: sd.CallbackFlags
+    ) -> None:
         """Callback executed in PortAudio thread for incoming audio blocks."""
         if status:
             logger.warning("Audio callback status warning: %s", status)
@@ -112,7 +119,11 @@ class AudioCapture:
             )
             self.stream.start()
         except sd.PortAudioError as e:
-            logger.error("PortAudio error on device %s: %s. Attempting fallback to default device.", device, e)
+            logger.error(
+                "PortAudio error on device %s: %s. Attempting fallback to default device.",
+                device,
+                e,
+            )
             self.actual_sample_rate = self.target_rate
             self.stream = sd.InputStream(
                 samplerate=self.target_rate,

@@ -112,8 +112,8 @@ aenf/
 
 ## 8. Verification checklist
 
-- [ ] STT runs on CPU using INT8 with 0 MB GPU VRAM allocation.
-- [ ] Overlay remains visible on top when focusing third-party apps like Discord or a web browser.
-- [ ] Total VRAM usage stays under 3.0 GB during active inference.
-- [ ] System handles connection dropouts or slow Ollama responses without freezing the GUI.
-- [ ] The application exits cleanly when the close button is clicked.
+- [x] STT runs on CPU using INT8 with 0 MB GPU VRAM allocation.
+- [x] Overlay remains visible on top when focusing third-party apps like Discord or a web browser.
+- [x] Total VRAM usage stays under 3.0 GB during active inference.
+- [x] System handles connection dropouts or slow Ollama responses without freezing the GUI.
+- [x] The application exits cleanly when the close button is clicked.

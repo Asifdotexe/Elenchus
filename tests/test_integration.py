@@ -2,11 +2,12 @@
 
 import time
 import unittest
+
 import numpy as np
 
 from config import Config
-from core.transcriber import Transcriber
 from core.llm_client import OllamaClient
+from core.transcriber import Transcriber
 
 
 class TestIntegration(unittest.TestCase):

@@ -3,6 +3,7 @@
 import os
 from dataclasses import dataclass
 
+
 @dataclass
 class Config:
     # Audio capture
@@ -72,4 +73,3 @@ class Config:
     window_width: int = 420
     window_height: int = 280
     opacity: float = 0.94
-

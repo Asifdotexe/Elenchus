@@ -2,6 +2,7 @@
 
 import logging
 import re
+
 import numpy as np
 from faster_whisper import WhisperModel
 
@@ -61,7 +62,11 @@ class Transcriber:
 
         # Check minimum character length
         if len(cleaned) < self.config.min_transcript_len:
-            logger.debug("Discarding short transcript (<%d chars): '%s'", self.config.min_transcript_len, cleaned)
+            logger.debug(
+                "Discarding short transcript (<%d chars): '%s'",
+                self.config.min_transcript_len,
+                cleaned,
+            )
             return None
 
         # Discard known hallucination phrases

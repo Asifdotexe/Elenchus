@@ -1,17 +1,17 @@
 """PyQt6 Heads-Up Display (HUD) overlay for aenf."""
 
-from PyQt6.QtCore import Qt, QPoint
-from PyQt6.QtGui import QMouseEvent, QKeyEvent, QColor
+from PyQt6.QtCore import QPoint, Qt
+from PyQt6.QtGui import QColor, QKeyEvent, QMouseEvent
 from PyQt6.QtWidgets import (
     QApplication,
-    QWidget,
-    QVBoxLayout,
-    QHBoxLayout,
-    QLabel,
-    QPushButton,
-    QProgressBar,
     QFrame,
     QGraphicsDropShadowEffect,
+    QHBoxLayout,
+    QLabel,
+    QProgressBar,
+    QPushButton,
+    QVBoxLayout,
+    QWidget,
 )
 
 from config import Config
@@ -82,7 +82,9 @@ class AenfOverlay(QWidget):
         header_layout.addWidget(self.status_dot)
 
         title_label = QLabel("aenf // HUD")
-        title_label.setStyleSheet("color: #FFFFFF; font-weight: bold; font-size: 13px; font-family: 'Segoe UI', sans-serif; letter-spacing: 0.5px;")
+        title_label.setStyleSheet(
+            "color: #FFFFFF; font-weight: bold; font-size: 13px; font-family: 'Segoe UI', sans-serif; letter-spacing: 0.5px;"
+        )
         header_layout.addWidget(title_label)
 
         header_layout.addStretch()
@@ -167,7 +169,9 @@ class AenfOverlay(QWidget):
 
         # Status text below action button
         self.status_label = QLabel("Initializing...")
-        self.status_label.setStyleSheet("color: #888899; font-size: 11px; font-family: 'Segoe UI', sans-serif;")
+        self.status_label.setStyleSheet(
+            "color: #888899; font-size: 11px; font-family: 'Segoe UI', sans-serif;"
+        )
         self.card_layout.addWidget(self.status_label)
 
         # Audio VU / activity bar
@@ -198,17 +202,23 @@ class AenfOverlay(QWidget):
         # Divider line
         divider = QFrame()
         divider.setFrameShape(QFrame.Shape.HLine)
-        divider.setStyleSheet("border: none; background-color: rgba(255, 255, 255, 0.08); max-height: 1px;")
+        divider.setStyleSheet(
+            "border: none; background-color: rgba(255, 255, 255, 0.08); max-height: 1px;"
+        )
         content_layout.addWidget(divider)
 
         # Opponent Transcript Section
         transcript_header = QLabel("OPPONENT")
-        transcript_header.setStyleSheet("color: #707088; font-size: 10px; font-weight: bold; letter-spacing: 1px;")
+        transcript_header.setStyleSheet(
+            "color: #707088; font-size: 10px; font-weight: bold; letter-spacing: 1px;"
+        )
         content_layout.addWidget(transcript_header)
 
         self.transcript_label = QLabel("Press 'Start Listening' to capture opponent...")
         self.transcript_label.setWordWrap(True)
-        self.transcript_label.setStyleSheet("color: #C0C0D4; font-size: 12px; font-style: italic; line-height: 1.4;")
+        self.transcript_label.setStyleSheet(
+            "color: #C0C0D4; font-size: 12px; font-style: italic; line-height: 1.4;"
+        )
         content_layout.addWidget(self.transcript_label)
 
         # Flaw Badge Section
@@ -232,7 +242,9 @@ class AenfOverlay(QWidget):
 
         # Counter Rebuttal Section
         counter_header = QLabel("REBUTTAL")
-        counter_header.setStyleSheet("color: #707088; font-size: 10px; font-weight: bold; letter-spacing: 1px;")
+        counter_header.setStyleSheet(
+            "color: #707088; font-size: 10px; font-weight: bold; letter-spacing: 1px;"
+        )
         content_layout.addWidget(counter_header)
 
         self.counter_label = QLabel("Listening for arguments...")
@@ -447,4 +459,3 @@ class AenfOverlay(QWidget):
         app = QApplication.instance()
         if app is not None:
             app.quit()
-

@@ -3,14 +3,15 @@
 import logging
 import threading
 import time
+
 import numpy as np
 from PyQt6.QtCore import QThread, pyqtSignal
 
 from config import Config
 from core.audio_capture import AudioCapture
-from core.vad import DynamicVAD, compute_rms
-from core.transcriber import Transcriber
 from core.llm_client import OllamaClient
+from core.transcriber import Transcriber
+from core.vad import DynamicVAD, compute_rms
 
 logger = logging.getLogger(__name__)
 
@@ -120,7 +121,9 @@ class PipelineWorker(QThread):
             self.status_changed.emit(f"Init Error: {e}", "error")
             return
 
-        init_status = "Ready (Manual Mode)" if self.manual_mode else f"Listening ({self.llm_client.model})"
+        init_status = (
+            "Ready (Manual Mode)" if self.manual_mode else f"Listening ({self.llm_client.model})"
+        )
         self.status_changed.emit(init_status, "ok")
         logger.info("Pipeline worker active.")
 

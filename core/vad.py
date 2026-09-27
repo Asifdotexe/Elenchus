@@ -1,7 +1,7 @@
 """Voice Activity Detection and dynamic speech segmentation using energy RMS."""
 
-import time
 import numpy as np
+
 from config import Config
 
 
@@ -64,7 +64,10 @@ class DynamicVAD:
                 self.total_speech_s += chunk_s
 
                 # Check if silence exceeded threshold or max length reached
-                if self.consecutive_silence_s >= self.silence_duration_s or self.total_speech_s >= self.max_speech_duration_s:
+                if (
+                    self.consecutive_silence_s >= self.silence_duration_s
+                    or self.total_speech_s >= self.max_speech_duration_s
+                ):
                     if self.total_speech_s >= self.min_speech_duration_s and self.active_buffer:
                         completed_segment = np.concatenate(self.active_buffer, axis=0)
                     # Reset state

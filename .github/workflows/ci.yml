@@ -53,6 +53,11 @@ jobs:
       - name: Sync dependencies
         run: uv sync
 
+      - name: Run Ruff linter and formatter checks
+        run: |
+          uv run ruff check
+          uv run ruff format --check
+
       - name: Run unit tests
         run: uv run python -m unittest tests/test_core.py
 
