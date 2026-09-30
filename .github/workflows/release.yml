@@ -70,7 +70,7 @@ jobs:
           uv pip install "pyinstaller>=6.10.0"
 
       - name: Build standalone executable
-        run: uv run python packaging/build.py
+        run: uv run pyinstaller packaging/elenchus.spec --clean --noconfirm --distpath dist
 
       - name: Rename and prepare release artifact (Windows)
         if: runner.os == 'Windows'

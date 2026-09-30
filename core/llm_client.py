@@ -48,7 +48,7 @@ def ensure_ollama_service(
             "stderr": subprocess.DEVNULL,
         }
         if sys.platform == "win32":
-            popen_kwargs["creationflags"] = getattr(subprocess, "CREATE_NO_WINDOW", 0x08000000)
+            popen_kwargs["creationflags"] = subprocess.CREATE_NO_WINDOW
         else:
             popen_kwargs["start_new_session"] = True
 
@@ -151,9 +151,7 @@ class OllamaClient:
         self.config = config
         self.generate_url = f"{config.ollama_url.rstrip('/')}/api/generate"
         self.tags_url = f"{config.ollama_url.rstrip('/')}/api/tags"
-        self.is_available, self.service_status = ensure_ollama_service(
-            config.ollama_url, config.ollama_model
-        )
+        ensure_ollama_service(config.ollama_url, config.ollama_model)
         self.model = self._resolve_model()
 
     def _resolve_model(self) -> str:

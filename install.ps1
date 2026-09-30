@@ -12,20 +12,9 @@ if (-not (Test-Path $InstallDir)) {
     New-Item -ItemType Directory -Path $InstallDir -Force | Out-Null
 }
 
-# 2. Query latest release asset from GitHub API
-Write-Host "[1/3] Resolving latest binary from GitHub Releases..." -ForegroundColor Yellow
-$ApiUrl = "https://api.github.com/repos/$Repo/releases/latest"
-try {
-    $Release = Invoke-RestMethod -Uri $ApiUrl -TimeoutSec 10 -Headers @{ "User-Agent" = "Elenchus-Installer" }
-    $Asset = $Release.assets | Where-Object { $_.name -eq "elenchus-windows-x86_64.exe" }
-    if ($null -eq $Asset) {
-        throw "Could not locate elenchus-windows-x86_64.exe in latest release."
-    }
-    $DownloadUrl = $Asset.browser_download_url
-} catch {
-    Write-Host "      Falling back to direct release download URL..." -ForegroundColor DarkYellow
-    $DownloadUrl = "https://github.com/$Repo/releases/latest/download/elenchus-windows-x86_64.exe"
-}
+# 2. Resolve direct release download URL
+Write-Host "[1/3] Resolving download URL..." -ForegroundColor Yellow
+$DownloadUrl = "https://github.com/$Repo/releases/latest/download/elenchus-windows-x86_64.exe"
 
 # 3. Download standalone binary
 Write-Host "[2/3] Downloading elenchus.exe..." -ForegroundColor Yellow
