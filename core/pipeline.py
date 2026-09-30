@@ -148,6 +148,17 @@ class PipelineWorker(QThread):
                 with self._lock:
                     if self.is_manual_recording:
                         self.manual_buffer.append(chunk)
+                        max_chunks = int(
+                            self.config.max_manual_buffer_s / (self.config.chunk_ms / 1000.0)
+                        )
+                        if len(self.manual_buffer) >= max_chunks:
+                            self.is_manual_recording = False
+                            self._flush_requested = True
+                            self.recording_state_changed.emit(False)
+                            self.status_changed.emit(
+                                f"Max duration reached ({int(self.config.max_manual_buffer_s)}s). Processing...",
+                                "busy",
+                            )
                         self.audio_level.emit(rms, True)
                     else:
                         self.audio_level.emit(rms, False)

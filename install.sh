@@ -36,6 +36,30 @@ DOWNLOAD_URL="https://github.com/$REPO/releases/latest/download/$ASSET"
 
 echo "[2/3] Downloading $ASSET to $TARGET_FILE..."
 curl -fsSL "$DOWNLOAD_URL" -o "$TARGET_FILE"
+
+SHA_URL="${DOWNLOAD_URL}.sha256"
+if curl -fsSL "$SHA_URL" -o "${TARGET_FILE}.sha256" 2>/dev/null; then
+    EXPECTED_SHA=$(awk '{print $1}' "${TARGET_FILE}.sha256" | tr '[:upper:]' '[:lower:]')
+    if command -v sha256sum &> /dev/null; then
+        ACTUAL_SHA=$(sha256sum "$TARGET_FILE" | awk '{print $1}' | tr '[:upper:]' '[:lower:]')
+    elif command -v shasum &> /dev/null; then
+        ACTUAL_SHA=$(shasum -a 256 "$TARGET_FILE" | awk '{print $1}' | tr '[:upper:]' '[:lower:]')
+    else
+        ACTUAL_SHA=""
+    fi
+    rm -f "${TARGET_FILE}.sha256"
+    if [ -n "$ACTUAL_SHA" ]; then
+        if [ "$EXPECTED_SHA" != "$ACTUAL_SHA" ]; then
+            echo "Error: SHA-256 checksum mismatch! Expected $EXPECTED_SHA, got $ACTUAL_SHA. Aborting."
+            rm -f "$TARGET_FILE"
+            exit 1
+        fi
+        echo "      Checksum verified: $ACTUAL_SHA"
+    fi
+else
+    echo "      [NOTE] Checksum verification skipped (release asset hash unavailable)."
+fi
+
 chmod +x "$TARGET_FILE"
 
 echo "[3/3] Checking PATH environment..."

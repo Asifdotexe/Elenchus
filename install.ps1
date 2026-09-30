@@ -16,10 +16,25 @@ if (-not (Test-Path $InstallDir)) {
 Write-Host "[1/3] Resolving download URL..." -ForegroundColor Yellow
 $DownloadUrl = "https://github.com/$Repo/releases/latest/download/elenchus-windows-x86_64.exe"
 
-# 3. Download standalone binary
+# 3. Download standalone binary and verify cryptographic checksum
 Write-Host "[2/3] Downloading elenchus.exe..." -ForegroundColor Yellow
 Invoke-WebRequest -Uri $DownloadUrl -OutFile $ExePath -UseBasicParsing
 Write-Host "      Saved to: $ExePath" -ForegroundColor Green
+
+$ShaUrl = "$DownloadUrl.sha256"
+try {
+    $ExpectedHash = ((Invoke-RestMethod -Uri $ShaUrl -UseBasicParsing).Trim() -split '\s+')[0].ToLower()
+    $ActualHash = (Get-FileHash -Path $ExePath -Algorithm SHA256).Hash.ToLower()
+
+    if ($ActualHash -ne $ExpectedHash) {
+        Remove-Item -Path $ExePath -Force -ErrorAction SilentlyContinue
+        Write-Error "SHA-256 checksum mismatch! Expected: $ExpectedHash, Got: $ActualHash. Download aborted."
+        exit 1
+    }
+    Write-Host "      Checksum verified: $ActualHash" -ForegroundColor Green
+} catch {
+    Write-Host "      [NOTE] Checksum verification skipped (release asset hash unavailable)." -ForegroundColor DarkYellow
+}
 
 # 4. Ensure install directory is on user PATH
 Write-Host "[3/3] Configuring user PATH environment variable..." -ForegroundColor Yellow

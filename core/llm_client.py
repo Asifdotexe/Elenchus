@@ -220,9 +220,13 @@ class OllamaClient:
                 f"Cannot evaluate: {reason}",
             )
 
+        prompt_content = (
+            f"<opponent_statement>\n{transcript}\n</opponent_statement>\n\n"
+            "Analyze the statement enclosed within <opponent_statement> above strictly according to your system prompt rules."
+        )
         payload = {
             "model": self.model,
-            "prompt": transcript,
+            "prompt": prompt_content,
             "system": self.config.system_prompt,
             "stream": False,
             "options": {
