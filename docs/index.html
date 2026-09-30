@@ -1,0 +1,1701 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Elenchus (ἔλεγχος) — Socratic Debate Analysis Engine</title>
+  <meta name="description" content="Real-time Socratic debate analysis and fallacy detection engine. Local Whisper speech-to-text and Ollama reasoning rendered over your desktop.">
+
+  <!-- Typography: Inter (Aeonik substitute) & JetBrains Mono (Input substitute) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <style>
+    /* -------------------------------------------------------------
+       HYPERSTUDIO DESIGN TOKENS
+       "blueprint scratched into obsidian. Type and hairline borders
+       carve white space from pure black, with the occasional gold
+       compass-mark to show the way."
+       ------------------------------------------------------------- */
+    :root {
+      /* Surfaces & Colors */
+      --color-obsidian: #101010;
+      --color-carbon: #080808;
+      --color-chalk: #f3f3f3;
+      --color-smoke: #9c9c9c;
+      --color-ash: #c1c1c1;
+      --color-graphite: #212121;
+      --color-iron: #474747;
+      --color-signal-white: #ffffff;
+      --color-compass-gold: #6f6759;
+      --color-card-slate: #3b3d45;
+      --color-pulse-green: #98ff38;
+
+      /* Typography */
+      --font-display: 'Inter', ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --font-body: 'Inter', ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --font-mono: 'JetBrains Mono', ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+
+      /* Type Scale */
+      --text-caption: 13px;
+      --text-body: 16px;
+      --text-heading-xs: 18px;
+      --text-subheading: 21px;
+      --text-heading-sm: 23px;
+      --text-heading: 34px;
+      --text-heading-lg: 44px;
+      --text-display: 63px;
+
+      /* Spacing Scale */
+      --spacing-4: 4px;
+      --spacing-8: 8px;
+      --spacing-12: 12px;
+      --spacing-16: 16px;
+      --spacing-20: 20px;
+      --spacing-24: 24px;
+      --spacing-32: 32px;
+      --spacing-40: 40px;
+      --spacing-48: 48px;
+      --spacing-64: 64px;
+
+      /* Radii */
+      --radius-tags: 4px;
+      --radius-cards: 8px;
+      --radius-icons: 99px;
+      --radius-buttons: 9999px;
+
+      /* Layout */
+      --page-max-width: 1200px;
+    }
+
+    /* -------------------------------------------------------------
+       GLOBAL RESET & BASE DISCIPLINE
+       ------------------------------------------------------------- */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      background-color: var(--color-obsidian);
+      color: var(--color-chalk);
+      font-family: var(--font-body);
+      font-size: 16px;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background-color: var(--color-obsidian);
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Selection */
+    ::selection {
+      background-color: var(--color-chalk);
+      color: var(--color-obsidian);
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+      transition: color 0.15s ease;
+    }
+
+    code, pre {
+      font-family: var(--font-mono);
+      font-size: 13px;
+    }
+
+    /* -------------------------------------------------------------
+       STRUCTURAL ELEMENTS & HAIRLINE GRIDS
+       ------------------------------------------------------------- */
+    .container {
+      max-width: var(--page-max-width);
+      margin-left: auto;
+      margin-right: auto;
+      padding-left: 24px;
+      padding-right: 24px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .hairline-divider {
+      width: 100%;
+      height: 1px;
+      background-color: var(--color-graphite);
+      border: none;
+      margin: 0;
+    }
+
+    .section-spacing {
+      padding-top: 130px;
+      padding-bottom: 130px;
+    }
+
+    @media (max-width: 768px) {
+      .section-spacing {
+        padding-top: 80px;
+        padding-bottom: 80px;
+      }
+    }
+
+    /* -------------------------------------------------------------
+       TOP NAVIGATION BAR
+       ------------------------------------------------------------- */
+    .nav-bar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background-color: rgba(16, 16, 16, 0.88);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--color-graphite);
+    }
+
+    .nav-content {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+    }
+
+    .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+    }
+
+    .nav-wordmark {
+      font-size: 18px;
+      font-weight: 400;
+      letter-spacing: -0.01em;
+      color: var(--color-chalk);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .nav-wordmark .greek {
+      color: var(--color-smoke);
+      font-size: 14px;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      list-style: none;
+    }
+
+    @media (max-width: 860px) {
+      .nav-links {
+        display: none;
+      }
+    }
+
+    .nav-links a {
+      font-size: 13px;
+      font-weight: 400;
+      color: var(--color-smoke);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .nav-links a:hover {
+      color: var(--color-chalk);
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    /* -------------------------------------------------------------
+       BUTTONS & BADGES
+       ------------------------------------------------------------- */
+    .btn-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background-color: var(--color-signal-white);
+      color: var(--color-obsidian);
+      border: 1px solid var(--color-signal-white);
+      border-radius: var(--radius-buttons);
+      padding: 12px 24px;
+      font-size: 14px;
+      font-weight: 400;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+      cursor: pointer;
+      transition: background-color 0.15s ease, border-color 0.15s ease;
+      white-space: nowrap;
+    }
+
+    .btn-pill:hover {
+      background-color: #e5e5e5;
+      border-color: #e5e5e5;
+    }
+
+    .btn-ghost {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background-color: transparent;
+      color: var(--color-chalk);
+      border: 1px solid var(--color-graphite);
+      border-radius: var(--radius-cards);
+      padding: 10px 20px;
+      font-size: 14px;
+      font-weight: 400;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+      cursor: pointer;
+      transition: border-color 0.15s ease, background-color 0.15s ease;
+      white-space: nowrap;
+    }
+
+    .btn-ghost:hover {
+      border-color: var(--color-chalk);
+      background-color: rgba(255, 255, 255, 0.03);
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background-color: #1a1a1a;
+      border: 1px solid var(--color-graphite);
+      border-radius: var(--radius-tags);
+      padding: 6px 12px;
+      font-size: 12px;
+      font-weight: 400;
+      color: var(--color-smoke);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .pulse-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background-color: var(--color-pulse-green);
+      box-shadow: 0 0 6px var(--color-pulse-green);
+    }
+
+    /* -------------------------------------------------------------
+       HERO SECTION
+       ------------------------------------------------------------- */
+    .hero-section {
+      padding-top: 100px;
+      padding-bottom: 80px;
+      position: relative;
+    }
+
+    .hero-content {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 28px;
+      max-width: 900px;
+    }
+
+    .hero-headline {
+      font-size: var(--text-display);
+      font-weight: 400;
+      line-height: 1.05;
+      letter-spacing: -0.69px;
+      color: var(--color-chalk);
+      text-wrap: balance;
+    }
+
+    @media (max-width: 768px) {
+      .hero-headline {
+        font-size: 42px;
+        letter-spacing: -0.3px;
+      }
+    }
+
+    .hero-subheading {
+      font-size: var(--text-subheading);
+      font-weight: 400;
+      line-height: 1.35;
+      color: var(--color-smoke);
+      max-width: 760px;
+    }
+
+    @media (max-width: 768px) {
+      .hero-subheading {
+        font-size: 18px;
+      }
+    }
+
+    .hero-actions {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-top: 8px;
+      flex-wrap: wrap;
+    }
+
+    /* Dot-Matrix World / Constellation Canvas Graphic */
+    .hero-canvas-container {
+      margin-top: 50px;
+      width: 100%;
+      height: 240px;
+      position: relative;
+      border: 1px solid var(--color-graphite);
+      border-radius: var(--radius-cards);
+      overflow: hidden;
+      background-color: var(--color-carbon);
+    }
+
+    #dotMatrixCanvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .canvas-caption {
+      position: absolute;
+      bottom: 12px;
+      left: 16px;
+      font-size: 11px;
+      font-family: var(--font-mono);
+      color: var(--color-smoke);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* -------------------------------------------------------------
+       INTERACTIVE HUD SIMULATION ("THE WIREFRAME IN LIGHT")
+       ------------------------------------------------------------- */
+    .hud-demo-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+      align-items: start;
+    }
+
+    @media (max-width: 900px) {
+      .hud-demo-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .hud-controls-card {
+      border: 1px solid var(--color-graphite);
+      border-radius: var(--radius-cards);
+      padding: 32px;
+      background-color: var(--color-carbon);
+    }
+
+    .hud-controls-title {
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--color-chalk);
+      margin-bottom: 8px;
+    }
+
+    .hud-controls-desc {
+      font-size: 14px;
+      color: var(--color-smoke);
+      margin-bottom: 24px;
+    }
+
+    .preset-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+
+    .preset-btn {
+      text-align: left;
+      background: transparent;
+      border: 1px solid var(--color-graphite);
+      border-radius: var(--radius-cards);
+      padding: 12px 16px;
+      color: var(--color-smoke);
+      cursor: pointer;
+      font-size: 13px;
+      transition: all 0.15s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .preset-btn.active, .preset-btn:hover {
+      border-color: var(--color-ash);
+      color: var(--color-chalk);
+      background-color: rgba(255, 255, 255, 0.02);
+    }
+
+    .preset-btn .tag {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--color-compass-gold);
+      text-transform: uppercase;
+    }
+
+    .hud-input-row {
+      display: flex;
+      gap: 12px;
+    }
+
+    .hud-input {
+      flex: 1;
+      background: #121214;
+      border: 1px solid var(--color-graphite);
+      border-radius: var(--radius-cards);
+      padding: 12px 16px;
+      color: var(--color-chalk);
+      font-family: var(--font-body);
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.15s ease;
+    }
+
+    .hud-input:focus {
+      border-color: var(--color-ash);
+    }
+
+    /* Virtual HUD Mockup */
+    .hud-preview-wrapper {
+      position: sticky;
+      top: 96px;
+    }
+
+    .hud-device-window {
+      background: linear-gradient(180deg, #151518 0%, #0c0c0e 100%);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+      width: 100%;
+      max-width: 440px;
+      margin: 0 auto;
+    }
+
+    .hud-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .hud-title-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .hud-status-led {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: #10b981;
+      transition: background-color 0.2s ease;
+    }
+
+    .hud-title {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--color-chalk);
+    }
+
+    .hud-action-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #18181b;
+      border: 1px solid #2e2e34;
+      border-radius: 7px;
+      padding: 8px 12px;
+      margin-bottom: 12px;
+    }
+
+    .hud-action-bar span {
+      font-size: 12px;
+      color: var(--color-chalk);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .hud-mode-pill {
+      font-size: 10px;
+      font-family: var(--font-mono);
+      background: rgba(255, 255, 255, 0.08);
+      padding: 2px 6px;
+      border-radius: 4px;
+      color: var(--color-smoke);
+    }
+
+    .monochart-meter {
+      display: flex;
+      gap: 2px;
+      height: 12px;
+      align-items: flex-end;
+      margin-bottom: 16px;
+      padding: 0 2px;
+    }
+
+    .monochart-bar {
+      flex: 1;
+      background-color: #27272a;
+      height: 20%;
+      border-radius: 1px;
+      transition: height 0.1s ease, background-color 0.1s ease;
+    }
+
+    .monochart-bar.active {
+      background-color: #10b981;
+    }
+
+    .hud-transcript-box {
+      border-top: 1px solid rgba(255, 255, 255, 0.07);
+      padding-top: 12px;
+      margin-bottom: 14px;
+    }
+
+    .hud-meta-label {
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--color-smoke);
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .hud-transcript-text {
+      font-size: 12px;
+      font-style: italic;
+      color: #a1a1aa;
+      line-height: 1.4;
+      min-height: 36px;
+    }
+
+    .hud-rebuttal-card {
+      background-color: #141417;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 8px;
+      padding: 14px;
+    }
+
+    .hud-finding-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .hud-finding-tag {
+      background-color: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 4px;
+      font-size: 10px;
+      font-weight: 500;
+      color: var(--color-smoke);
+      padding: 2px 6px;
+      text-transform: uppercase;
+    }
+
+    .hud-flaw-title {
+      font-size: 12px;
+      font-weight: 500;
+      color: #fca5a5;
+    }
+
+    .hud-counter-text {
+      font-size: 13px;
+      color: #fafafa;
+      line-height: 1.45;
+      margin-bottom: 8px;
+    }
+
+    .hud-footer-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      font-family: var(--font-mono);
+      color: #71717a;
+      border-top: 1px solid rgba(255, 255, 255, 0.04);
+      padding-top: 8px;
+      margin-top: 8px;
+    }
+
+    /* -------------------------------------------------------------
+       SERVICES / FEATURE 2x2 GRID
+       ------------------------------------------------------------- */
+    .section-header-block {
+      margin-bottom: 48px;
+    }
+
+    .section-eyebrow {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--color-compass-gold);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 12px;
+    }
+
+    .section-title {
+      font-size: var(--text-heading-lg);
+      font-weight: 400;
+      line-height: 1.07;
+      letter-spacing: -0.31px;
+      color: var(--color-chalk);
+    }
+
+    .services-frame {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      border-top: 1px solid var(--color-graphite);
+      border-left: 1px solid var(--color-graphite);
+    }
+
+    @media (max-width: 768px) {
+      .services-frame {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .service-cell {
+      padding: var(--spacing-48);
+      border-right: 1px solid var(--color-graphite);
+      border-bottom: 1px solid var(--color-graphite);
+      background-color: transparent;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      transition: background-color 0.2s ease;
+    }
+
+    .service-cell:hover {
+      background-color: rgba(255, 255, 255, 0.015);
+    }
+
+    .service-icon {
+      width: 32px;
+      height: 32px;
+      stroke: var(--color-compass-gold);
+      fill: none;
+      stroke-width: 1.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .service-title {
+      font-size: 14px;
+      font-weight: 400;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--color-chalk);
+      margin-top: 8px;
+    }
+
+    .service-body {
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--color-smoke);
+      line-height: 1.6;
+    }
+
+    /* -------------------------------------------------------------
+       MANIFESTO TEXT BLOCK (CENTERED 600px)
+       ------------------------------------------------------------- */
+    .manifesto-block {
+      max-width: 680px;
+      margin: 0 auto;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .manifesto-title {
+      font-size: var(--text-heading-sm);
+      font-weight: 400;
+      color: var(--color-chalk);
+      letter-spacing: -0.01em;
+    }
+
+    .manifesto-body {
+      font-size: 16px;
+      color: var(--color-smoke);
+      line-height: 1.65;
+    }
+
+    .specs-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1px;
+      background-color: var(--color-graphite);
+      border: 1px solid var(--color-graphite);
+      border-radius: var(--radius-cards);
+      overflow: hidden;
+      width: 100%;
+      margin-top: 16px;
+    }
+
+    @media (max-width: 640px) {
+      .specs-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    .spec-item {
+      background-color: var(--color-obsidian);
+      padding: 20px 16px;
+      text-align: center;
+    }
+
+    .spec-val {
+      font-family: var(--font-mono);
+      font-size: 18px;
+      color: var(--color-chalk);
+      margin-bottom: 4px;
+    }
+
+    .spec-label {
+      font-size: 11px;
+      font-family: var(--font-mono);
+      text-transform: uppercase;
+      color: var(--color-smoke);
+      letter-spacing: 0.05em;
+    }
+
+    /* -------------------------------------------------------------
+       QUICK START & STANDALONE PLATFORM TABS
+       ------------------------------------------------------------- */
+    .platform-tabs-header {
+      display: flex;
+      gap: 8px;
+      border-bottom: 1px solid var(--color-graphite);
+      padding-bottom: 12px;
+      margin-bottom: 24px;
+      overflow-x: auto;
+    }
+
+    .platform-tab-btn {
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--color-smoke);
+      padding: 8px 16px;
+      border-radius: var(--radius-cards);
+      font-size: 13px;
+      font-family: var(--font-mono);
+      cursor: pointer;
+      transition: all 0.15s ease;
+      white-space: nowrap;
+    }
+
+    .platform-tab-btn.active, .platform-tab-btn:hover {
+      border-color: var(--color-graphite);
+      color: var(--color-chalk);
+      background-color: #1a1a1a;
+    }
+
+    .terminal-card {
+      background-color: var(--color-carbon);
+      border: 1px solid var(--color-graphite);
+      border-radius: var(--radius-cards);
+      padding: 24px;
+      margin-bottom: 32px;
+    }
+
+    .terminal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .terminal-title {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--color-smoke);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .terminal-content {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      background: #111113;
+      border: 1px solid #212124;
+      border-radius: 6px;
+      padding: 14px 18px;
+      overflow-x: auto;
+    }
+
+    .terminal-code {
+      color: var(--color-chalk);
+      font-family: var(--font-mono);
+      font-size: 13px;
+      white-space: nowrap;
+    }
+
+    .terminal-code span.prompt {
+      color: var(--color-compass-gold);
+      user-select: none;
+      margin-right: 8px;
+    }
+
+    .copy-btn {
+      background: #1c1c1f;
+      border: 1px solid #2e2e34;
+      color: var(--color-chalk);
+      border-radius: 4px;
+      padding: 6px 12px;
+      font-size: 11px;
+      font-family: var(--font-mono);
+      text-transform: uppercase;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s ease;
+      white-space: nowrap;
+    }
+
+    .copy-btn:hover {
+      background: #27272a;
+      border-color: #3f3f46;
+    }
+
+    /* Distribution Matrix Table */
+    .dist-table-wrap {
+      width: 100%;
+      overflow-x: auto;
+      border: 1px solid var(--color-graphite);
+      border-radius: var(--radius-cards);
+    }
+
+    .dist-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 13px;
+    }
+
+    .dist-table th {
+      background-color: var(--color-carbon);
+      color: var(--color-smoke);
+      font-family: var(--font-mono);
+      font-weight: 400;
+      text-transform: uppercase;
+      font-size: 11px;
+      letter-spacing: 0.05em;
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--color-graphite);
+    }
+
+    .dist-table td {
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--color-graphite);
+      color: var(--color-chalk);
+    }
+
+    .dist-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .dist-table .mono {
+      font-family: var(--font-mono);
+      color: var(--color-ash);
+    }
+
+    .dist-table .badge-ok {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--color-pulse-green);
+      background: rgba(152, 255, 56, 0.08);
+      border: 1px solid rgba(152, 255, 56, 0.2);
+      padding: 2px 6px;
+      border-radius: 3px;
+    }
+
+    /* -------------------------------------------------------------
+       SECURITY & AUDIT BADGE SECTION
+       ------------------------------------------------------------- */
+    .security-audit-card {
+      border: 1px solid var(--color-graphite);
+      border-radius: var(--radius-cards);
+      padding: 40px;
+      background: linear-gradient(180deg, #121214 0%, #0d0d0f 100%);
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .audit-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    @media (max-width: 800px) {
+      .audit-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .audit-item {
+      border: 1px solid var(--color-graphite);
+      border-radius: var(--radius-cards);
+      padding: 18px;
+      background-color: var(--color-carbon);
+    }
+
+    .audit-item-title {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--color-chalk);
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .audit-item-desc {
+      font-size: 12px;
+      color: var(--color-smoke);
+      line-height: 1.5;
+    }
+
+    /* -------------------------------------------------------------
+       FOOTER / BOTTOM BAR
+       ------------------------------------------------------------- */
+    .footer {
+      border-top: 1px solid var(--color-graphite);
+      padding-top: 48px;
+      padding-bottom: 48px;
+      font-size: 13px;
+      color: var(--color-smoke);
+    }
+
+    .footer-content {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 24px;
+    }
+
+    .footer-links {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .footer-links a:hover {
+      color: var(--color-chalk);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- =============================================================
+       PERSISTENT TOP NAVIGATION
+       ============================================================= -->
+  <nav class="nav-bar">
+    <div class="container nav-content">
+      <div class="nav-left">
+        <a href="#" class="nav-wordmark">
+          <span>Elenchus</span>
+          <span class="greek">(ἔλεγχος)</span>
+        </a>
+        <ul class="nav-links">
+          <li><a href="#overview">Overview</a></li>
+          <li><a href="#simulator">HUD Simulator</a></li>
+          <li><a href="#architecture">Architecture</a></li>
+          <li><a href="#distribution">Distribution</a></li>
+          <li><a href="#security">Security Audit</a></li>
+        </ul>
+      </div>
+      <div class="nav-right">
+        <a href="#quickstart" class="btn-ghost" style="padding: 6px 14px; font-size: 12px;">Quick Start ↗</a>
+        <a href="https://github.com/Asifdotexe/aenf" target="_blank" rel="noopener noreferrer" class="btn-ghost" style="padding: 6px 14px; font-size: 12px;">GitHub ↗</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- =============================================================
+       HERO SECTION
+       ============================================================= -->
+  <section class="hero-section" id="overview">
+    <div class="container">
+      <div class="hero-content">
+        <div class="status-badge">
+          <span class="pulse-dot"></span>
+          <span>v1.0.0 Stable · Standalone Binaries & Security Audited</span>
+        </div>
+
+        <h1 class="hero-headline">
+          Socratic refutation engine for live debate.
+        </h1>
+
+        <p class="hero-subheading">
+          Real-time logical fallacy detection and rhetorical counter-analysis, rendered directly over your screen from local whisper and ollama.
+        </p>
+
+        <div class="hero-actions">
+          <a href="#quickstart" class="btn-pill">Download & Run ↗</a>
+          <a href="#simulator" class="btn-ghost">Try HUD Simulator ↗</a>
+        </div>
+      </div>
+
+      <!-- Dot-Matrix Constellation Canvas Visual -->
+      <div class="hero-canvas-container">
+        <canvas id="dotMatrixCanvas"></canvas>
+        <div class="canvas-caption">
+          <span class="pulse-dot" style="background-color: var(--color-compass-gold); box-shadow: none;"></span>
+          <span>Local Signal Fabric · Continuous Audio Ingestion & Tensor Graph</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="hairline-divider">
+
+  <!-- =============================================================
+       INTERACTIVE HUD SIMULATOR SECTION ("WIREFRAME IN LIGHT")
+       ============================================================= -->
+  <section class="section-spacing" id="simulator">
+    <div class="container">
+      <div class="section-header-block">
+        <div class="section-eyebrow">Interactive Simulation</div>
+        <h2 class="section-title">Experience the real-time HUD.</h2>
+      </div>
+
+      <div class="hud-demo-grid">
+        <!-- Control Card -->
+        <div class="hud-controls-card">
+          <div class="hud-controls-title">Feed Opponent Speech Slices</div>
+          <p class="hud-controls-desc">
+            Select a classic rhetorical fallacy or enter custom speech to observe the Socratic parser, latency budget, and counter-argument generator in real-time.
+          </p>
+
+          <div class="preset-buttons">
+            <button class="preset-btn active" onclick="loadPreset('strawman')">
+              <span class="tag">Straw Man Argument</span>
+              <span>"My opponent wants to ban all medicine because a single trial had side effects!"</span>
+            </button>
+            <button class="preset-btn" onclick="loadPreset('adhominem')">
+              <span class="tag">Ad Hominem</span>
+              <span>"Why should we listen to his economic plan when he doesn't even have a finance degree?"</span>
+            </button>
+            <button class="preset-btn" onclick="loadPreset('falsedilemma')">
+              <span class="tag">False Dilemma</span>
+              <span>"Either we shut down all fossil plants tomorrow, or humanity goes extinct next decade."</span>
+            </button>
+            <button class="preset-btn" onclick="loadPreset('valid')">
+              <span class="tag">Valid Claim</span>
+              <span>"Public transit investments lower per-capita emissions and reduce highway maintenance costs."</span>
+            </button>
+          </div>
+
+          <div class="hud-input-row">
+            <input type="text" id="customInput" class="hud-input" placeholder="Type custom opponent argument..." onkeydown="if(event.key==='Enter') runSimulation()">
+            <button class="btn-pill" style="padding: 10px 18px; font-size: 13px;" onclick="runSimulation()">Evaluate ↗</button>
+          </div>
+        </div>
+
+        <!-- Virtual HUD Mockup Display -->
+        <div class="hud-preview-wrapper">
+          <div class="hud-device-window">
+            <div class="hud-header">
+              <div class="hud-title-wrap">
+                <span id="hudStatusDot" class="hud-status-led"></span>
+                <span class="hud-title">elenchus</span>
+              </div>
+              <div style="font-size: 11px; color: #71717a; font-family: var(--font-mono);">TOPMOST HUD</div>
+            </div>
+
+            <div class="hud-action-bar">
+              <span id="hudActionText">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/></svg>
+                Listen (Click or Space)
+              </span>
+              <span class="hud-mode-pill">Manual Mode</span>
+            </div>
+
+            <!-- Monocharts Audio Activity Waveform -->
+            <div class="monochart-meter" id="audioMeter">
+              <!-- 30 Dynamic Bar slices generated by JS -->
+            </div>
+
+            <!-- Transcript Section -->
+            <div class="hud-transcript-box">
+              <div class="hud-meta-label">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                Opponent Statement
+              </div>
+              <div class="hud-transcript-text" id="hudTranscript">
+                "My opponent wants to ban all medicine because a single trial had side effects!"
+              </div>
+            </div>
+
+            <!-- Rebuttal Card -->
+            <div class="hud-rebuttal-card">
+              <div class="hud-finding-row">
+                <span class="hud-finding-tag" id="hudTag">Finding</span>
+                <span class="hud-flaw-title" id="hudFlaw">Straw Man Argument</span>
+              </div>
+              <div class="hud-counter-text" id="hudCounter">
+                I never advocated banning medicine; I proposed targeted regulatory oversight for specific clinical phases.
+              </div>
+              <div class="hud-footer-meta">
+                <span id="hudStatusMsg">Ready</span>
+                <span id="hudLatency">0.6s latency</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="hairline-divider">
+
+  <!-- =============================================================
+       SERVICES / 2x2 FEATURE GRID
+       ============================================================= -->
+  <section class="section-spacing" id="architecture">
+    <div class="container">
+      <div class="section-header-block">
+        <div class="section-eyebrow">Local-First Architecture</div>
+        <h2 class="section-title">Engineered for sub-second Socratic clarity.</h2>
+      </div>
+
+      <div class="services-frame">
+        <!-- Cell 1 -->
+        <div class="service-cell">
+          <svg class="service-icon" viewBox="0 0 24 24">
+            <path d="M2 10v4M6 6v12M10 3v18M14 8v8M18 5v14M22 10v4"/>
+          </svg>
+          <h3 class="service-title">01 / Dual-Channel Audio Ingestion</h3>
+          <p class="service-body">
+            Captures your physical microphone or captures your opponent directly over Discord, Zoom, or browser audio via WASAPI loopback. Audio never leaves local RAM.
+          </p>
+        </div>
+
+        <!-- Cell 2 -->
+        <div class="service-cell">
+          <svg class="service-icon" viewBox="0 0 24 24">
+            <rect x="4" y="4" width="16" height="16" rx="2"/>
+            <rect x="9" y="9" width="6" height="6"/>
+            <path d="M9 1v3M15 1v3M9 20v3M15 20v3M20 9h3M20 14h3M1 9h3M1 14h3"/>
+          </svg>
+          <h3 class="service-title">02 / Local INT8 Speech Recognition</h3>
+          <p class="service-body">
+            faster-whisper quantized on CPU for zero VRAM consumption. Discards hallucinated fillers, silences, and background music in sub-500ms bursts.
+          </p>
+        </div>
+
+        <!-- Cell 3 -->
+        <div class="service-cell">
+          <svg class="service-icon" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="10"/>
+            <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/>
+          </svg>
+          <h3 class="service-title">03 / Socratic Reasoning Daemon</h3>
+          <p class="service-body">
+            Interfaces with local Ollama weights (qwen2.5-coder:3b). Incomplete thoughts and rhetorical fillers are dropped before generating crisp, under-30-word counters.
+          </p>
+        </div>
+
+        <!-- Cell 4 -->
+        <div class="service-cell">
+          <svg class="service-icon" viewBox="0 0 24 24">
+            <rect x="2" y="3" width="20" height="14" rx="2"/>
+            <line x1="8" y1="21" x2="16" y2="21"/>
+            <line x1="12" y1="17" x2="12" y2="21"/>
+          </svg>
+          <h3 class="service-title">04 / Translucent HUD Overlay</h3>
+          <p class="service-body">
+            Minimalist PyQt6 card floating permanently atop your screen. Styled with dark directional lighting and Monochart audio activity meters.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="hairline-divider">
+
+  <!-- =============================================================
+       MANIFESTO TEXT BLOCK (CENTERED 600px)
+       ============================================================= -->
+  <section class="section-spacing">
+    <div class="container">
+      <div class="manifesto-block">
+        <div class="section-eyebrow">Philosophical Baseline</div>
+        <h2 class="manifesto-title">The Socratic Invariant</h2>
+        <p class="manifesto-body">
+          Debate in the digital age is saturated with rhetorical sleights of hand, bad-faith framing, and conversational derailment. Elenchus functions as an intellectual exoskeleton — silently transcribing speech, evaluating formal premises, and surfacing lethal Socratic refutations without breaking your cadence.
+        </p>
+
+        <!-- Hairline Spec Grid -->
+        <div class="specs-grid">
+          <div class="spec-item">
+            <div class="spec-val">&lt; 380 MB</div>
+            <div class="spec-label">Peak Memory</div>
+          </div>
+          <div class="spec-item">
+            <div class="spec-val">~ 550 ms</div>
+            <div class="spec-label">CPU STT Burst</div>
+          </div>
+          <div class="spec-item">
+            <div class="spec-val">0.00 %</div>
+            <div class="spec-label">Cloud Leakage</div>
+          </div>
+          <div class="spec-item">
+            <div class="spec-val">SHA-256</div>
+            <div class="spec-label">Release Digest</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="hairline-divider">
+
+  <!-- =============================================================
+       CROSS-PLATFORM DISTRIBUTION & QUICKSTART
+       ============================================================= -->
+  <section class="section-spacing" id="quickstart">
+    <div class="container">
+      <div class="section-header-block">
+        <div class="section-eyebrow">Distribution & Quick Start</div>
+        <h2 class="section-title">Deploy in one command. Zero runtime dependencies.</h2>
+      </div>
+
+      <!-- Platform Selector Tabs -->
+      <div class="platform-tabs-header">
+        <button class="platform-tab-btn active" onclick="switchPlatform('win')">Windows (x86_64)</button>
+        <button class="platform-tab-btn" onclick="switchPlatform('mac-arm')">macOS (Apple Silicon)</button>
+        <button class="platform-tab-btn" onclick="switchPlatform('mac-intel')">macOS (Intel)</button>
+        <button class="platform-tab-btn" onclick="switchPlatform('linux')">Linux (x86_64)</button>
+        <button class="platform-tab-btn" onclick="switchPlatform('dev')">Developer (uv)</button>
+      </div>
+
+      <!-- Terminal Command Card -->
+      <div class="terminal-card">
+        <div class="terminal-header">
+          <div class="terminal-title">
+            <span class="pulse-dot" style="background-color: var(--color-pulse-green);"></span>
+            <span id="platformTitle">Windows PowerShell 1-Line Installer</span>
+          </div>
+          <span style="font-family: var(--font-mono); font-size: 11px; color: var(--color-smoke);" id="artifactLabel">elenchus-windows-x86_64.exe</span>
+        </div>
+
+        <div class="terminal-content">
+          <code class="terminal-code" id="terminalCommand">
+            <span class="prompt">&gt;</span>irm https://github.com/Asifdotexe/aenf/releases/latest/download/install.ps1 | iex
+          </code>
+          <button class="copy-btn" id="copyBtn" onclick="copyCommand()">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            <span id="copyBtnText">Copy</span>
+          </button>
+        </div>
+
+        <p style="font-size: 13px; color: var(--color-smoke); margin-top: 14px;" id="platformNote">
+          Downloads standalone executable directly to <code style="color: var(--color-ash); font-size: 12px;">$env:LOCALAPPDATA\Programs\Elenchus</code>, verifies cryptographic SHA-256 release digest, and configures user PATH automatically.
+        </p>
+      </div>
+
+      <!-- Binary Artifacts Matrix Table -->
+      <div class="dist-table-wrap" id="distribution">
+        <table class="dist-table">
+          <thead>
+            <tr>
+              <th>Target Platform</th>
+              <th>Architecture</th>
+              <th>Release Artifact</th>
+              <th>Integrity</th>
+              <th>Installation Path</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Windows 10 / 11</td>
+              <td class="mono">x86_64</td>
+              <td class="mono">elenchus-windows-x86_64.exe</td>
+              <td><span class="badge-ok">SHA-256 Verified</span></td>
+              <td class="mono">%LOCALAPPDATA%\Programs\Elenchus\</td>
+            </tr>
+            <tr>
+              <td>macOS 12+ (Apple Silicon)</td>
+              <td class="mono">arm64 (M1/M2/M3/M4)</td>
+              <td class="mono">elenchus-darwin-arm64</td>
+              <td><span class="badge-ok">SHA-256 Verified</span></td>
+              <td class="mono">~/.local/bin/elenchus</td>
+            </tr>
+            <tr>
+              <td>macOS 12+ (Intel)</td>
+              <td class="mono">x86_64</td>
+              <td class="mono">elenchus-darwin-x86_64</td>
+              <td><span class="badge-ok">SHA-256 Verified</span></td>
+              <td class="mono">~/.local/bin/elenchus</td>
+            </tr>
+            <tr>
+              <td>Linux (Ubuntu, Fedora, Arch)</td>
+              <td class="mono">x86_64</td>
+              <td class="mono">elenchus-linux-x86_64</td>
+              <td><span class="badge-ok">SHA-256 Verified</span></td>
+              <td class="mono">~/.local/bin/elenchus</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <hr class="hairline-divider">
+
+  <!-- =============================================================
+       SECURITY & DEFENSIVE HARDENING SECTION
+       ============================================================= -->
+  <section class="section-spacing" id="security">
+    <div class="container">
+      <div class="security-audit-card">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 16px;">
+          <div>
+            <div class="section-eyebrow">Cloudflare Audit Skill · Completed & Verified</div>
+            <h3 style="font-size: 24px; font-weight: 400; color: var(--color-chalk);">Six-Phase Defensive Security Rigour</h3>
+          </div>
+          <span class="status-badge" style="border-color: var(--color-pulse-green); color: var(--color-pulse-green);">
+            <span class="pulse-dot"></span>
+            Zero Unresolved Leads
+          </span>
+        </div>
+
+        <div class="audit-grid">
+          <div class="audit-item">
+            <div class="audit-item-title">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              Prompt Injection Fencing
+            </div>
+            <p class="audit-item-desc">
+              All speech transcripts are bounded in <code style="color: #fafafa;">&lt;opponent_statement&gt;</code> tags. System prompt Rule 6 enforces strict instruction isolation to prevent adversarial voice overrides.
+            </p>
+          </div>
+
+          <div class="audit-item">
+            <div class="audit-item-title">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/></svg>
+              Qt PlainText Enforcement
+            </div>
+            <p class="audit-item-desc">
+              HUD label widgets explicitly enforce <code style="color: #fafafa;">Qt.TextFormat.PlainText</code>, mitigating RichText/HTML injection, UI spoofing, or layout disruption from opponent speech.
+            </p>
+          </div>
+
+          <div class="audit-item">
+            <div class="audit-item-title">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              Bounded Buffer Ceiling
+            </div>
+            <p class="audit-item-desc">
+              Manual listening mode enforces a strict 60-second capture ceiling, auto-committing speech to prevent memory bloat and CPU freezing during large array concatenation.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =============================================================
+       FOOTER / BOTTOM BAR
+       ============================================================= -->
+  <footer class="footer">
+    <div class="container footer-content">
+      <div>
+        <span style="color: var(--color-chalk); font-weight: 500;">Elenchus (ἔλεγχος)</span>
+        <span style="margin: 0 8px; color: var(--color-iron);">·</span>
+        <span>Socratic Debate Analysis & Fallacy Detection</span>
+      </div>
+
+      <div class="footer-links">
+        <a href="https://github.com/Asifdotexe/aenf/blob/master/LICENSE" target="_blank">MIT License</a>
+        <a href="https://github.com/Asifdotexe/aenf/blob/master/docs/ARCHITECTURE.md" target="_blank">Architecture Spec</a>
+        <a href="https://github.com/Asifdotexe/aenf" target="_blank">GitHub Repository ↗</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- =============================================================
+       VANILLA SCRIPT: CANVAS, SIMULATOR & PLATFORM TABS
+       ============================================================= -->
+  <script>
+    /* -------------------------------------------------------------
+       1. HERO DOT-MATRIX CONSTELLATION GRAPHIC
+       ------------------------------------------------------------- */
+    const canvas = document.getElementById('dotMatrixCanvas');
+    const ctx = canvas.getContext('2d');
+    let width, height;
+    let dots = [];
+    const spacing = 18;
+    let mouse = { x: -1000, y: -1000, radius: 120 };
+
+    function initCanvas() {
+      const rect = canvas.getBoundingClientRect();
+      width = canvas.width = rect.width;
+      height = canvas.height = rect.height;
+      dots = [];
+
+      const cols = Math.floor(width / spacing);
+      const rows = Math.floor(height / spacing);
+      const offsetX = (width - cols * spacing) / 2;
+      const offsetY = (height - rows * spacing) / 2;
+
+      for (let i = 0; i <= cols; i++) {
+        for (let j = 0; j <= rows; j++) {
+          dots.push({
+            baseX: offsetX + i * spacing,
+            baseY: offsetY + j * spacing,
+            x: offsetX + i * spacing,
+            y: offsetY + j * spacing,
+            alpha: 0.15 + (Math.sin(i * 0.3) * Math.cos(j * 0.3) * 0.1)
+          });
+        }
+      }
+    }
+
+    window.addEventListener('resize', initCanvas);
+    canvas.addEventListener('mousemove', (e) => {
+      const rect = canvas.getBoundingClientRect();
+      mouse.x = e.clientX - rect.left;
+      mouse.y = e.clientY - rect.top;
+    });
+    canvas.addEventListener('mouseleave', () => {
+      mouse.x = -1000;
+      mouse.y = -1000;
+    });
+
+    let frame = 0;
+    function animateCanvas() {
+      frame++;
+      ctx.clearRect(0, 0, width, height);
+
+      for (let i = 0; i < dots.length; i++) {
+        const dot = dots[i];
+        const dx = mouse.x - dot.x;
+        const dy = mouse.y - dot.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+
+        // Subtle ambient wave ripple
+        const wave = Math.sin(frame * 0.03 + (dot.baseX + dot.baseY) * 0.02) * 1.5;
+
+        if (dist < mouse.radius) {
+          const force = (1 - dist / mouse.radius) * 12;
+          const angle = Math.atan2(dy, dx);
+          dot.x = dot.baseX - Math.cos(angle) * force;
+          dot.y = dot.baseY - Math.sin(angle) * force + wave;
+          ctx.fillStyle = `rgba(243, 243, 243, ${0.4 + (1 - dist / mouse.radius) * 0.5})`;
+        } else {
+          dot.x += (dot.baseX - dot.x) * 0.1;
+          dot.y += (dot.baseY + wave - dot.y) * 0.1;
+          ctx.fillStyle = `rgba(156, 156, 156, ${dot.alpha})`;
+        }
+
+        ctx.beginPath();
+        ctx.arc(dot.x, dot.y, 1.2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      requestAnimationFrame(animateCanvas);
+    }
+
+    initCanvas();
+    animateCanvas();
+
+    /* -------------------------------------------------------------
+       2. INTERACTIVE HUD SIMULATOR
+       ------------------------------------------------------------- */
+    const meterEl = document.getElementById('audioMeter');
+    for (let i = 0; i < 30; i++) {
+      const bar = document.createElement('div');
+      bar.className = 'monochart-bar';
+      meterEl.appendChild(bar);
+    }
+    const bars = document.querySelectorAll('.monochart-bar');
+
+    // Idle ambient audio energy meter animation
+    setInterval(() => {
+      const baseLvl = Math.random();
+      bars.forEach((b, idx) => {
+        const heightPct = Math.max(10, Math.min(95, Math.sin(idx * 0.25) * 40 + baseLvl * 50));
+        b.style.height = heightPct + '%';
+        if (heightPct > 45) {
+          b.classList.add('active');
+        } else {
+          b.classList.remove('active');
+        }
+      });
+    }, 120);
+
+    const presets = {
+      strawman: {
+        text: 'My opponent wants to ban all medicine because a single trial had side effects!',
+        flaw: 'Straw Man Argument',
+        tag: 'Finding',
+        counter: 'I never advocated banning medicine; I proposed targeted regulatory oversight for specific clinical phases.',
+        latency: '0.6s'
+      },
+      adhominem: {
+        text: 'Why should we listen to his economic plan when he doesn\'t even have a finance degree?',
+        flaw: 'Ad Hominem',
+        tag: 'Finding',
+        counter: 'My credentials do not invalidate the empirical data; address the budget projections directly.',
+        latency: '0.7s'
+      },
+      falsedilemma: {
+        text: 'Either we shut down all fossil plants tomorrow, or humanity goes extinct next decade.',
+        flaw: 'False Dilemma (Black-and-White Fallacy)',
+        tag: 'Finding',
+        counter: 'Energy transitions are phased; gradual grid decarbonization exists alongside immediate sustainability measures.',
+        latency: '0.8s'
+      },
+      valid: {
+        text: 'Public transit investments lower per-capita emissions and reduce highway maintenance costs.',
+        flaw: 'None (Valid claim)',
+        tag: 'Note',
+        counter: 'Claim is logically coherent. Probe whether municipal funding structures can support operating deficits.',
+        latency: '0.5s'
+      }
+    };
+
+    function loadPreset(key) {
+      document.querySelectorAll('.preset-btn').forEach(btn => btn.classList.remove('active'));
+      event.currentTarget.classList.add('active');
+      const item = presets[key];
+      document.getElementById('customInput').value = '';
+      applySimulation(item);
+    }
+
+    function runSimulation() {
+      const input = document.getElementById('customInput').value.trim();
+      if (!input) return;
+
+      // Simulated Socratic inference for custom input
+      const customItem = {
+        text: input,
+        flaw: input.length < 20 ? 'Incomplete / Truncated Argument' : 'Rhetorical Scrutiny Target',
+        tag: input.length < 20 ? 'Note' : 'Finding',
+        counter: input.length < 20
+          ? 'Premise is insufficient to form an inferred conclusion.'
+          : 'What evidence demonstrates that this causal relationship holds under counter-examples?',
+        latency: '0.7s'
+      };
+      applySimulation(customItem);
+    }
+
+    function applySimulation(data) {
+      const statusLed = document.getElementById('hudStatusDot');
+      const statusMsg = document.getElementById('hudStatusMsg');
+      const actionText = document.getElementById('hudActionText');
+
+      // Busy state
+      statusLed.style.backgroundColor = '#f59e0b';
+      statusMsg.textContent = 'Analyzing rhetorical flaws...';
+      actionText.innerHTML = '<span style="color:#f59e0b">Processing speech...</span>';
+
+      setTimeout(() => {
+        document.getElementById('hudTranscript').textContent = `"${data.text}"`;
+        document.getElementById('hudFlaw').textContent = data.flaw;
+        document.getElementById('hudFlaw').style.color = data.tag === 'Note' ? '#a1a1aa' : '#fca5a5';
+        document.getElementById('hudTag').textContent = data.tag;
+        document.getElementById('hudCounter').textContent = data.counter;
+        document.getElementById('hudLatency').textContent = `${data.latency} latency`;
+
+        statusLed.style.backgroundColor = '#10b981';
+        statusMsg.textContent = 'Ready';
+        actionText.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/></svg> Listen (Click or Space)';
+      }, 350);
+    }
+
+    /* -------------------------------------------------------------
+       3. CROSS-PLATFORM TABS
+       ------------------------------------------------------------- */
+    const platforms = {
+      'win': {
+        title: 'Windows PowerShell 1-Line Installer',
+        cmd: 'irm https://github.com/Asifdotexe/aenf/releases/latest/download/install.ps1 | iex',
+        artifact: 'elenchus-windows-x86_64.exe',
+        note: 'Downloads standalone executable directly to $env:LOCALAPPDATA\\Programs\\Elenchus, verifies cryptographic SHA-256 release digest, and configures user PATH automatically.'
+      },
+      'mac-arm': {
+        title: 'macOS Apple Silicon (M1/M2/M3/M4) 1-Line Installer',
+        cmd: 'curl -fsSL https://github.com/Asifdotexe/aenf/releases/latest/download/install.sh | bash',
+        artifact: 'elenchus-darwin-arm64',
+        note: 'Downloads native ARM64 binary into ~/.local/bin/elenchus, performs SHA-256 digest validation, and marks executable.'
+      },
+      'mac-intel': {
+        title: 'macOS Intel (x86_64) 1-Line Installer',
+        cmd: 'curl -fsSL https://github.com/Asifdotexe/aenf/releases/latest/download/install.sh | bash',
+        artifact: 'elenchus-darwin-x86_64',
+        note: 'Downloads native x86_64 binary into ~/.local/bin/elenchus with SHA-256 verification.'
+      },
+      'linux': {
+        title: 'Linux (Ubuntu / Debian / Fedora / Arch) 1-Line Installer',
+        cmd: 'curl -fsSL https://github.com/Asifdotexe/aenf/releases/latest/download/install.sh | bash',
+        artifact: 'elenchus-linux-x86_64',
+        note: 'Downloads precompiled Linux binary into ~/.local/bin/elenchus, verifies SHA-256 checksum against release digest, and configures executable permissions.'
+      },
+      'dev': {
+        title: 'Developer Source Installation (Python 3.12 + Astral uv)',
+        cmd: 'git clone https://github.com/Asifdotexe/aenf.git && cd aenf && uv run elenchus',
+        artifact: 'uv pyproject.toml',
+        note: 'Full Python development setup with PyQt6, faster-whisper, and automated virtual environment resolution via uv.'
+      }
+    };
+
+    let currentCmd = platforms['win'].cmd;
+
+    function switchPlatform(key) {
+      document.querySelectorAll('.platform-tab-btn').forEach(btn => btn.classList.remove('active'));
+      event.currentTarget.classList.add('active');
+      const p = platforms[key];
+      currentCmd = p.cmd;
+      document.getElementById('platformTitle').textContent = p.title;
+      document.getElementById('artifactLabel').textContent = p.artifact;
+      document.getElementById('terminalCommand').innerHTML = `<span class="prompt">&gt;</span>${p.cmd}`;
+      document.getElementById('platformNote').innerHTML = p.note;
+    }
+
+    function copyCommand() {
+      navigator.clipboard.writeText(currentCmd).then(() => {
+        const btnText = document.getElementById('copyBtnText');
+        btnText.textContent = 'Copied!';
+        setTimeout(() => {
+          btnText.textContent = 'Copy';
+        }, 2000);
+      });
+    }
+  </script>
+</body>
+</html>
