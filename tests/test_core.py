@@ -1,6 +1,7 @@
 """Unit tests for Elenchus core components."""
 
 import unittest
+from unittest.mock import patch
 
 import numpy as np
 
@@ -222,6 +223,28 @@ class TestElenchusOverlay(unittest.TestCase):
         overlay = ElenchusOverlay(cfg, pipeline)
         self.assertEqual(overlay.title_label.text(), "elenchus")
         overlay.close()
+
+
+class TestEnsureOllamaService(unittest.TestCase):
+    def test_ensure_ollama_not_installed_mock(self):
+        from core.llm_client import ensure_ollama_service
+
+        with patch("core.llm_client._http_json", side_effect=Exception("Connection refused")):
+            with patch("shutil.which", return_value=None):
+                avail, msg = ensure_ollama_service(url="http://localhost:11434")
+                self.assertFalse(avail)
+                self.assertIn("Ollama not installed", msg)
+
+    def test_ensure_ollama_running_mock(self):
+        from core.llm_client import ensure_ollama_service
+
+        fake_tags = {"models": [{"name": "qwen2.5-coder:3b"}]}
+        with patch("core.llm_client._http_json", return_value=fake_tags):
+            avail, msg = ensure_ollama_service(
+                url="http://localhost:11434", target_model="qwen2.5-coder:3b"
+            )
+            self.assertTrue(avail)
+            self.assertIn("Ollama connected", msg)
 
 
 if __name__ == "__main__":

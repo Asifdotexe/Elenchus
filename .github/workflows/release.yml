@@ -1,0 +1,96 @@
+name: Release Binaries
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+permissions:
+  contents: write
+
+jobs:
+  build-binaries:
+    name: Build ${{ matrix.target }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            target: windows-x86_64
+            binary_src: dist/elenchus.exe
+            binary_dest: elenchus-windows-x86_64.exe
+          - os: ubuntu-22.04
+            target: linux-x86_64
+            binary_src: dist/elenchus
+            binary_dest: elenchus-linux-x86_64
+          - os: macos-14
+            target: darwin-arm64
+            binary_src: dist/elenchus
+            binary_dest: elenchus-darwin-arm64
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Linux system dependencies
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libportaudio2 \
+            libasound2-dev \
+            libegl1 \
+            libgl1 \
+            libxkbcommon-x11-0 \
+            libxcb-cursor0 \
+            libxcb-icccm4 \
+            libxcb-image0 \
+            libxcb-keysyms1 \
+            libxcb-randr0 \
+            libxcb-render-util0 \
+            libxcb-shape0 \
+            libxcb-xfixes0 \
+            libxcb-xinerama0
+
+      - name: Install macOS audio dependencies
+        if: runner.os == 'macOS'
+        run: |
+          brew install portaudio
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+          python-version: "3.12"
+
+      - name: Sync dependencies and install PyInstaller
+        run: |
+          uv sync
+          uv pip install "pyinstaller>=6.10.0"
+
+      - name: Build standalone executable
+        run: uv run python packaging/build.py
+
+      - name: Rename and prepare release artifact (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          Copy-Item "${{ matrix.binary_src }}" "${{ matrix.binary_dest }}"
+          Get-FileHash "${{ matrix.binary_dest }}" -Algorithm SHA256 | Out-File "${{ matrix.binary_dest }}.sha256"
+
+      - name: Rename and prepare release artifact (Unix)
+        if: runner.os != 'Windows'
+        run: |
+          cp "${{ matrix.binary_src }}" "${{ matrix.binary_dest }}"
+          chmod +x "${{ matrix.binary_dest }}"
+          shasum -a 256 "${{ matrix.binary_dest }}" > "${{ matrix.binary_dest }}.sha256"
+
+      - name: Upload binaries to GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            ${{ matrix.binary_dest }}
+            ${{ matrix.binary_dest }}.sha256
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

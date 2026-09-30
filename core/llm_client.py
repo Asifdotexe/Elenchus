@@ -3,12 +3,70 @@
 import json
 import logging
 import re
+import shutil
+import subprocess
+import sys
+import time
 import urllib.error
 import urllib.request
 
 from config import Config
 
 logger = logging.getLogger(__name__)
+
+
+def ensure_ollama_service(
+    url: str = "http://localhost:11434", target_model: str = "qwen2.5-coder:3b"
+) -> tuple[bool, str]:
+    """Verify Ollama daemon is active; if down and ollama binary is installed, spawn it.
+
+    :param url: Ollama base URL.
+    :param target_model: Name of the expected reasoning model.
+    :return: Tuple of (is_available_flag, status_or_error_message).
+    """
+    clean_url = url.rstrip("/")
+    try:
+        data = _http_json(f"{clean_url}/api/tags", timeout=1.5)
+        models = [m.get("name", "") for m in data.get("models", [])]
+        has_model = any(
+            target_model in m or m.startswith(target_model.split(":")[0]) for m in models
+        )
+        if has_model:
+            return True, f"Ollama connected ({target_model})"
+        return True, f"Ollama connected (model {target_model} missing)"
+    except Exception:
+        pass
+
+    ollama_bin = shutil.which("ollama")
+    if not ollama_bin:
+        return False, "Ollama not installed. Download from https://ollama.com"
+
+    logger.info("Ollama daemon offline. Launching background 'ollama serve' via %s...", ollama_bin)
+    try:
+        popen_kwargs: dict = {
+            "stdout": subprocess.DEVNULL,
+            "stderr": subprocess.DEVNULL,
+        }
+        if sys.platform == "win32":
+            popen_kwargs["creationflags"] = getattr(subprocess, "CREATE_NO_WINDOW", 0x08000000)
+        else:
+            popen_kwargs["start_new_session"] = True
+
+        subprocess.Popen([ollama_bin, "serve"], **popen_kwargs)
+
+        for _ in range(8):
+            time.sleep(0.4)
+            try:
+                _http_json(f"{clean_url}/api/tags", timeout=1.0)
+                logger.info("Ollama daemon successfully started and responding.")
+                return True, "Ollama daemon started automatically"
+            except Exception:
+                pass
+
+        return True, "Ollama daemon launched (starting in background...)"
+    except Exception as e:
+        logger.warning("Failed to auto-spawn Ollama daemon: %s", e)
+        return False, f"Failed to start Ollama: {e}"
 
 
 def _http_json(url: str, payload: dict | None = None, timeout: float = 10.0) -> dict:
@@ -93,6 +151,9 @@ class OllamaClient:
         self.config = config
         self.generate_url = f"{config.ollama_url.rstrip('/')}/api/generate"
         self.tags_url = f"{config.ollama_url.rstrip('/')}/api/tags"
+        self.is_available, self.service_status = ensure_ollama_service(
+            config.ollama_url, config.ollama_model
+        )
         self.model = self._resolve_model()
 
     def _resolve_model(self) -> str:
@@ -186,9 +247,10 @@ class OllamaClient:
             )
         except urllib.error.URLError as e:
             logger.error("Ollama connection failed at %s: %s", self.config.ollama_url, e)
+            avail, status_msg = ensure_ollama_service(self.config.ollama_url, self.model)
             return (
                 "Ollama Offline",
-                f"Start Ollama service. Command: ollama run {self.model}",
+                status_msg if not avail else f"Reconnecting: {status_msg}",
             )
         except Exception as e:
             logger.error("Error analyzing transcript with Ollama: %s", e)
