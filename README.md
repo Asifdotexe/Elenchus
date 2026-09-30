@@ -105,5 +105,5 @@ Run integration tests (requires local Ollama service):
 ```bash
 uv run python -m unittest tests/test_integration.py
 ```
-
-For system specifications and version planning, refer to [BLUEPRINT.md](BLUEPRINT.md).
+For milestone release tracking, refer to [docs/BLUEPRINT.md](docs/BLUEPRINT.md).
+For permanent system design and threading specifications, refer to [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
