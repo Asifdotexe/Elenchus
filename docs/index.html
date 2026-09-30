@@ -293,90 +293,172 @@
     }
 
     /* -------------------------------------------------------------
-       HERO SECTION
+       HERO SECTION (Centered layout with ASCII Creation of Adam hands)
        ------------------------------------------------------------- */
     .hero-section {
       padding-top: 100px;
-      padding-bottom: 80px;
+      padding-bottom: 40px;
       position: relative;
+      text-align: center;
+      overflow: hidden;
+      background: radial-gradient(circle at 50% 20%, rgba(255, 255, 255, 0.02) 0%, transparent 70%);
     }
 
     .hero-content {
       display: flex;
       flex-direction: column;
-      align-items: flex-start;
-      gap: 28px;
+      align-items: center;
+      text-align: center;
+      gap: 20px;
       max-width: 900px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 2;
     }
 
     .hero-headline {
-      font-size: var(--text-display);
+      font-size: 72px;
       font-weight: 400;
-      line-height: 1.05;
-      letter-spacing: -0.69px;
+      line-height: 1.02;
+      letter-spacing: -1.4px;
       color: var(--color-chalk);
+      margin: 0;
       text-wrap: balance;
     }
 
     @media (max-width: 768px) {
       .hero-headline {
-        font-size: 42px;
-        letter-spacing: -0.3px;
+        font-size: 46px;
+        letter-spacing: -0.8px;
       }
     }
 
-    .hero-subheading {
+    .hero-tagline {
       font-size: var(--text-subheading);
       font-weight: 400;
       line-height: 1.35;
       color: var(--color-smoke);
-      max-width: 760px;
+      max-width: 680px;
+      margin: 0 auto;
+      letter-spacing: -0.2px;
     }
 
     @media (max-width: 768px) {
-      .hero-subheading {
-        font-size: 18px;
+      .hero-tagline {
+        font-size: 17px;
       }
     }
 
     .hero-actions {
       display: flex;
       align-items: center;
+      justify-content: center;
       gap: 16px;
-      margin-top: 8px;
+      margin-top: 10px;
       flex-wrap: wrap;
     }
 
-    /* Dot-Matrix World / Constellation Canvas Graphic */
-    .hero-canvas-container {
-      margin-top: 50px;
-      width: 100%;
-      height: 240px;
-      position: relative;
+    .btn-pill-ghost {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background-color: #181818;
+      color: var(--color-smoke);
       border: 1px solid var(--color-graphite);
-      border-radius: var(--radius-cards);
-      overflow: hidden;
-      background-color: var(--color-carbon);
+      border-radius: var(--radius-buttons);
+      padding: 12px 24px;
+      font-size: 14px;
+      font-weight: 400;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+      cursor: pointer;
+      transition: border-color 0.15s ease, background-color 0.15s ease, color 0.15s ease;
+      white-space: nowrap;
     }
 
-    #dotMatrixCanvas {
+    .btn-pill-ghost:hover {
+      border-color: var(--color-ash);
+      color: var(--color-chalk);
+      background-color: #222222;
+    }
+
+    /* ASCII Hands Artwork Presentation */
+    .hero-hands-wrapper {
+      position: relative;
+      width: 100%;
+      max-width: 1200px;
+      margin: 48px auto 0 auto;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      user-select: none;
+    }
+
+    .hero-hands-img {
+      width: 100%;
+      height: auto;
+      display: block;
+      object-fit: contain;
+      filter: contrast(1.05) brightness(1.0);
+      transition: filter 0.4s ease;
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero-hands-wrapper:hover .hero-hands-img {
+      filter: contrast(1.12) brightness(1.06);
+    }
+
+    #handsCanvas {
+      position: absolute;
+      top: 0;
+      left: 0;
       width: 100%;
       height: 100%;
-      display: block;
+      z-index: 1;
+      pointer-events: none;
     }
 
-    .canvas-caption {
+    /* Socratic Nexus Spark between the reaching fingertips */
+    .hands-nexus-spark {
       position: absolute;
-      bottom: 12px;
-      left: 16px;
-      font-size: 11px;
-      font-family: var(--font-mono);
-      color: var(--color-smoke);
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-      display: flex;
-      align-items: center;
-      gap: 8px;
+      top: 59%;
+      left: 49.8%;
+      transform: translate(-50%, -50%);
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: var(--color-compass-gold);
+      box-shadow: 0 0 16px 4px rgba(111, 103, 89, 0.7), 0 0 32px 10px rgba(243, 243, 243, 0.25);
+      animation: nexus-pulse 3s infinite ease-in-out;
+      pointer-events: none;
+      z-index: 3;
+    }
+
+    .hands-nexus-spark::after {
+      content: '✦';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 13px;
+      color: #ffffff;
+      opacity: 0.85;
+      text-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
+    }
+
+    @keyframes nexus-pulse {
+      0%, 100% {
+        transform: translate(-50%, -50%) scale(0.9);
+        opacity: 0.6;
+      }
+      50% {
+        transform: translate(-50%, -50%) scale(1.35);
+        opacity: 1;
+        box-shadow: 0 0 24px 8px rgba(111, 103, 89, 0.95), 0 0 44px 14px rgba(243, 243, 243, 0.45);
+      }
     }
 
     /* -------------------------------------------------------------
@@ -1052,30 +1134,33 @@
       <div class="hero-content">
         <div class="status-badge">
           <span class="pulse-dot"></span>
-          <span>v1.0.0 Stable · Standalone Binaries & Security Audited</span>
+          <span>v1.0.0 Stable · Standalone Binaries &amp; Security Audited</span>
         </div>
 
         <h1 class="hero-headline">
-          Socratic refutation engine for live debate.
+          Elenchus
         </h1>
 
-        <p class="hero-subheading">
-          Real-time logical fallacy detection and rhetorical counter-analysis, rendered directly over your screen from local whisper and ollama.
+        <p class="hero-tagline">
+          Real-time Socratic debate analysis and fallacy detection engine.
         </p>
 
         <div class="hero-actions">
-          <a href="#quickstart" class="btn-pill">Download & Run ↗</a>
-          <a href="#simulator" class="btn-ghost">Try HUD Simulator ↗</a>
+          <a href="#quickstart" class="btn-pill">START NOW ↗</a>
+          <a href="#simulator" class="btn-pill-ghost">VIEW HUD ↓</a>
         </div>
       </div>
 
-      <!-- Dot-Matrix Constellation Canvas Visual -->
-      <div class="hero-canvas-container">
-        <canvas id="dotMatrixCanvas"></canvas>
-        <div class="canvas-caption">
-          <span class="pulse-dot" style="background-color: var(--color-compass-gold); box-shadow: none;"></span>
-          <span>Local Signal Fabric · Continuous Audio Ingestion & Tensor Graph</span>
-        </div>
+      <!-- ASCII Creation of Adam Hands Artwork -->
+      <div class="hero-hands-wrapper" id="heroHandsContainer">
+        <canvas id="handsCanvas"></canvas>
+        <picture>
+          <source media="(max-width: 767px)" srcset="assets/hero-hands-mobile.webp" type="image/webp">
+          <source media="(max-width: 767px)" srcset="assets/hero-hands-mobile.png" type="image/png">
+          <source srcset="assets/hero-hands.webp" type="image/webp">
+          <img src="assets/hero-hands.png" alt="ASCII art of Creation of Adam hands reaching towards each other" class="hero-hands-img" loading="eager" fetchpriority="high">
+        </picture>
+        <div class="hands-nexus-spark" title="Socratic Invariant Spark"></div>
       </div>
     </div>
   </section>
@@ -1453,85 +1538,112 @@
        ============================================================= -->
   <script>
     /* -------------------------------------------------------------
-       1. HERO DOT-MATRIX CONSTELLATION GRAPHIC
+       1. HERO ASCII HANDS AMBIENT & INTERACTIVE PARTICLE CANVAS
        ------------------------------------------------------------- */
-    const canvas = document.getElementById('dotMatrixCanvas');
-    const ctx = canvas.getContext('2d');
-    let width, height;
-    let dots = [];
-    const spacing = 18;
-    let mouse = { x: -1000, y: -1000, radius: 120 };
+    const handsContainer = document.getElementById('heroHandsContainer');
+    const handsCanvas = document.getElementById('handsCanvas');
+    const handsCtx = handsCanvas ? handsCanvas.getContext('2d') : null;
+    let canvasW, canvasH;
+    let particles = [];
+    let handsMouse = { x: -1000, y: -1000, active: false };
 
-    function initCanvas() {
-      const rect = canvas.getBoundingClientRect();
-      width = canvas.width = rect.width;
-      height = canvas.height = rect.height;
-      dots = [];
+    function initHandsCanvas() {
+      if (!handsContainer || !handsCanvas || !handsCtx) return;
+      const rect = handsContainer.getBoundingClientRect();
+      canvasW = handsCanvas.width = rect.width;
+      canvasH = handsCanvas.height = rect.height;
+      particles = [];
 
-      const cols = Math.floor(width / spacing);
-      const rows = Math.floor(height / spacing);
-      const offsetX = (width - cols * spacing) / 2;
-      const offsetY = (height - rows * spacing) / 2;
-
-      for (let i = 0; i <= cols; i++) {
-        for (let j = 0; j <= rows; j++) {
-          dots.push({
-            baseX: offsetX + i * spacing,
-            baseY: offsetY + j * spacing,
-            x: offsetX + i * spacing,
-            y: offsetY + j * spacing,
-            alpha: 0.15 + (Math.sin(i * 0.3) * Math.cos(j * 0.3) * 0.1)
-          });
-        }
+      // Create ambient floating micro-dots around the hands
+      const count = Math.min(80, Math.floor(canvasW / 18));
+      for (let i = 0; i < count; i++) {
+        particles.push({
+          x: Math.random() * canvasW,
+          y: Math.random() * canvasH,
+          vx: (Math.random() - 0.5) * 0.35,
+          vy: (Math.random() - 0.5) * 0.35,
+          size: Math.random() * 1.4 + 0.6,
+          alpha: Math.random() * 0.35 + 0.08,
+          isGold: Math.random() > 0.75
+        });
       }
     }
 
-    window.addEventListener('resize', initCanvas);
-    canvas.addEventListener('mousemove', (e) => {
-      const rect = canvas.getBoundingClientRect();
-      mouse.x = e.clientX - rect.left;
-      mouse.y = e.clientY - rect.top;
-    });
-    canvas.addEventListener('mouseleave', () => {
-      mouse.x = -1000;
-      mouse.y = -1000;
-    });
+    if (handsContainer && handsCanvas) {
+      window.addEventListener('resize', initHandsCanvas);
+      handsContainer.addEventListener('mousemove', (e) => {
+        const rect = handsContainer.getBoundingClientRect();
+        handsMouse.x = e.clientX - rect.left;
+        handsMouse.y = e.clientY - rect.top;
+        handsMouse.active = true;
+      });
+      handsContainer.addEventListener('mouseleave', () => {
+        handsMouse.x = -1000;
+        handsMouse.y = -1000;
+        handsMouse.active = false;
+      });
 
-    let frame = 0;
-    function animateCanvas() {
-      frame++;
-      ctx.clearRect(0, 0, width, height);
+      let handsFrame = 0;
+      function animateHandsCanvas() {
+        handsFrame++;
+        handsCtx.clearRect(0, 0, canvasW, canvasH);
 
-      for (let i = 0; i < dots.length; i++) {
-        const dot = dots[i];
-        const dx = mouse.x - dot.x;
-        const dy = mouse.y - dot.y;
-        const dist = Math.sqrt(dx * dx + dy * dy);
+        // Nexus coordinates between pointing index fingers (49.8% x, 59% y)
+        const nexusX = canvasW * 0.498;
+        const nexusY = canvasH * 0.59;
 
-        // Subtle ambient wave ripple
-        const wave = Math.sin(frame * 0.03 + (dot.baseX + dot.baseY) * 0.02) * 1.5;
+        // Subtle ambient aura around the nexus
+        const pulse = Math.sin(handsFrame * 0.04) * 0.25 + 0.75;
+        const aura = handsCtx.createRadialGradient(nexusX, nexusY, 1, nexusX, nexusY, 40 * pulse);
+        aura.addColorStop(0, 'rgba(111, 103, 89, 0.35)');
+        aura.addColorStop(0.5, 'rgba(111, 103, 89, 0.08)');
+        aura.addColorStop(1, 'rgba(0, 0, 0, 0)');
+        handsCtx.fillStyle = aura;
+        handsCtx.beginPath();
+        handsCtx.arc(nexusX, nexusY, 40 * pulse, 0, Math.PI * 2);
+        handsCtx.fill();
 
-        if (dist < mouse.radius) {
-          const force = (1 - dist / mouse.radius) * 12;
-          const angle = Math.atan2(dy, dx);
-          dot.x = dot.baseX - Math.cos(angle) * force;
-          dot.y = dot.baseY - Math.sin(angle) * force + wave;
-          ctx.fillStyle = `rgba(243, 243, 243, ${0.4 + (1 - dist / mouse.radius) * 0.5})`;
-        } else {
-          dot.x += (dot.baseX - dot.x) * 0.1;
-          dot.y += (dot.baseY + wave - dot.y) * 0.1;
-          ctx.fillStyle = `rgba(156, 156, 156, ${dot.alpha})`;
+        // Particles
+        for (let i = 0; i < particles.length; i++) {
+          const p = particles[i];
+          p.x += p.vx;
+          p.y += p.vy;
+
+          if (p.x < 0) p.x = canvasW;
+          if (p.x > canvasW) p.x = 0;
+          if (p.y < 0) p.y = canvasH;
+          if (p.y > canvasH) p.y = 0;
+
+          if (handsMouse.active) {
+            const dx = handsMouse.x - p.x;
+            const dy = handsMouse.y - p.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < 110) {
+              const angle = Math.atan2(dy, dx);
+              p.x -= Math.cos(angle) * 1.8;
+              p.y -= Math.sin(angle) * 1.8;
+            }
+          }
+
+          handsCtx.fillStyle = p.isGold
+            ? `rgba(111, 103, 89, ${p.alpha})`
+            : `rgba(243, 243, 243, ${p.alpha})`;
+
+          handsCtx.beginPath();
+          handsCtx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+          handsCtx.fill();
         }
 
-        ctx.beginPath();
-        ctx.arc(dot.x, dot.y, 1.2, 0, Math.PI * 2);
-        ctx.fill();
+        requestAnimationFrame(animateHandsCanvas);
       }
-      requestAnimationFrame(animateCanvas);
-    }
 
-    initCanvas();
-    animateCanvas();
+      window.addEventListener('load', () => {
+        initHandsCanvas();
+        animateHandsCanvas();
+      });
+      initHandsCanvas();
+      animateHandsCanvas();
+    }
 
     /* -------------------------------------------------------------
        2. INTERACTIVE HUD SIMULATOR
