@@ -1,6 +1,6 @@
-"""PyQt6 Heads-Up Display (HUD) overlay for aenf."""
+"""PyQt6 Heads-Up Display (HUD) overlay for Elenchus (ἔλεγχος)."""
 
-from PyQt6.QtCore import QPoint, Qt
+from PyQt6.QtCore import QPoint, QSize, Qt
 from PyQt6.QtGui import QColor, QKeyEvent, QMouseEvent
 from PyQt6.QtWidgets import (
     QApplication,
@@ -8,7 +8,6 @@ from PyQt6.QtWidgets import (
     QGraphicsDropShadowEffect,
     QHBoxLayout,
     QLabel,
-    QProgressBar,
     QPushButton,
     QVBoxLayout,
     QWidget,
@@ -16,10 +15,12 @@ from PyQt6.QtWidgets import (
 
 from config import Config
 from core.pipeline import PipelineWorker
+from ui.icons import get_icon, get_pixmap
+from ui.waveform import MonochartMeter
 
 
-class AenfOverlay(QWidget):
-    """Draggable, frameless, translucent HUD overlay displaying live debate rebuttals."""
+class ElenchusOverlay(QWidget):
+    """Draggable, frameless, minimal HUD overlay displaying Socratic debate refutations."""
 
     def __init__(self, config: Config, pipeline: PipelineWorker):
         """Initialize the HUD overlay window and widgets.
@@ -51,22 +52,22 @@ class AenfOverlay(QWidget):
         self.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
 
     def _build_ui(self) -> None:
-        """Construct dark glassmorphic card interface."""
+        """Construct ShadCN-inspired dark interface with Lucide icons and Monochart meters."""
         self.outer_layout = QVBoxLayout(self)
         self.outer_layout.setContentsMargins(12, 12, 12, 12)
 
-        # Glass container frame
+        # Primary card container with directional top-down lighting
         self.card = QFrame()
         self.card.setObjectName("HUDCard")
         self.card.setStyleSheet("""
             QFrame#HUDCard {
-                background-color: rgba(18, 18, 24, 0.93);
-                border: 1px solid rgba(255, 255, 255, 0.14);
+                background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #151518, stop:1 #0c0c0e);
+                border: 1px solid rgba(255, 255, 255, 0.08);
                 border-radius: 12px;
             }
         """)
 
-        # Drop shadow
+        # Soft diffused drop shadow
         shadow = QGraphicsDropShadowEffect(self)
         shadow.setBlurRadius(24)
         shadow.setColor(QColor(0, 0, 0, 180))
@@ -74,89 +75,96 @@ class AenfOverlay(QWidget):
         self.card.setGraphicsEffect(shadow)
 
         self.card_layout = QVBoxLayout(self.card)
-        self.card_layout.setContentsMargins(16, 12, 16, 14)
-        self.card_layout.setSpacing(10)
+        self.card_layout.setContentsMargins(16, 14, 16, 16)
+        self.card_layout.setSpacing(12)
 
+        # -------------------------------------------------------------
         # 1. Header Bar
+        # -------------------------------------------------------------
         header_layout = QHBoxLayout()
         header_layout.setSpacing(8)
 
         self.status_dot = QLabel("●")
         self.status_dot.setObjectName("StatusDot")
-        self.status_dot.setStyleSheet("color: #00FFA3; font-size: 11px;")
+        self.status_dot.setStyleSheet("color: #10b981; font-size: 8px;")
         header_layout.addWidget(self.status_dot)
 
-        title_label = QLabel("aenf // HUD")
-        title_label.setStyleSheet(
-            "color: #FFFFFF; font-weight: bold; font-size: 13px; font-family: 'Segoe UI', sans-serif; letter-spacing: 0.5px;"
+        self.title_label = QLabel("elenchus")
+        self.title_label.setStyleSheet(
+            "color: #fafafa; font-weight: 600; font-size: 13px; "
+            "font-family: 'Inter', -apple-system, 'Segoe UI Variable Text', 'Segoe UI', sans-serif; "
+            "letter-spacing: -0.01em;"
         )
-        header_layout.addWidget(title_label)
+        header_layout.addWidget(self.title_label)
 
         header_layout.addStretch()
 
-        # Mode switch button (Manual vs Auto VAD)
-        self.mode_btn = QPushButton("Manual" if self.manual_mode else "Auto VAD")
-        self.mode_btn.setToolTip("Click to toggle Manual Button vs Auto Silence-detection")
+        # Latency badge pill
+        self.latency_label = QLabel("")
+        self.latency_label.setStyleSheet(
+            "color: #71717a; font-size: 10px; font-weight: 500; font-family: monospace; "
+            "background-color: rgba(255, 255, 255, 0.04); padding: 2px 6px; border-radius: 4px;"
+        )
+        header_layout.addWidget(self.latency_label)
+
+        # Mode toggle button with Lucide sliders icon
+        self.mode_btn = QPushButton("Manual" if self.manual_mode else "Auto")
+        self.mode_btn.setIcon(get_icon("sliders", color="#a1a1aa", size=13))
+        self.mode_btn.setIconSize(QSize(13, 13))
+        self.mode_btn.setToolTip("Toggle Manual Push-to-Listen vs Continuous Auto VAD")
         self.mode_btn.setCursor(Qt.CursorShape.PointingHandCursor)
         self.mode_btn.setStyleSheet("""
             QPushButton {
-                background: rgba(255, 255, 255, 0.08);
-                color: #A0A0C0;
-                border: 1px solid rgba(255, 255, 255, 0.12);
-                border-radius: 4px;
-                padding: 2px 7px;
-                font-size: 10px;
-                font-weight: 600;
+                background-color: #18181b;
+                color: #a1a1aa;
+                border: 1px solid #27272a;
+                border-radius: 5px;
+                padding: 3px 8px;
+                font-size: 11px;
+                font-weight: 500;
             }
             QPushButton:hover {
-                background: rgba(255, 255, 255, 0.18);
-                color: #FFFFFF;
+                background-color: #27272a;
+                color: #fafafa;
+                border-color: #3f3f46;
             }
         """)
         self.mode_btn.clicked.connect(self._toggle_mode)
         header_layout.addWidget(self.mode_btn)
 
-        # Latency badge
-        self.latency_label = QLabel("")
-        self.latency_label.setStyleSheet("color: #7986CB; font-size: 11px; font-weight: bold;")
-        header_layout.addWidget(self.latency_label)
-
-        # Minimize / Collapse Button
-        self.collapse_btn = QPushButton("—")
+        # Collapse Button with Lucide minus icon
+        self.collapse_btn = QPushButton()
+        self.collapse_btn.setIcon(get_icon("minus", color="#71717a", size=13))
+        self.collapse_btn.setIconSize(QSize(13, 13))
         self.collapse_btn.setFixedSize(22, 22)
         self.collapse_btn.setCursor(Qt.CursorShape.PointingHandCursor)
         self.collapse_btn.setStyleSheet("""
             QPushButton {
-                background: rgba(255, 255, 255, 0.08);
-                color: #B0B0C0;
+                background: transparent;
                 border: none;
                 border-radius: 4px;
-                font-weight: bold;
-                font-size: 11px;
             }
             QPushButton:hover {
-                background: rgba(255, 255, 255, 0.18);
-                color: #FFFFFF;
+                background-color: #27272a;
             }
         """)
         self.collapse_btn.clicked.connect(self._toggle_collapse)
         header_layout.addWidget(self.collapse_btn)
 
-        # Close Button
-        self.close_btn = QPushButton("✕")
+        # Close Button with Lucide X icon
+        self.close_btn = QPushButton()
+        self.close_btn.setIcon(get_icon("x", color="#71717a", size=13))
+        self.close_btn.setIconSize(QSize(13, 13))
         self.close_btn.setFixedSize(22, 22)
         self.close_btn.setCursor(Qt.CursorShape.PointingHandCursor)
         self.close_btn.setStyleSheet("""
             QPushButton {
-                background: rgba(255, 75, 75, 0.15);
-                color: #FF7070;
+                background: transparent;
                 border: none;
                 border-radius: 4px;
-                font-size: 11px;
             }
             QPushButton:hover {
-                background: rgba(255, 75, 75, 0.35);
-                color: #FFFFFF;
+                background-color: #27272a;
             }
         """)
         self.close_btn.clicked.connect(self.close)
@@ -164,147 +172,171 @@ class AenfOverlay(QWidget):
 
         self.card_layout.addLayout(header_layout)
 
-        # 2. Main Action Button (Wake / Listen / Cut & Analyze)
-        self.action_btn = QPushButton("🎙️  Start Listening")
-        self.action_btn.setFixedHeight(34)
+        # -------------------------------------------------------------
+        # 2. Main Action Button & Monochart Audio Level Meter
+        # -------------------------------------------------------------
+        self.action_btn = QPushButton()
+        self.action_btn.setFixedHeight(36)
         self.action_btn.setCursor(Qt.CursorShape.PointingHandCursor)
         self._apply_idle_button_style()
         self.action_btn.clicked.connect(self._on_action_button_clicked)
         self.card_layout.addWidget(self.action_btn)
 
-        # Status text below action button
-        self.status_label = QLabel("Initializing...")
+        # Monocharts-inspired segmented audio activity meter
+        self.audio_meter = MonochartMeter(bar_count=30)
+        self.card_layout.addWidget(self.audio_meter)
+
+        # Status row
+        status_row = QHBoxLayout()
+        status_row.setContentsMargins(0, 0, 0, 0)
+        self.status_label = QLabel("Ready")
         self.status_label.setStyleSheet(
-            "color: #888899; font-size: 11px; font-family: 'Segoe UI', sans-serif;"
+            "color: #71717a; font-size: 11px; "
+            "font-family: 'Inter', -apple-system, 'Segoe UI', sans-serif;"
         )
-        self.card_layout.addWidget(self.status_label)
+        status_row.addWidget(self.status_label)
+        status_row.addStretch()
 
-        # Audio VU / activity bar
-        self.audio_bar = QProgressBar()
-        self.audio_bar.setFixedHeight(3)
-        self.audio_bar.setRange(0, 100)
-        self.audio_bar.setValue(0)
-        self.audio_bar.setTextVisible(False)
-        self.audio_bar.setStyleSheet("""
-            QProgressBar {
-                background-color: rgba(255, 255, 255, 0.06);
-                border: none;
-                border-radius: 1px;
-            }
-            QProgressBar::chunk {
-                background-color: #00FFA3;
-                border-radius: 1px;
-            }
-        """)
-        self.card_layout.addWidget(self.audio_bar)
+        shortcut_label = QLabel("Space")
+        shortcut_label.setStyleSheet(
+            "color: #71717a; font-size: 10px; font-weight: 500; font-family: monospace; "
+            "background-color: #18181b; border: 1px solid #27272a; border-radius: 3px; padding: 1px 5px;"
+        )
+        status_row.addWidget(shortcut_label)
+        self.card_layout.addLayout(status_row)
 
+        # -------------------------------------------------------------
         # 3. Collapsible Content Container
+        # -------------------------------------------------------------
         self.content_widget = QWidget()
         content_layout = QVBoxLayout(self.content_widget)
         content_layout.setContentsMargins(0, 4, 0, 0)
-        content_layout.setSpacing(8)
+        content_layout.setSpacing(12)
 
-        # Divider line
+        # Subtle 1px ShadCN separator
         divider = QFrame()
         divider.setFrameShape(QFrame.Shape.HLine)
         divider.setStyleSheet(
-            "border: none; background-color: rgba(255, 255, 255, 0.08); max-height: 1px;"
+            "border: none; background-color: rgba(255, 255, 255, 0.07); max-height: 1px;"
         )
         content_layout.addWidget(divider)
 
         # Opponent Transcript Section
-        transcript_header = QLabel("OPPONENT")
-        transcript_header.setStyleSheet(
-            "color: #707088; font-size: 10px; font-weight: bold; letter-spacing: 1px;"
-        )
-        content_layout.addWidget(transcript_header)
+        opponent_row = QHBoxLayout()
+        opponent_row.setSpacing(6)
+        opponent_icon = QLabel()
+        opponent_icon.setPixmap(get_pixmap("message", color="#71717a", size=13))
+        opponent_row.addWidget(opponent_icon)
 
-        self.transcript_label = QLabel("Press 'Start Listening' to capture opponent...")
+        opponent_title = QLabel("Opponent Statement")
+        opponent_title.setStyleSheet("color: #71717a; font-size: 11px; font-weight: 500;")
+        opponent_row.addWidget(opponent_title)
+        opponent_row.addStretch()
+        content_layout.addLayout(opponent_row)
+
+        self.transcript_label = QLabel("Awaiting opponent argument...")
         self.transcript_label.setWordWrap(True)
         self.transcript_label.setStyleSheet(
-            "color: #C0C0D4; font-size: 12px; font-style: italic; line-height: 1.4;"
+            "color: #a1a1aa; font-size: 12px; font-style: italic; line-height: 1.45; padding-left: 2px;"
         )
         content_layout.addWidget(self.transcript_label)
 
-        # Flaw Badge Section
-        flaw_container = QHBoxLayout()
-        flaw_container.setSpacing(6)
-        self.flaw_tag = QLabel("FLAW")
+        # Finding & Rebuttal Card Container
+        self.rebuttal_card = QFrame()
+        self.rebuttal_card.setStyleSheet("""
+            QFrame {
+                background-color: #141417;
+                border: 1px solid rgba(255, 255, 255, 0.08);
+                border-radius: 8px;
+            }
+        """)
+        rebuttal_card_layout = QVBoxLayout(self.rebuttal_card)
+        rebuttal_card_layout.setContentsMargins(14, 12, 14, 14)
+        rebuttal_card_layout.setSpacing(8)
+
+        # Finding Header Row
+        finding_row = QHBoxLayout()
+        finding_row.setSpacing(6)
+
+        self.flaw_tag = QLabel("Finding")
         self.flaw_tag.setStyleSheet("""
-            background-color: rgba(255, 92, 92, 0.20);
-            color: #FF7070;
+            background-color: rgba(255, 255, 255, 0.06);
+            color: #a1a1aa;
             font-size: 10px;
-            font-weight: bold;
-            padding: 2px 6px;
-            border-radius: 4px;
-        """)
-        self.flaw_label = QLabel("None detected yet")
-        self.flaw_label.setStyleSheet("color: #FFA726; font-size: 12px; font-weight: bold;")
-        self.flaw_label.setWordWrap(True)
-        flaw_container.addWidget(self.flaw_tag)
-        flaw_container.addWidget(self.flaw_label, 1)
-        content_layout.addLayout(flaw_container)
-
-        # Counter Rebuttal Section
-        counter_header = QLabel("REBUTTAL")
-        counter_header.setStyleSheet(
-            "color: #707088; font-size: 10px; font-weight: bold; letter-spacing: 1px;"
-        )
-        content_layout.addWidget(counter_header)
-
-        self.counter_label = QLabel("Listening for arguments...")
-        self.counter_label.setWordWrap(True)
-        self.counter_label.setStyleSheet("""
-            color: #00FFA3;
-            font-size: 13px;
             font-weight: 500;
-            line-height: 1.4;
-            background-color: rgba(0, 255, 163, 0.05);
-            padding: 8px 10px;
-            border-radius: 6px;
-            border-left: 3px solid #00FFA3;
+            padding: 2px 7px;
+            border-radius: 4px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
         """)
-        content_layout.addWidget(self.counter_label)
+        finding_row.addWidget(self.flaw_tag)
 
+        self.flaw_label = QLabel("None detected yet")
+        self.flaw_label.setStyleSheet("color: #e4e4e7; font-size: 12px; font-weight: 600;")
+        self.flaw_label.setWordWrap(True)
+        finding_row.addWidget(self.flaw_label, 1)
+        rebuttal_card_layout.addLayout(finding_row)
+
+        # Counter Rebuttal text
+        self.counter_label = QLabel("Rebuttal will appear here after analysis.")
+        self.counter_label.setWordWrap(True)
+        self.counter_label.setStyleSheet(
+            "color: #fafafa; font-size: 13px; font-weight: 400; line-height: 1.5;"
+        )
+        rebuttal_card_layout.addWidget(self.counter_label)
+
+        content_layout.addWidget(self.rebuttal_card)
         self.card_layout.addWidget(self.content_widget)
         self.outer_layout.addWidget(self.card)
 
     def _apply_idle_button_style(self) -> None:
-        """Style button for idle/ready state."""
-        self.action_btn.setText("🎙️  Start Listening (Space)")
+        """Apply visual styling for the idle/ready listen button state."""
+        self.action_btn.setText("  Listen")
+        self.action_btn.setIcon(get_icon("mic", color="#fafafa", size=14))
+        self.action_btn.setIconSize(QSize(14, 14))
         self.action_btn.setStyleSheet("""
             QPushButton {
-                background: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 rgba(0, 255, 163, 0.15), stop:1 rgba(0, 229, 255, 0.15));
-                color: #00FFA3;
-                border: 1px solid rgba(0, 255, 163, 0.35);
-                border-radius: 6px;
-                font-weight: bold;
+                background-color: #18181b;
+                color: #fafafa;
+                border: 1px solid #2e2e34;
+                border-radius: 7px;
+                font-weight: 500;
                 font-size: 12px;
-                letter-spacing: 0.5px;
+                letter-spacing: 0.1px;
+                text-align: center;
             }
             QPushButton:hover {
-                background: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 rgba(0, 255, 163, 0.28), stop:1 rgba(0, 229, 255, 0.28));
-                border: 1px solid #00FFA3;
-                color: #FFFFFF;
+                background-color: #222226;
+                border: 1px solid #3f3f46;
+                color: #ffffff;
+            }
+            QPushButton:pressed {
+                background-color: #121215;
             }
         """)
 
     def _apply_recording_button_style(self) -> None:
-        """Style button for active recording state."""
-        self.action_btn.setText("⏹️  Stop & Analyze Now")
+        """Apply visual styling for the active recording button state."""
+        self.action_btn.setText("  Stop listening")
+        self.action_btn.setIcon(get_icon("square", color="#fca5a5", size=14))
+        self.action_btn.setIconSize(QSize(14, 14))
         self.action_btn.setStyleSheet("""
             QPushButton {
-                background: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 rgba(255, 92, 92, 0.30), stop:1 rgba(255, 140, 66, 0.30));
-                color: #FFFFFF;
-                border: 1px solid #FF5C5C;
-                border-radius: 6px;
-                font-weight: bold;
+                background-color: #261215;
+                color: #fca5a5;
+                border: 1px solid #7f1d1d;
+                border-radius: 7px;
+                font-weight: 500;
                 font-size: 12px;
-                letter-spacing: 0.5px;
+                letter-spacing: 0.1px;
+                text-align: center;
             }
             QPushButton:hover {
-                background: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 rgba(255, 92, 92, 0.45), stop:1 rgba(255, 140, 66, 0.45));
-                border: 1px solid #FFA0A0;
+                background-color: #321519;
+                border: 1px solid #991b1b;
+                color: #fecaca;
+            }
+            QPushButton:pressed {
+                background-color: #1d0e10;
             }
         """)
 
@@ -317,9 +349,8 @@ class AenfOverlay(QWidget):
         self.pipeline.recording_state_changed.connect(self._on_recording_state_changed)
 
     def _on_action_button_clicked(self) -> None:
-        """Handle Listen / Stop button press."""
+        """Handle Listen / Stop action button click."""
         if not self.manual_mode:
-            # If in Auto mode, clicking switches to manual and triggers listen
             self._toggle_mode()
         self.pipeline.toggle_manual_capture()
 
@@ -336,18 +367,26 @@ class AenfOverlay(QWidget):
     def _toggle_mode(self) -> None:
         """Toggle between Manual button mode and Auto VAD silence-cut mode."""
         self.manual_mode = not self.manual_mode
-        self.mode_btn.setText("Manual" if self.manual_mode else "Auto VAD")
+        self.mode_btn.setText("Manual" if self.manual_mode else "Auto")
         self.pipeline.set_mode(self.manual_mode)
 
         if not self.manual_mode:
-            self.action_btn.setText("Auto VAD Mode (Listening)")
+            self.action_btn.setText("  Auto detecting speech")
+            self.action_btn.setIcon(get_icon("activity", color="#10b981", size=14))
+            self.action_btn.setIconSize(QSize(14, 14))
             self.action_btn.setStyleSheet("""
                 QPushButton {
-                    background: rgba(255, 255, 255, 0.04);
-                    color: #707088;
-                    border: 1px dashed rgba(255, 255, 255, 0.15);
-                    border-radius: 6px;
+                    background-color: #121215;
+                    color: #a1a1aa;
+                    border: 1px solid #27272a;
+                    border-radius: 7px;
                     font-size: 11px;
+                    font-weight: 500;
+                    text-align: center;
+                }
+                QPushButton:hover {
+                    background-color: #18181b;
+                    color: #d4d4d8;
                 }
             """)
         else:
@@ -361,30 +400,19 @@ class AenfOverlay(QWidget):
         """
         self.status_label.setText(text)
         if level == "ok":
-            self.status_dot.setStyleSheet("color: #00FFA3; font-size: 11px;")
+            self.status_dot.setStyleSheet("color: #10b981; font-size: 8px;")
         elif level == "busy":
-            self.status_dot.setStyleSheet("color: #FFA726; font-size: 11px;")
+            self.status_dot.setStyleSheet("color: #f59e0b; font-size: 8px;")
         elif level == "error":
-            self.status_dot.setStyleSheet("color: #FF5C5C; font-size: 11px;")
+            self.status_dot.setStyleSheet("color: #ef4444; font-size: 8px;")
 
     def _on_audio_level(self, rms: float, is_speaking: bool) -> None:
-        """Update VU meter progress bar.
+        """Update Monochart segmented audio level meter.
 
         :param rms: Current audio energy level.
         :param is_speaking: True if speech is actively detected, False otherwise.
         """
-        val = min(100, int((rms / 0.08) * 100))
-        self.audio_bar.setValue(val)
-        if is_speaking:
-            self.audio_bar.setStyleSheet("""
-                QProgressBar { background-color: rgba(255, 255, 255, 0.06); border: none; border-radius: 1px; }
-                QProgressBar::chunk { background-color: #00E5FF; border-radius: 1px; }
-            """)
-        else:
-            self.audio_bar.setStyleSheet("""
-                QProgressBar { background-color: rgba(255, 255, 255, 0.06); border: none; border-radius: 1px; }
-                QProgressBar::chunk { background-color: #00FFA3; border-radius: 1px; }
-            """)
+        self.audio_meter.set_level(rms, is_speaking)
 
     def _on_transcript_received(self, text: str) -> None:
         """Display incoming speech transcript.
@@ -402,62 +430,52 @@ class AenfOverlay(QWidget):
         """
         self.flaw_label.setText(flaw)
         self.counter_label.setText(counter)
-        self.latency_label.setText(f"⚡ {latency:.1f}s")
+        self.latency_label.setText(f"{latency:.1f}s")
 
         is_non_argument = flaw.lower().startswith("none") or "incomplete" in flaw.lower()
 
         if is_non_argument:
-            self.flaw_tag.setText("INFO")
+            self.flaw_tag.setText("Note")
             self.flaw_tag.setStyleSheet("""
-                background-color: rgba(121, 134, 203, 0.20);
-                color: #9FA8DA;
+                background-color: rgba(255, 255, 255, 0.05);
+                color: #71717a;
                 font-size: 10px;
-                font-weight: bold;
-                padding: 2px 6px;
-                border-radius: 4px;
-            """)
-            self.flaw_label.setStyleSheet("color: #B0BEC5; font-size: 12px; font-weight: 500;")
-            self.counter_label.setStyleSheet("""
-                color: #B0BEC5;
-                font-size: 12px;
-                font-style: italic;
-                line-height: 1.4;
-                background-color: rgba(255, 255, 255, 0.04);
-                padding: 8px 10px;
-                border-radius: 6px;
-                border-left: 3px solid #78909C;
-            """)
-        else:
-            self.flaw_tag.setText("FLAW")
-            self.flaw_tag.setStyleSheet("""
-                background-color: rgba(255, 92, 92, 0.20);
-                color: #FF7070;
-                font-size: 10px;
-                font-weight: bold;
-                padding: 2px 6px;
-                border-radius: 4px;
-            """)
-            self.flaw_label.setStyleSheet("color: #FFA726; font-size: 12px; font-weight: bold;")
-            self.counter_label.setStyleSheet("""
-                color: #00FFA3;
-                font-size: 13px;
                 font-weight: 500;
-                line-height: 1.4;
-                background-color: rgba(0, 255, 163, 0.05);
-                padding: 8px 10px;
-                border-radius: 6px;
-                border-left: 3px solid #00FFA3;
+                padding: 2px 7px;
+                border-radius: 4px;
+                border: 1px solid rgba(255, 255, 255, 0.08);
             """)
+            self.flaw_label.setStyleSheet("color: #a1a1aa; font-size: 12px; font-weight: 500;")
+            self.counter_label.setStyleSheet(
+                "color: #71717a; font-size: 12px; font-style: italic; line-height: 1.45;"
+            )
+        else:
+            self.flaw_tag.setText("Fallacy")
+            self.flaw_tag.setStyleSheet("""
+                background-color: rgba(239, 68, 68, 0.12);
+                color: #f87171;
+                font-size: 10px;
+                font-weight: 600;
+                padding: 2px 7px;
+                border-radius: 4px;
+                border: 1px solid rgba(239, 68, 68, 0.25);
+            """)
+            self.flaw_label.setStyleSheet("color: #fafafa; font-size: 12px; font-weight: 600;")
+            self.counter_label.setStyleSheet(
+                "color: #fafafa; font-size: 13px; font-weight: 400; line-height: 1.5;"
+            )
 
     def _toggle_collapse(self) -> None:
         """Collapse or expand HUD content."""
         self.is_collapsed = not self.is_collapsed
         self.content_widget.setVisible(not self.is_collapsed)
         self.action_btn.setVisible(not self.is_collapsed)
-        self.collapse_btn.setText("+" if self.is_collapsed else "—")
+        self.audio_meter.setVisible(not self.is_collapsed)
+        self.collapse_btn.setIcon(
+            get_icon("activity" if self.is_collapsed else "minus", color="#71717a", size=13)
+        )
         self.adjustSize()
 
-    # Keyboard shortcut (Space toggles listening)
     def keyPressEvent(self, event: QKeyEvent) -> None:
         """Handle keyboard shortcut events.
 
@@ -469,7 +487,6 @@ class AenfOverlay(QWidget):
         else:
             super().keyPressEvent(event)
 
-    # Window drag events
     def mousePressEvent(self, event: QMouseEvent) -> None:
         """Record window position offset when left mouse button is pressed for dragging.
 

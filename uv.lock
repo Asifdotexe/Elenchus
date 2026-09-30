@@ -3,33 +3,6 @@ revision = 3
 requires-python = ">=3.12"
 
 [[package]]
-name = "aenf"
-version = "0.1.0"
-source = { editable = "." }
-dependencies = [
-    { name = "faster-whisper" },
-    { name = "numpy" },
-    { name = "pyqt6" },
-    { name = "sounddevice" },
-]
-
-[package.dev-dependencies]
-dev = [
-    { name = "ruff" },
-]
-
-[package.metadata]
-requires-dist = [
-    { name = "faster-whisper", specifier = ">=1.0.0" },
-    { name = "numpy", specifier = ">=2.0.0" },
-    { name = "pyqt6", specifier = ">=6.6.0" },
-    { name = "sounddevice", specifier = ">=0.5.0" },
-]
-
-[package.metadata.requires-dev]
-dev = [{ name = "ruff", specifier = ">=0.16.9" }]
-
-[[package]]
 name = "anyio"
 version = "4.15.1"
 source = { registry = "https://pypi.org/simple" }
@@ -210,6 +183,33 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/63/87/b964f427fcdfad983977859386007e1367eb340f747f63b6c0001cf78905/ctranslate2-4.8.2-cp314-cp314t-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:dd9ab8b521230e8e962a58362b1ccde582806e781af8c1b9d7b244f3024468b1", size = 39491894, upload-time = "2026-08-31T19:38:06.365Z" },
     { url = "https://files.pythonhosted.org/packages/6a/39/9d316f00f184cea15e807a977df5bc76fc8f27f81246015f12083f42cd1c/ctranslate2-4.8.2-cp314-cp314t-win_amd64.whl", hash = "sha256:f6f0b576c247984d3fc299a372ccc9319b668d6d25b0539f3c861beba15d0504", size = 19500896, upload-time = "2026-08-31T19:38:09.111Z" },
 ]
+
+[[package]]
+name = "elenchus"
+version = "1.0.0"
+source = { editable = "." }
+dependencies = [
+    { name = "faster-whisper" },
+    { name = "numpy" },
+    { name = "pyqt6" },
+    { name = "sounddevice" },
+]
+
+[package.dev-dependencies]
+dev = [
+    { name = "ruff" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "faster-whisper", specifier = ">=1.0.0" },
+    { name = "numpy", specifier = ">=2.0.0" },
+    { name = "pyqt6", specifier = ">=6.6.0" },
+    { name = "sounddevice", specifier = ">=0.5.0" },
+]
+
+[package.metadata.requires-dev]
+dev = [{ name = "ruff", specifier = ">=0.16.9" }]
 
 [[package]]
 name = "faster-whisper"
