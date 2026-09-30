@@ -1,10 +1,10 @@
 @echo off
 setlocal
 cd /d "%~dp0"
-echo Starting aenf // live debate HUD...
-uv run aenf %*
+echo Starting Elenchus // Socratic debate analysis HUD...
+uv run elenchus %*
 if %ERRORLEVEL% NEQ 0 (
     echo.
-    echo aenf exited with error code %ERRORLEVEL%.
+    echo Elenchus exited with error code %ERRORLEVEL%.
     pause
 )

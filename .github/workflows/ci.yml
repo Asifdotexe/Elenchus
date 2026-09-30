@@ -62,8 +62,8 @@ jobs:
         run: uv run python -m unittest tests/test_core.py
 
       - name: Verify CLI list-devices
-        run: uv run aenf --list-devices
+        run: uv run elenchus --list-devices
 
       - name: Verify Headless HUD initialization
         run: |
-          uv run python -c "from PyQt6.QtWidgets import QApplication; from config import Config; from core.pipeline import PipelineWorker; from ui.overlay import AenfOverlay; app = QApplication([]); cfg = Config(); p = PipelineWorker(cfg); o = AenfOverlay(cfg, p); o.show(); o.close()"
+          uv run python -c "from PyQt6.QtWidgets import QApplication; from config import Config; from core.pipeline import PipelineWorker; from ui.overlay import ElenchusOverlay; app = QApplication([]); cfg = Config(); p = PipelineWorker(cfg); o = ElenchusOverlay(cfg, p); o.show(); o.close()"

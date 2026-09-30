@@ -1,4 +1,4 @@
-"""Unit tests for aenf core components."""
+"""Unit tests for Elenchus core components."""
 
 import unittest
 
@@ -139,6 +139,89 @@ class TestArgumentFilter(unittest.TestCase):
             "We should ban electric vehicles because battery recycling is not yet feasible."
         )
         self.assertTrue(valid)
+
+
+class TestConfigRebrand(unittest.TestCase):
+    def test_default_model(self):
+        cfg = Config()
+        self.assertEqual(cfg.ollama_model, "qwen2.5-coder:3b")
+
+    def test_elenchus_model_env_precedence(self):
+        import os
+
+        old_elenchus = os.environ.get("ELENCHUS_MODEL")
+        try:
+            os.environ["ELENCHUS_MODEL"] = "custom-elenchus:latest"
+            cfg = Config()
+            self.assertEqual(cfg.ollama_model, "custom-elenchus:latest")
+        finally:
+            if old_elenchus is not None:
+                os.environ["ELENCHUS_MODEL"] = old_elenchus
+            else:
+                os.environ.pop("ELENCHUS_MODEL", None)
+
+
+class TestUIIcons(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        from PyQt6.QtWidgets import QApplication
+
+        cls.app = QApplication.instance() or QApplication([])
+
+    def test_get_icon_known_and_unknown(self):
+        from ui.icons import get_icon
+
+        icon = get_icon("mic")
+        self.assertFalse(icon.isNull())
+
+        fallback_icon = get_icon("nonexistent_icon_key")
+        self.assertTrue(fallback_icon.isNull())
+
+    def test_get_pixmap(self):
+        from ui.icons import get_pixmap
+
+        pixmap = get_pixmap("activity", size=14)
+        self.assertFalse(pixmap.isNull())
+        self.assertEqual(pixmap.width(), 14)
+        self.assertEqual(pixmap.height(), 14)
+
+
+class TestMonochartMeter(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        from PyQt6.QtWidgets import QApplication
+
+        cls.app = QApplication.instance() or QApplication([])
+
+    def test_set_level_clamping(self):
+        from ui.waveform import MonochartMeter
+
+        meter = MonochartMeter()
+        meter.set_level(0.0, False)
+        self.assertEqual(meter.level, 0.0)
+        self.assertFalse(meter.is_speaking)
+
+        meter.set_level(0.1, True)
+        self.assertEqual(meter.level, 1.0)
+        self.assertTrue(meter.is_speaking)
+
+
+class TestElenchusOverlay(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        from PyQt6.QtWidgets import QApplication
+
+        cls.app = QApplication.instance() or QApplication([])
+
+    def test_overlay_creation(self):
+        from core.pipeline import PipelineWorker
+        from ui.overlay import ElenchusOverlay
+
+        cfg = Config()
+        pipeline = PipelineWorker(cfg)
+        overlay = ElenchusOverlay(cfg, pipeline)
+        self.assertEqual(overlay.title_label.text(), "elenchus")
+        overlay.close()
 
 
 if __name__ == "__main__":

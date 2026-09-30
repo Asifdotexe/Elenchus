@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
-# setup.sh - Automated Setup for aenf (Linux / macOS / WSL)
+# setup.sh - Automated Setup for Elenchus (Linux / macOS / WSL)
 set -euo pipefail
 
 echo ""
-echo "=== aenf Setup & Verification (Unix) ==="
+echo "=== Elenchus Setup & Verification (Unix) ==="
 
 # 1. Check or install uv
 if ! command -v uv &> /dev/null; then
@@ -48,6 +48,6 @@ QT_QPA_PLATFORM=offscreen uv run python -m unittest tests/test_core.py
 echo ""
 echo "========================================================"
 echo " [OK] Setup completed successfully! Everything is ready."
-echo " Launch HUD anytime:  uv run aenf"
+echo " Launch HUD anytime:  uv run elenchus"
 echo "========================================================"
 echo ""

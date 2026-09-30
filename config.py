@@ -1,7 +1,7 @@
-"""Configuration settings for aenf (all ears no foul)."""
+"""Configuration settings for Elenchus (ἔλεγχος)."""
 
 import os
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 
 @dataclass
@@ -42,14 +42,18 @@ class Config:
     )
 
     # Ollama LLM Reasoning
-    ollama_url: str = os.getenv("OLLAMA_URL", "http://localhost:11434")
-    ollama_model: str = os.getenv("AENF_MODEL", "qwen2.5-coder:3b")
+    ollama_url: str = field(
+        default_factory=lambda: os.getenv("OLLAMA_URL", "http://localhost:11434")
+    )
+    ollama_model: str = field(
+        default_factory=lambda: os.getenv("ELENCHUS_MODEL", "qwen2.5-coder:3b")
+    )
     ollama_temperature: float = 0.25
     ollama_num_predict: int = 80
     ollama_timeout_s: float = 12.0
 
     system_prompt: str = (
-        "You are an expert, real-time debate analysis engine named aenf.\n"
+        "You are an expert debate analysis and Socratic refutation engine named Elenchus (ἔλεγχος).\n"
         "Your job is to identify logical fallacies, faulty premises, or rhetorical tricks "
         "in the user's opponent's speech, or recognize when no actual argument has been made.\n\n"
         "CRITICAL RULES:\n"

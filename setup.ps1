@@ -1,7 +1,7 @@
-# setup.ps1 - Automated 1-Click Setup for aenf (Windows)
+# setup.ps1 - Automated 1-Click Setup for Elenchus (Windows)
 $ErrorActionPreference = "Stop"
 
-Write-Host "`n=== aenf 1-Click Setup & Verification ===" -ForegroundColor Cyan
+Write-Host "`n=== Elenchus 1-Click Setup & Verification ===" -ForegroundColor Cyan
 
 # 1. Check or install uv
 if (-not (Get-Command uv -ErrorAction SilentlyContinue)) {
@@ -45,6 +45,6 @@ uv run python -m unittest tests/test_core.py
 
 Write-Host "`n========================================================" -ForegroundColor Green
 Write-Host " [OK] Setup completed successfully! Everything is ready." -ForegroundColor Green
-Write-Host " Launch HUD anytime:  uv run aenf" -ForegroundColor Cyan
+Write-Host " Launch HUD anytime:  uv run elenchus" -ForegroundColor Cyan
 Write-Host " Or double-click:    .\run.bat" -ForegroundColor Cyan
 Write-Host "========================================================`n" -ForegroundColor Green

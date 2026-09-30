@@ -1,4 +1,4 @@
-"""Main entry point for aenf (all ears no foul) desktop HUD."""
+"""Main entry point for Elenchus (ἔλεγχος) debate analysis and fallacy detection engine."""
 
 import argparse
 import logging
@@ -10,7 +10,20 @@ from PyQt6.QtWidgets import QApplication
 from config import Config
 from core.audio_capture import list_audio_devices
 from core.pipeline import PipelineWorker
-from ui.overlay import AenfOverlay
+from ui.overlay import ElenchusOverlay
+
+
+def _configure_terminal_encoding() -> None:
+    """Ensure standard output and error use UTF-8 on Windows terminals."""
+    for stream in (sys.stdout, sys.stderr):
+        if hasattr(stream, "reconfigure"):
+            try:
+                stream.reconfigure(encoding="utf-8", errors="replace")
+            except Exception:
+                pass
+
+
+_configure_terminal_encoding()
 
 
 def setup_logging(verbose: bool = False) -> None:
@@ -18,6 +31,7 @@ def setup_logging(verbose: bool = False) -> None:
 
     :param verbose: If True, set logging level to DEBUG; otherwise INFO.
     """
+    _configure_terminal_encoding()
     level = logging.DEBUG if verbose else logging.INFO
     logging.basicConfig(
         level=level,
@@ -31,10 +45,11 @@ def parse_args() -> argparse.Namespace:
 
     :return: Parsed command line arguments namespace.
     """
+    _configure_terminal_encoding()
     cfg = Config()
     parser = argparse.ArgumentParser(
-        prog="aenf",
-        description="Real-time heads-up display overlay for debate flaw detection and instant counter-arguments.",
+        prog="elenchus",
+        description="Elenchus (ἔλεγχος): Socratic debate analysis and fallacy detection engine for live interactions and recorded speech.",
     )
     parser.add_argument(
         "--list-devices",
@@ -126,7 +141,9 @@ def print_devices() -> None:
         for d in others:
             print(f"   [{d['index']:2d}] {d['name']} ({d['hostapi']})")
     print("============================================================\n")
-    print("TIP: Run 'uv run aenf --test-device <ID>' to see live volume meter before launching!\n")
+    print(
+        "TIP: Run 'uv run elenchus --test-device <ID>' to see live volume meter before launching!\n"
+    )
 
 
 def test_audio_device(device_idx: int | None = None) -> None:
@@ -214,10 +231,10 @@ def main() -> None:
     signal.signal(signal.SIGINT, signal.SIG_DFL)
 
     app = QApplication(sys.argv)
-    app.setApplicationName("aenf")
+    app.setApplicationName("elenchus")
 
     pipeline = PipelineWorker(config)
-    overlay = AenfOverlay(config, pipeline)
+    overlay = ElenchusOverlay(config, pipeline)
 
     # Position overlay at top-right corner of screen by default
     screen = app.primaryScreen()
