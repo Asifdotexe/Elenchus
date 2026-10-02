@@ -8,7 +8,7 @@ from PyQt6.QtWidgets import QWidget
 class MonochartMeter(QWidget):
     """Monochrome segmented audio level visualizer displaying discrete dynamic micro-bars."""
 
-    def __init__(self, parent: QWidget | None = None, bar_count: int = 28):
+    def __init__(self, parent: QWidget | None = None, bar_count: int = 30):
         """Initialize the monochart meter with bar geometry.
 
         :param parent: Optional parent QWidget.
@@ -53,11 +53,9 @@ class MonochartMeter(QWidget):
         bar_width = max(2.0, (width - total_gap) / float(self.bar_count))
         active_count = int(round(self.level * self.bar_count))
 
-        inactive_color = QColor(39, 39, 42, 160)  # Zinc 800 subtle
-        if self.is_speaking:
-            active_color = QColor(16, 185, 129, 230)  # Crisp emerald
-        else:
-            active_color = QColor(212, 212, 216, 200)  # Monochrome zinc-300
+        # Hyperstudio tokens: Iron (#474747) idle, Pulse Green (#98ff38) active
+        inactive_color = QColor("#474747")
+        active_color = QColor("#98ff38")
 
         for i in range(self.bar_count):
             x = i * (bar_width + 2.0)
@@ -71,6 +69,6 @@ class MonochartMeter(QWidget):
             color = active_color if is_active else inactive_color
             painter.setPen(Qt.PenStyle.NoPen)
             painter.setBrush(color)
-            painter.drawRoundedRect(int(x), int(y), int(bar_width), int(bar_height), 1.0, 1.0)
+            painter.drawRoundedRect(int(x), int(y), int(bar_width), int(bar_height), 0.5, 0.5)
 
         painter.end()

@@ -222,6 +222,93 @@ class TestElenchusOverlay(unittest.TestCase):
         pipeline = PipelineWorker(cfg)
         overlay = ElenchusOverlay(cfg, pipeline)
         self.assertEqual(overlay.title_label.text(), "elenchus")
+        self.assertEqual(overlay.audio_meter.bar_count, 30)
+        self.assertEqual(overlay.mode_btn.text(), "Manual Mode")
+        self.assertIn("Listen (Click or Space)", overlay.action_btn.text())
+        overlay.close()
+
+    def test_overlay_mode_toggle(self):
+        from core.pipeline import PipelineWorker
+        from ui.overlay import ElenchusOverlay
+
+        cfg = Config()
+        pipeline = PipelineWorker(cfg)
+        overlay = ElenchusOverlay(cfg, pipeline)
+
+        # Toggle to Auto Mode
+        overlay._toggle_mode()
+        self.assertFalse(overlay.manual_mode)
+        self.assertEqual(overlay.mode_btn.text(), "Auto Mode")
+        self.assertIn("Auto detecting speech", overlay.action_btn.text())
+
+        # Toggle back to Manual Mode
+        overlay._toggle_mode()
+        self.assertTrue(overlay.manual_mode)
+        self.assertEqual(overlay.mode_btn.text(), "Manual Mode")
+        self.assertIn("Listen (Click or Space)", overlay.action_btn.text())
+        overlay.close()
+
+    def test_overlay_status_and_rebuttal_styling(self):
+        from core.pipeline import PipelineWorker
+        from ui.overlay import ElenchusOverlay
+
+        cfg = Config()
+        pipeline = PipelineWorker(cfg)
+        overlay = ElenchusOverlay(cfg, pipeline)
+
+        # Status ok / busy / error
+        overlay._on_status_changed("Processing...", "busy")
+        self.assertEqual(overlay.status_label.text(), "Processing...")
+        self.assertIn("#d97706", overlay.status_dot.styleSheet())
+
+        overlay._on_status_changed("Ready", "ok")
+        self.assertIn("#98ff38", overlay.status_dot.styleSheet())
+
+        overlay._on_status_changed("Failed", "error")
+        self.assertIn("#ef4444", overlay.status_dot.styleSheet())
+
+        # Rebuttal with fallacy
+        overlay._on_rebuttal_received("Straw Man Argument", "Counter-argument text", 0.62)
+        self.assertEqual(overlay.flaw_tag.text(), "FINDING")
+        self.assertEqual(overlay.flaw_label.text(), "Straw Man Argument")
+        self.assertEqual(overlay.counter_label.text(), "Counter-argument text")
+        self.assertEqual(overlay.latency_label.text(), "0.6s latency")
+        self.assertIn("#ef4444", overlay.flaw_label.styleSheet())
+
+        # Rebuttal with valid claim (Note)
+        overlay._on_rebuttal_received("None (Valid claim)", "Coherent argument", 0.45)
+        self.assertEqual(overlay.flaw_tag.text(), "NOTE")
+        self.assertEqual(overlay.latency_label.text(), "0.5s latency")
+
+        overlay.close()
+
+    def test_overlay_collapse_toggle(self):
+        from core.pipeline import PipelineWorker
+        from ui.overlay import ElenchusOverlay
+
+        cfg = Config()
+        pipeline = PipelineWorker(cfg)
+        overlay = ElenchusOverlay(cfg, pipeline)
+
+        self.assertFalse(overlay.is_collapsed)
+        self.assertFalse(overlay.content_widget.isHidden())
+        self.assertFalse(overlay.action_bar.isHidden())
+        self.assertFalse(overlay.audio_meter.isHidden())
+
+        # Collapse HUD
+        overlay._toggle_collapse()
+        self.assertTrue(overlay.is_collapsed)
+        self.assertTrue(overlay.content_widget.isHidden())
+        self.assertTrue(overlay.action_bar.isHidden())
+        self.assertTrue(overlay.audio_meter.isHidden())
+
+        # Expand HUD
+        overlay._toggle_collapse()
+        self.assertFalse(overlay.is_collapsed)
+        self.assertFalse(overlay.content_widget.isHidden())
+        self.assertFalse(overlay.action_bar.isHidden())
+        self.assertFalse(overlay.audio_meter.isHidden())
+
         overlay.close()
 
 
