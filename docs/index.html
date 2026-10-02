@@ -184,14 +184,14 @@
     }
 
     .section-spacing {
-      padding-top: 130px;
-      padding-bottom: 130px;
+      padding-top: clamp(64px, 7vh, 96px);
+      padding-bottom: clamp(64px, 7vh, 96px);
     }
 
     @media (max-width: 768px) {
       .section-spacing {
-        padding-top: 80px;
-        padding-bottom: 80px;
+        padding-top: 56px;
+        padding-bottom: 56px;
       }
     }
 
@@ -234,6 +234,18 @@
     .nav-wordmark .greek {
       color: var(--color-smoke);
       font-size: 14px;
+    }
+
+    .nav-version-tag {
+      font-size: 11px;
+      font-family: var(--font-mono);
+      color: var(--color-smoke);
+      background-color: var(--color-surface);
+      border: 1px solid var(--color-graphite);
+      padding: 2px 7px;
+      border-radius: var(--radius-tags);
+      margin-left: 6px;
+      font-weight: 400;
     }
 
     .nav-links {
@@ -806,140 +818,172 @@
       margin-bottom: 48px;
     }
 
-    .section-eyebrow {
-      font-family: var(--font-mono);
-      font-size: 12px;
-      color: var(--color-compass-gold);
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      margin-bottom: 12px;
+    .section-header-block {
+      margin-bottom: 32px;
+      max-width: 760px;
     }
 
     .section-title {
-      font-size: var(--text-heading-lg);
+      font-size: clamp(26px, 3.2vw, 36px);
       font-weight: 400;
-      line-height: 1.07;
-      letter-spacing: -0.31px;
+      line-height: 1.15;
+      letter-spacing: -0.6px;
       color: var(--color-chalk);
+      text-wrap: balance;
     }
 
-    .services-frame {
+    .section-subtitle {
+      font-size: 15px;
+      color: var(--color-smoke);
+      margin-top: 8px;
+      line-height: 1.5;
+      text-wrap: pretty;
+    }
+
+    /* System Pipeline Flow */
+    .pipeline-flow {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      border-top: 1px solid var(--color-graphite);
-      border-left: 1px solid var(--color-graphite);
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-top: 24px;
     }
 
-    @media (max-width: 768px) {
-      .services-frame {
+    @media (max-width: 960px) {
+      .pipeline-flow {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .pipeline-flow {
         grid-template-columns: 1fr;
       }
     }
 
-    .service-cell {
-      padding: var(--spacing-48);
-      border-right: 1px solid var(--color-graphite);
-      border-bottom: 1px solid var(--color-graphite);
-      background-color: transparent;
+    .pipeline-step {
+      background: var(--color-carbon);
+      border: 1px solid var(--color-graphite);
+      border-radius: var(--radius-cards);
+      padding: 24px 20px;
       display: flex;
       flex-direction: column;
-      gap: 16px;
-      transition: background-color 0.2s ease;
+      gap: 12px;
+      transition: border-color 0.2s ease;
     }
 
-    .service-cell:hover {
-      background-color: rgba(255, 255, 255, 0.015);
+    .pipeline-step:hover {
+      border-color: var(--color-iron);
     }
 
-    .service-icon {
-      width: 32px;
-      height: 32px;
-      stroke: var(--color-compass-gold);
-      fill: none;
-      stroke-width: 1.5;
-      stroke-linecap: round;
-      stroke-linejoin: round;
+    .pipeline-step-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
 
-    .service-title {
-      font-size: 14px;
-      font-weight: 400;
+    .pipeline-step-label {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--color-compass-gold);
       text-transform: uppercase;
       letter-spacing: 0.04em;
-      color: var(--color-chalk);
-      margin-top: 8px;
     }
 
-    .service-body {
-      font-size: 14px;
-      font-weight: 400;
+    .pipeline-step-badge {
+      font-family: var(--font-mono);
+      font-size: 11px;
       color: var(--color-smoke);
-      line-height: 1.6;
+      background: var(--color-surface);
+      border: 1px solid var(--color-graphite);
+      padding: 2px 7px;
+      border-radius: var(--radius-tags);
     }
 
-    /* -------------------------------------------------------------
-       MANIFESTO TEXT BLOCK (CENTERED 600px)
-       ------------------------------------------------------------- */
-    .manifesto-block {
-      max-width: 680px;
-      margin: 0 auto;
-      text-align: center;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 24px;
-    }
-
-    .manifesto-title {
-      font-size: var(--text-heading-sm);
-      font-weight: 400;
+    .pipeline-step-title {
+      font-size: 15px;
+      font-weight: 500;
       color: var(--color-chalk);
       letter-spacing: -0.01em;
     }
 
-    .manifesto-body {
-      font-size: 16px;
+    .pipeline-step-desc {
+      font-size: 13px;
       color: var(--color-smoke);
-      line-height: 1.65;
+      line-height: 1.55;
     }
 
-    .specs-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 1px;
-      background-color: var(--color-graphite);
-      border: 1px solid var(--color-graphite);
-      border-radius: var(--radius-cards);
-      overflow: hidden;
+    /* -------------------------------------------------------------
+       SYSTEM RATIONALE & RUNTIME SPECS
+       ------------------------------------------------------------- */
+    .manifesto-block {
+      max-width: 720px;
+      margin: 0 auto;
+      text-align: left;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .manifesto-title {
+      font-size: 24px;
+      font-weight: 400;
+      color: var(--color-chalk);
+      letter-spacing: -0.4px;
+      text-wrap: balance;
+    }
+
+    .manifesto-body {
+      font-size: 15px;
+      color: var(--color-smoke);
+      line-height: 1.6;
+      text-wrap: pretty;
+    }
+
+    .runtime-specs {
       width: 100%;
       margin-top: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      background: var(--color-carbon);
+      border: 1px solid var(--color-graphite);
+      border-radius: var(--radius-cards);
+      padding: 20px 24px;
     }
 
-    @media (max-width: 640px) {
-      .specs-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
+    .spec-row {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+      font-size: 13px;
     }
 
-    .spec-item {
-      background-color: var(--color-obsidian);
-      padding: 20px 16px;
-      text-align: center;
-    }
-
-    .spec-val {
-      font-family: var(--font-mono);
-      font-size: 18px;
-      color: var(--color-chalk);
-      margin-bottom: 4px;
-    }
-
-    .spec-label {
-      font-size: 11px;
-      font-family: var(--font-mono);
-      text-transform: uppercase;
+    .spec-name {
       color: var(--color-smoke);
-      letter-spacing: 0.05em;
+      white-space: nowrap;
+    }
+
+    .spec-line {
+      flex: 1;
+      border-bottom: 1px dashed var(--color-graphite);
+      min-width: 20px;
+    }
+
+    .spec-data {
+      font-family: var(--font-mono);
+      color: var(--color-chalk);
+      white-space: nowrap;
+      font-size: 12px;
+    }
+
+    @media (max-width: 580px) {
+      .spec-row {
+        flex-direction: column;
+        gap: 4px;
+      }
+      .spec-line {
+        display: none;
+      }
     }
 
     /* -------------------------------------------------------------
@@ -1108,53 +1152,7 @@
       border-radius: var(--radius-tags);
     }
 
-    /* -------------------------------------------------------------
-       SECURITY & AUDIT BADGE SECTION
-       ------------------------------------------------------------- */
-    .security-audit-card {
-      border: 1px solid var(--color-graphite);
-      border-radius: var(--radius-cards);
-      padding: 40px;
-      background-color: var(--color-carbon);
-      display: flex;
-      flex-direction: column;
-      gap: 24px;
-    }
 
-    .audit-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 20px;
-    }
-
-    @media (max-width: 800px) {
-      .audit-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    .audit-item {
-      border: 1px solid var(--color-graphite);
-      border-radius: var(--radius-cards);
-      padding: 18px;
-      background-color: var(--color-carbon);
-    }
-
-    .audit-item-title {
-      font-size: 13px;
-      font-weight: 500;
-      color: var(--color-chalk);
-      margin-bottom: 6px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .audit-item-desc {
-      font-size: 12px;
-      color: var(--color-smoke);
-      line-height: 1.5;
-    }
 
     /* -------------------------------------------------------------
        FOOTER / BOTTOM BAR
@@ -1197,6 +1195,7 @@
         <a href="#" class="nav-wordmark">
           <span>Elenchus</span>
           <span class="greek">(ἔλεγχος)</span>
+          <span class="nav-version-tag">v1.0.0</span>
         </a>
         <ul class="nav-links">
           <li><a href="#overview">Overview</a></li>
@@ -1207,7 +1206,7 @@
         </ul>
       </div>
       <div class="nav-right">
-        <a href="#quickstart" class="btn-ghost" style="padding: 6px 14px; font-size: 12px;">Quick Start ↗</a>
+        <a href="#quickstart" class="btn-ghost" style="padding: 6px 14px; font-size: 12px;">Quick Start</a>
         <a href="https://github.com/Asifdotexe/elenchus" target="_blank" rel="noopener noreferrer" class="btn-ghost" style="padding: 6px 14px; font-size: 12px;">GitHub ↗</a>
       </div>
     </div>
@@ -1219,22 +1218,17 @@
   <section class="hero-section" id="overview">
     <div class="container">
       <div class="hero-content">
-        <div class="status-badge">
-          <span class="pulse-dot"></span>
-          <span>v1.0.0 Stable · Standalone Binaries &amp; Security Audited</span>
-        </div>
-
         <h1 class="hero-headline">
           Elenchus
         </h1>
 
         <p class="hero-tagline">
-          Real-time Socratic debate analysis and fallacy detection engine.
+          Local speech recognition and Socratic argument analysis for live debates.
         </p>
 
         <div class="hero-actions">
-          <a href="#quickstart" class="btn-pill">START NOW ↗</a>
-          <a href="#simulator" class="btn-pill-ghost">VIEW HUD ↓</a>
+          <a href="#quickstart" class="btn-pill">Get Started</a>
+          <a href="#simulator" class="btn-pill-ghost">Live HUD Demo</a>
         </div>
       </div>
 
@@ -1260,7 +1254,10 @@
   <section class="section-spacing" id="simulator">
     <div class="container">
       <div class="section-header-block">
-        <h2 class="section-title">Experience the real-time HUD.</h2>
+        <h2 class="section-title">Interactive HUD Simulator</h2>
+        <p class="section-subtitle">
+          Feed common fallacies or enter custom arguments to observe speech slicing, latency budget, and counter-generation in real time.
+        </p>
       </div>
 
       <div class="hud-demo-grid">
@@ -1292,7 +1289,7 @@
 
           <div class="hud-input-row">
             <input type="text" id="customInput" class="hud-input" placeholder="Type custom opponent argument..." onkeydown="if(event.key==='Enter') runSimulation()">
-            <button class="btn-pill" style="padding: 10px 18px; font-size: 13px;" onclick="runSimulation()">Evaluate ↗</button>
+            <button class="btn-pill" style="padding: 10px 18px; font-size: 13px;" onclick="runSimulation()">Evaluate</button>
           </div>
         </div>
 
@@ -1356,59 +1353,60 @@
   <!-- =============================================================
        SERVICES / 2x2 FEATURE GRID
        ============================================================= -->
+  <!-- =============================================================
+       ARCHITECTURE / SYSTEM PIPELINE FLOW
+       ============================================================= -->
   <section class="section-spacing" id="architecture">
     <div class="container">
       <div class="section-header-block">
-        <h2 class="section-title">Engineered for sub-second Socratic clarity.</h2>
+        <h2 class="section-title">System Pipeline &amp; Data Flow</h2>
+        <p class="section-subtitle">
+          Four stages executing locally on CPU cores with zero external network dependencies.
+        </p>
       </div>
 
-      <div class="services-frame">
-        <!-- Cell 1 -->
-        <div class="service-cell">
-          <svg class="service-icon" viewBox="0 0 24 24">
-            <path d="M2 10v4M6 6v12M10 3v18M14 8v8M18 5v14M22 10v4"/>
-          </svg>
-          <h3 class="service-title">Dual-Channel Audio Ingestion</h3>
-          <p class="service-body">
-            Captures your physical microphone or captures your opponent directly over Discord, Zoom, or browser audio via WASAPI loopback. Audio never leaves local RAM.
+      <div class="pipeline-flow">
+        <div class="pipeline-step">
+          <div class="pipeline-step-header">
+            <span class="pipeline-step-label">Stage 1</span>
+            <span class="pipeline-step-badge">Loopback Capture</span>
+          </div>
+          <h3 class="pipeline-step-title">Audio Ingestion</h3>
+          <p class="pipeline-step-desc">
+            Captures opponent speech directly from Discord, Zoom, or web browser calls using WASAPI loopback. Audio arrays remain solely in volatile RAM.
           </p>
         </div>
 
-        <!-- Cell 2 -->
-        <div class="service-cell">
-          <svg class="service-icon" viewBox="0 0 24 24">
-            <rect x="4" y="4" width="16" height="16" rx="2"/>
-            <rect x="9" y="9" width="6" height="6"/>
-            <path d="M9 1v3M15 1v3M9 20v3M15 20v3M20 9h3M20 14h3M1 9h3M1 14h3"/>
-          </svg>
-          <h3 class="service-title">Local INT8 Speech Recognition</h3>
-          <p class="service-body">
-            faster-whisper quantized on CPU for zero VRAM consumption. Discards hallucinated fillers, silences, and background music in sub-500ms bursts.
+        <div class="pipeline-step">
+          <div class="pipeline-step-header">
+            <span class="pipeline-step-label">Stage 2</span>
+            <span class="pipeline-step-badge">INT8 CPU</span>
+          </div>
+          <h3 class="pipeline-step-title">Whisper Transcription</h3>
+          <p class="pipeline-step-desc">
+            faster-whisper quantized on CPU. Discards hallucinated fillers, silences, and background chatter in sub-500ms bursts.
           </p>
         </div>
 
-        <!-- Cell 3 -->
-        <div class="service-cell">
-          <svg class="service-icon" viewBox="0 0 24 24">
-            <circle cx="12" cy="12" r="10"/>
-            <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/>
-          </svg>
-          <h3 class="service-title">Socratic Reasoning Daemon</h3>
-          <p class="service-body">
-            Interfaces with local Ollama weights (qwen2.5-coder:3b). Incomplete thoughts and rhetorical fillers are dropped before generating crisp, under-30-word counters.
+        <div class="pipeline-step">
+          <div class="pipeline-step-header">
+            <span class="pipeline-step-label">Stage 3</span>
+            <span class="pipeline-step-badge">Ollama Local</span>
+          </div>
+          <h3 class="pipeline-step-title">Fallacy Classification</h3>
+          <p class="pipeline-step-desc">
+            Interfaces with local model weights (qwen2.5-coder:3b) to evaluate premises and generate crisp, under-30-word refutations.
           </p>
         </div>
 
-        <!-- Cell 4 -->
-        <div class="service-cell">
-          <svg class="service-icon" viewBox="0 0 24 24">
-            <rect x="2" y="3" width="20" height="14" rx="2"/>
-            <line x1="8" y1="21" x2="16" y2="21"/>
-            <line x1="12" y1="17" x2="12" y2="21"/>
-          </svg>
-          <h3 class="service-title">Translucent HUD Overlay</h3>
-          <p class="service-body">
-            Minimalist PyQt6 card floating permanently atop your screen. Styled with dark directional lighting and Monochart audio activity meters.
+        <div class="pipeline-step">
+          <div class="pipeline-step-header">
+            <span class="pipeline-step-label">Stage 4</span>
+            <span class="pipeline-step-badge">PyQt6 HUD</span>
+          </div>
+          <h3 class="pipeline-step-title">Desktop Overlay</h3>
+          <p class="pipeline-step-desc">
+            Lightweight floating widget hovering above active applications with live audio energy meters and latency telemetry.
           </p>
         </div>
       </div>
@@ -1418,33 +1416,37 @@
   <hr class="hairline-divider">
 
   <!-- =============================================================
-       MANIFESTO TEXT BLOCK (CENTERED 600px)
+       SYSTEM RATIONALE & RUNTIME SPECS
        ============================================================= -->
   <section class="section-spacing">
     <div class="container">
       <div class="manifesto-block">
-        <h2 class="manifesto-title">The Socratic Invariant</h2>
+        <h2 class="manifesto-title">Designed for real-time arguments.</h2>
         <p class="manifesto-body">
-          Debate in the digital age is saturated with rhetorical sleights of hand, bad-faith framing, and conversational derailment. Elenchus functions as an intellectual exoskeleton — silently transcribing speech, evaluating formal premises, and surfacing lethal Socratic refutations without breaking your cadence.
+          Conversations move faster than memory. When an opponent shifts premises, uses a false dilemma, or attacks character rather than evidence, you usually realize it seconds after the moment has passed. Elenchus runs quietly in the background, listening to system audio, parsing arguments into formal logic, and displaying targeted refutations directly in your peripheral field of view before you take your turn to speak.
         </p>
 
-        <!-- Hairline Spec Grid -->
-        <div class="specs-grid">
-          <div class="spec-item">
-            <div class="spec-val">&lt; 380 MB</div>
-            <div class="spec-label">Peak Memory</div>
+        <!-- Runtime Specifications -->
+        <div class="runtime-specs">
+          <div class="spec-row">
+            <span class="spec-name">Peak resident memory</span>
+            <span class="spec-line"></span>
+            <span class="spec-data">&lt; 380 MB RSS (CPU quantized)</span>
           </div>
-          <div class="spec-item">
-            <div class="spec-val">~ 550 ms</div>
-            <div class="spec-label">CPU STT Burst</div>
+          <div class="spec-row">
+            <span class="spec-name">Speech chunk transcription</span>
+            <span class="spec-line"></span>
+            <span class="spec-data">~ 550 ms on CPU</span>
           </div>
-          <div class="spec-item">
-            <div class="spec-val">0.00 %</div>
-            <div class="spec-label">Cloud Leakage</div>
+          <div class="spec-row">
+            <span class="spec-name">External network transmission</span>
+            <span class="spec-line"></span>
+            <span class="spec-data">Zero bytes (fully airgapped)</span>
           </div>
-          <div class="spec-item">
-            <div class="spec-val">SHA-256</div>
-            <div class="spec-label">Release Digest</div>
+          <div class="spec-row">
+            <span class="spec-name">Binary digest verification</span>
+            <span class="spec-line"></span>
+            <span class="spec-data">Cryptographic SHA-256</span>
           </div>
         </div>
       </div>
@@ -1459,7 +1461,10 @@
   <section class="section-spacing" id="quickstart">
     <div class="container">
       <div class="section-header-block">
-        <h2 class="section-title">Deploy in one command. Zero runtime dependencies.</h2>
+        <h2 class="section-title">Distribution &amp; Quick Start</h2>
+        <p class="section-subtitle">
+          Single-command standalone installers configured with automated cryptographic SHA-256 checksum verification.
+        </p>
       </div>
 
       <!-- Platform Selector Tabs -->
@@ -1549,53 +1554,59 @@
   <hr class="hairline-divider">
 
   <!-- =============================================================
-       SECURITY & DEFENSIVE HARDENING SECTION
+       SECURITY AUDIT & THREAT REMEDIATION LEDGER
        ============================================================= -->
   <section class="section-spacing" id="security">
     <div class="container">
-      <div class="security-audit-card">
-        <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 16px;">
-          <div>
-            <div style="font-family: var(--font-mono); font-size: 11px; color: var(--color-smoke); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px;">Defensive Security Rigour</div>
-            <h3 style="font-size: 24px; font-weight: 400; color: var(--color-chalk);">Six-Phase Independent Verification</h3>
-          </div>
-          <span class="status-badge" style="border-color: var(--color-pulse-green); color: var(--color-pulse-green);">
-            <span class="pulse-dot"></span>
-            Zero Unresolved Leads
-          </span>
-        </div>
+      <div class="section-header-block">
+        <h2 class="section-title">Security &amp; Vulnerability Remediation Ledger</h2>
+        <p class="section-subtitle">
+          Audited under Cloudflare's structured six-phase security methodology across memory safety, input sanitization, and execution boundaries.
+        </p>
+      </div>
 
-        <div class="audit-grid">
-          <div class="audit-item">
-            <div class="audit-item-title">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-              Prompt Injection Fencing
-            </div>
-            <p class="audit-item-desc">
-              All speech transcripts are bounded in <code style="color: #fafafa;">&lt;opponent_statement&gt;</code> tags. System prompt Rule 6 enforces strict instruction isolation to prevent adversarial voice overrides.
-            </p>
-          </div>
-
-          <div class="audit-item">
-            <div class="audit-item-title">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/></svg>
-              Qt PlainText Enforcement
-            </div>
-            <p class="audit-item-desc">
-              HUD label widgets explicitly enforce <code style="color: #fafafa;">Qt.TextFormat.PlainText</code>, mitigating RichText/HTML injection, UI spoofing, or layout disruption from opponent speech.
-            </p>
-          </div>
-
-          <div class="audit-item">
-            <div class="audit-item-title">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-              Bounded Buffer Ceiling
-            </div>
-            <p class="audit-item-desc">
-              Manual listening mode enforces a strict 60-second capture ceiling, auto-committing speech to prevent memory bloat and CPU freezing during large array concatenation.
-            </p>
-          </div>
-        </div>
+      <div class="dist-table-wrap">
+        <table class="dist-table">
+          <thead>
+            <tr>
+              <th>Finding Identifier</th>
+              <th>Attack Surface</th>
+              <th>Threat Classification</th>
+              <th>Remediation Implementation</th>
+              <th>Audit Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="mono">aenf-prompt-injection</td>
+              <td>Ollama Interface</td>
+              <td>Instruction Override</td>
+              <td>Transcript enclosed in <code>&lt;opponent_statement&gt;</code> with System Prompt Rule 6</td>
+              <td><span class="badge-ok">Verified</span></td>
+            </tr>
+            <tr>
+              <td class="mono">aenf-richtext-injection</td>
+              <td>PyQt6 Overlay Labels</td>
+              <td>RichText / HTML Spoofing</td>
+              <td>Mandatory <code>Qt.TextFormat.PlainText</code> enforcement on all dynamic widgets</td>
+              <td><span class="badge-ok">Verified</span></td>
+            </tr>
+            <tr>
+              <td class="mono">aenf-unbounded-buffer</td>
+              <td>Audio Capture Pipeline</td>
+              <td>Memory / CPU Exhaustion</td>
+              <td>Hard 60-second capture ceiling with automated commit and memory drain</td>
+              <td><span class="badge-ok">Verified</span></td>
+            </tr>
+            <tr>
+              <td class="mono">aenf-installer-digest</td>
+              <td>Release Distribution</td>
+              <td>Binary Tampering</td>
+              <td>Pre-execution SHA-256 checksum verification in install.ps1 and install.sh</td>
+              <td><span class="badge-ok">Verified</span></td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </section>
