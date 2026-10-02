@@ -6,10 +6,12 @@
   <title>Elenchus (ἔλεγχος) — Socratic Debate Analysis Engine</title>
   <meta name="description" content="Real-time Socratic debate analysis and fallacy detection engine. Local Whisper speech-to-text and Ollama reasoning rendered over your desktop.">
 
-  <!-- Typography: Inter (Aeonik substitute) & JetBrains Mono (Input substitute) -->
+  <!-- Typography: General Sans (Aeonik substitute) & JetBrains Mono (Input substitute) -->
+  <link rel="preconnect" href="https://api.fontshare.com">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
   <style>
     /* -------------------------------------------------------------
@@ -19,22 +21,36 @@
        compass-mark to show the way."
        ------------------------------------------------------------- */
     :root {
-      /* Surfaces & Colors */
+      /* Surfaces & Tonal Steps */
       --color-obsidian: #101010;
       --color-carbon: #080808;
+      --color-surface: #141414;
+      --color-surface-hover: #1c1c1c;
+
+      /* Ink & Contrast */
       --color-chalk: #f3f3f3;
       --color-smoke: #9c9c9c;
       --color-ash: #c1c1c1;
+
+      /* Line-work & Hairlines */
       --color-graphite: #212121;
       --color-iron: #474747;
+      --color-border-subtle: rgba(255, 255, 255, 0.08);
+
+      /* High-contrast Action & Accents */
       --color-signal-white: #ffffff;
       --color-compass-gold: #6f6759;
       --color-card-slate: #3b3d45;
+
+      /* Semantic Status Indicators */
       --color-pulse-green: #98ff38;
+      --color-status-active: #98ff38;
+      --color-status-busy: #d97706;
+      --color-status-alert: #ef4444;
 
       /* Typography */
-      --font-display: 'Inter', ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      --font-body: 'Inter', ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --font-display: 'General Sans', ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --font-body: 'General Sans', ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       --font-mono: 'JetBrains Mono', ui-monospace, "SF Mono", Menlo, Consolas, monospace;
 
       /* Type Scale */
@@ -102,10 +118,43 @@
       color: var(--color-obsidian);
     }
 
+    /* Accessible Focus Indicators (WCAG AA) */
+    :focus-visible {
+      outline: 2px solid var(--color-chalk);
+      outline-offset: 3px;
+    }
+
     a {
       color: inherit;
       text-decoration: none;
       transition: color 0.15s ease;
+    }
+
+    /* Headings & Text wrap */
+    h1, h2, h3, h4 {
+      text-wrap: balance;
+    }
+
+    p {
+      text-wrap: pretty;
+    }
+
+    /* Tactile button & chip micro-interactions */
+    .btn-pill:active, .btn-ghost:active, .btn-pill-ghost:active, .preset-btn:active, .copy-btn:active, .platform-tab-btn:active {
+      transform: scale(0.98);
+    }
+
+    /* prefers-reduced-motion compliance */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+      .hands-nexus-spark, .pulse-dot {
+        animation: none !important;
+      }
     }
 
     code, pre {
@@ -241,8 +290,8 @@
     }
 
     .btn-pill:hover {
-      background-color: #e5e5e5;
-      border-color: #e5e5e5;
+      background-color: var(--color-ash);
+      border-color: var(--color-ash);
     }
 
     .btn-ghost {
@@ -273,7 +322,7 @@
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      background-color: #1a1a1a;
+      background-color: var(--color-surface);
       border: 1px solid var(--color-graphite);
       border-radius: var(--radius-tags);
       padding: 6px 12px;
@@ -363,7 +412,7 @@
       align-items: center;
       justify-content: center;
       gap: 8px;
-      background-color: #181818;
+      background-color: var(--color-surface);
       color: var(--color-smoke);
       border: 1px solid var(--color-graphite);
       border-radius: var(--radius-buttons);
@@ -380,7 +429,7 @@
     .btn-pill-ghost:hover {
       border-color: var(--color-ash);
       color: var(--color-chalk);
-      background-color: #222222;
+      background-color: var(--color-surface-hover);
     }
 
     /* ASCII Hands Artwork Presentation */
@@ -540,7 +589,7 @@
 
     .hud-input {
       flex: 1;
-      background: #121214;
+      background: var(--color-obsidian);
       border: 1px solid var(--color-graphite);
       border-radius: var(--radius-cards);
       padding: 12px 16px;
@@ -562,11 +611,10 @@
     }
 
     .hud-device-window {
-      background: linear-gradient(180deg, #151518 0%, #0c0c0e 100%);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      border-radius: 12px;
-      padding: 20px;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+      background-color: var(--color-carbon);
+      border: 1px solid var(--color-graphite);
+      border-radius: var(--radius-cards);
+      padding: var(--spacing-20);
       width: 100%;
       max-width: 440px;
       margin: 0 auto;
@@ -576,25 +624,25 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 16px;
+      margin-bottom: var(--spacing-16);
     }
 
     .hud-title-wrap {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: var(--spacing-8);
     }
 
     .hud-status-led {
       width: 8px;
       height: 8px;
-      border-radius: 50%;
-      background-color: #10b981;
+      border-radius: var(--radius-buttons);
+      background-color: var(--color-pulse-green);
       transition: background-color 0.2s ease;
     }
 
     .hud-title {
-      font-size: 13px;
+      font-size: var(--text-caption);
       font-weight: 500;
       color: var(--color-chalk);
     }
@@ -603,11 +651,11 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      background: #18181b;
-      border: 1px solid #2e2e34;
-      border-radius: 7px;
-      padding: 8px 12px;
-      margin-bottom: 12px;
+      background: var(--color-surface);
+      border: 1px solid var(--color-graphite);
+      border-radius: var(--radius-tags);
+      padding: var(--spacing-8) var(--spacing-12);
+      margin-bottom: var(--spacing-12);
     }
 
     .hud-action-bar span {
@@ -621,9 +669,10 @@
     .hud-mode-pill {
       font-size: 10px;
       font-family: var(--font-mono);
-      background: rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--color-border-subtle);
       padding: 2px 6px;
-      border-radius: 4px;
+      border-radius: var(--radius-tags);
       color: var(--color-smoke);
     }
 
@@ -632,82 +681,89 @@
       gap: 2px;
       height: 12px;
       align-items: flex-end;
-      margin-bottom: 16px;
+      margin-bottom: var(--spacing-16);
       padding: 0 2px;
     }
 
     .monochart-bar {
       flex: 1;
-      background-color: #27272a;
-      height: 20%;
-      border-radius: 1px;
-      transition: height 0.1s ease, background-color 0.1s ease;
+      background-color: var(--color-iron);
+      height: 100%;
+      transform-origin: bottom;
+      transform: scaleY(0.2);
+      border-radius: 0;
+      transition: transform 0.1s ease, background-color 0.1s ease;
     }
 
     .monochart-bar.active {
-      background-color: #10b981;
+      background-color: var(--color-pulse-green);
     }
 
     .hud-transcript-box {
-      border-top: 1px solid rgba(255, 255, 255, 0.07);
-      padding-top: 12px;
+      border-top: 1px solid var(--color-graphite);
+      padding-top: var(--spacing-12);
       margin-bottom: 14px;
     }
 
     .hud-meta-label {
       font-size: 11px;
       font-weight: 500;
+      font-family: var(--font-mono);
       color: var(--color-smoke);
-      margin-bottom: 4px;
+      margin-bottom: var(--spacing-4);
       display: flex;
       align-items: center;
       gap: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
     }
 
     .hud-transcript-text {
-      font-size: 12px;
+      font-size: 13px;
       font-style: italic;
-      color: #a1a1aa;
-      line-height: 1.4;
-      min-height: 36px;
+      color: var(--color-ash);
+      line-height: 1.45;
+      min-height: 38px;
     }
 
     .hud-rebuttal-card {
-      background-color: #141417;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 8px;
+      background-color: var(--color-surface);
+      border: 1px solid var(--color-graphite);
+      border-radius: var(--radius-cards);
       padding: 14px;
     }
 
     .hud-finding-row {
       display: flex;
       align-items: center;
-      gap: 8px;
-      margin-bottom: 8px;
+      gap: var(--spacing-8);
+      margin-bottom: var(--spacing-8);
     }
 
     .hud-finding-tag {
       background-color: rgba(255, 255, 255, 0.06);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 4px;
+      border: 1px solid var(--color-graphite);
+      border-radius: var(--radius-tags);
       font-size: 10px;
       font-weight: 500;
+      font-family: var(--font-mono);
       color: var(--color-smoke);
       padding: 2px 6px;
       text-transform: uppercase;
+      letter-spacing: 0.04em;
     }
 
     .hud-flaw-title {
       font-size: 12px;
       font-weight: 500;
-      color: #fca5a5;
+      color: var(--color-status-alert);
     }
 
     .hud-counter-text {
       font-size: 13px;
-      color: #fafafa;
-      line-height: 1.45;
-      margin-bottom: 8px;
+      color: var(--color-chalk);
+      line-height: 1.5;
+      margin-bottom: var(--spacing-8);
     }
 
     .hud-footer-meta {
@@ -716,10 +772,10 @@
       align-items: center;
       font-size: 11px;
       font-family: var(--font-mono);
-      color: #71717a;
-      border-top: 1px solid rgba(255, 255, 255, 0.04);
-      padding-top: 8px;
-      margin-top: 8px;
+      color: var(--color-smoke);
+      border-top: 1px solid var(--color-border-subtle);
+      padding-top: var(--spacing-8);
+      margin-top: var(--spacing-8);
     }
 
     /* -------------------------------------------------------------
@@ -893,7 +949,7 @@
     .platform-tab-btn.active, .platform-tab-btn:hover {
       border-color: var(--color-graphite);
       color: var(--color-chalk);
-      background-color: #1a1a1a;
+      background-color: var(--color-surface);
     }
 
     .terminal-card {
@@ -910,7 +966,7 @@
       justify-content: space-between;
       margin-bottom: 16px;
       padding-bottom: 12px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      border-bottom: 1px solid var(--color-border-subtle);
     }
 
     .terminal-title {
@@ -927,9 +983,9 @@
       align-items: center;
       justify-content: space-between;
       gap: 16px;
-      background: #111113;
-      border: 1px solid #212124;
-      border-radius: 6px;
+      background: var(--color-obsidian);
+      border: 1px solid var(--color-graphite);
+      border-radius: var(--radius-cards);
       padding: 14px 18px;
       overflow-x: auto;
     }
@@ -948,25 +1004,35 @@
     }
 
     .copy-btn {
-      background: #1c1c1f;
-      border: 1px solid #2e2e34;
+      background: var(--color-surface);
+      border: 1px solid var(--color-graphite);
       color: var(--color-chalk);
-      border-radius: 4px;
-      padding: 6px 12px;
+      border-radius: var(--radius-tags);
+      padding: 6px 14px;
       font-size: 11px;
       font-family: var(--font-mono);
       text-transform: uppercase;
+      letter-spacing: 0.04em;
       cursor: pointer;
       display: flex;
       align-items: center;
       gap: 6px;
-      transition: all 0.15s ease;
+      transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
       white-space: nowrap;
     }
 
     .copy-btn:hover {
-      background: #27272a;
-      border-color: #3f3f46;
+      background: var(--color-surface-hover);
+      border-color: var(--color-ash);
+    }
+
+    .copy-btn:active {
+      transform: scale(0.96);
+    }
+
+    .copy-btn.copied {
+      border-color: var(--color-pulse-green);
+      color: var(--color-pulse-green);
     }
 
     /* Distribution Matrix Table */
@@ -1016,9 +1082,9 @@
       font-size: 11px;
       color: var(--color-pulse-green);
       background: rgba(152, 255, 56, 0.08);
-      border: 1px solid rgba(152, 255, 56, 0.2);
+      border: 1px solid rgba(152, 255, 56, 0.25);
       padding: 2px 6px;
-      border-radius: 3px;
+      border-radius: var(--radius-tags);
     }
 
     /* -------------------------------------------------------------
@@ -1028,7 +1094,7 @@
       border: 1px solid var(--color-graphite);
       border-radius: var(--radius-cards);
       padding: 40px;
-      background: linear-gradient(180deg, #121214 0%, #0d0d0f 100%);
+      background-color: var(--color-carbon);
       display: flex;
       flex-direction: column;
       gap: 24px;
@@ -1173,7 +1239,6 @@
   <section class="section-spacing" id="simulator">
     <div class="container">
       <div class="section-header-block">
-        <div class="section-eyebrow">Interactive Simulation</div>
         <h2 class="section-title">Experience the real-time HUD.</h2>
       </div>
 
@@ -1218,7 +1283,7 @@
                 <span id="hudStatusDot" class="hud-status-led"></span>
                 <span class="hud-title">elenchus</span>
               </div>
-              <div style="font-size: 11px; color: #71717a; font-family: var(--font-mono);">TOPMOST HUD</div>
+              <div style="font-size: 11px; color: var(--color-smoke); font-family: var(--font-mono);">TOPMOST HUD</div>
             </div>
 
             <div class="hud-action-bar">
@@ -1273,7 +1338,6 @@
   <section class="section-spacing" id="architecture">
     <div class="container">
       <div class="section-header-block">
-        <div class="section-eyebrow">Local-First Architecture</div>
         <h2 class="section-title">Engineered for sub-second Socratic clarity.</h2>
       </div>
 
@@ -1283,7 +1347,7 @@
           <svg class="service-icon" viewBox="0 0 24 24">
             <path d="M2 10v4M6 6v12M10 3v18M14 8v8M18 5v14M22 10v4"/>
           </svg>
-          <h3 class="service-title">01 / Dual-Channel Audio Ingestion</h3>
+          <h3 class="service-title">Dual-Channel Audio Ingestion</h3>
           <p class="service-body">
             Captures your physical microphone or captures your opponent directly over Discord, Zoom, or browser audio via WASAPI loopback. Audio never leaves local RAM.
           </p>
@@ -1296,7 +1360,7 @@
             <rect x="9" y="9" width="6" height="6"/>
             <path d="M9 1v3M15 1v3M9 20v3M15 20v3M20 9h3M20 14h3M1 9h3M1 14h3"/>
           </svg>
-          <h3 class="service-title">02 / Local INT8 Speech Recognition</h3>
+          <h3 class="service-title">Local INT8 Speech Recognition</h3>
           <p class="service-body">
             faster-whisper quantized on CPU for zero VRAM consumption. Discards hallucinated fillers, silences, and background music in sub-500ms bursts.
           </p>
@@ -1308,7 +1372,7 @@
             <circle cx="12" cy="12" r="10"/>
             <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/>
           </svg>
-          <h3 class="service-title">03 / Socratic Reasoning Daemon</h3>
+          <h3 class="service-title">Socratic Reasoning Daemon</h3>
           <p class="service-body">
             Interfaces with local Ollama weights (qwen2.5-coder:3b). Incomplete thoughts and rhetorical fillers are dropped before generating crisp, under-30-word counters.
           </p>
@@ -1321,7 +1385,7 @@
             <line x1="8" y1="21" x2="16" y2="21"/>
             <line x1="12" y1="17" x2="12" y2="21"/>
           </svg>
-          <h3 class="service-title">04 / Translucent HUD Overlay</h3>
+          <h3 class="service-title">Translucent HUD Overlay</h3>
           <p class="service-body">
             Minimalist PyQt6 card floating permanently atop your screen. Styled with dark directional lighting and Monochart audio activity meters.
           </p>
@@ -1338,7 +1402,6 @@
   <section class="section-spacing">
     <div class="container">
       <div class="manifesto-block">
-        <div class="section-eyebrow">Philosophical Baseline</div>
         <h2 class="manifesto-title">The Socratic Invariant</h2>
         <p class="manifesto-body">
           Debate in the digital age is saturated with rhetorical sleights of hand, bad-faith framing, and conversational derailment. Elenchus functions as an intellectual exoskeleton — silently transcribing speech, evaluating formal premises, and surfacing lethal Socratic refutations without breaking your cadence.
@@ -1375,7 +1438,6 @@
   <section class="section-spacing" id="quickstart">
     <div class="container">
       <div class="section-header-block">
-        <div class="section-eyebrow">Distribution & Quick Start</div>
         <h2 class="section-title">Deploy in one command. Zero runtime dependencies.</h2>
       </div>
 
@@ -1402,9 +1464,12 @@
           <code class="terminal-code" id="terminalCommand">
             <span class="prompt">&gt;</span>irm https://github.com/Asifdotexe/elenchus/releases/latest/download/install.ps1 | iex
           </code>
-          <button class="copy-btn" id="copyBtn" onclick="copyCommand()">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          <button class="copy-btn" id="copyBtn" onclick="copyCommand()" aria-label="Copy installation command to clipboard">
+            <span id="copyBtnIcon" aria-hidden="true" style="display:inline-flex;align-items:center;">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            </span>
             <span id="copyBtnText">Copy</span>
+            <span class="sr-only" id="copyLiveStatus" aria-live="polite"></span>
           </button>
         </div>
 
@@ -1427,21 +1492,21 @@
           </thead>
           <tbody>
             <tr>
-              <td>Windows 10 / 11</td>
+              <td>Windows (64-bit)</td>
               <td class="mono">x86_64</td>
               <td class="mono">elenchus-windows-x86_64.exe</td>
               <td><span class="badge-ok">SHA-256 Verified</span></td>
               <td class="mono">%LOCALAPPDATA%\Programs\Elenchus\</td>
             </tr>
             <tr>
-              <td>macOS 12+ (Apple Silicon)</td>
+              <td>macOS (Apple Silicon)</td>
               <td class="mono">arm64 (M1/M2/M3/M4)</td>
               <td class="mono">elenchus-darwin-arm64</td>
               <td><span class="badge-ok">SHA-256 Verified</span></td>
               <td class="mono">~/.local/bin/elenchus</td>
             </tr>
             <tr>
-              <td>macOS 12+ (Intel)</td>
+              <td>macOS (Intel)</td>
               <td class="mono">x86_64</td>
               <td class="mono">elenchus-darwin-x86_64</td>
               <td><span class="badge-ok">SHA-256 Verified</span></td>
@@ -1470,8 +1535,8 @@
       <div class="security-audit-card">
         <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 16px;">
           <div>
-            <div class="section-eyebrow">Cloudflare Audit Skill · Completed & Verified</div>
-            <h3 style="font-size: 24px; font-weight: 400; color: var(--color-chalk);">Six-Phase Defensive Security Rigour</h3>
+            <div style="font-family: var(--font-mono); font-size: 11px; color: var(--color-smoke); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px;">Defensive Security Rigour</div>
+            <h3 style="font-size: 24px; font-weight: 400; color: var(--color-chalk);">Six-Phase Independent Verification</h3>
           </div>
           <span class="status-badge" style="border-color: var(--color-pulse-green); color: var(--color-pulse-green);">
             <span class="pulse-dot"></span>
@@ -1634,15 +1699,24 @@
           handsCtx.fill();
         }
 
-        requestAnimationFrame(animateHandsCanvas);
+        if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+          requestAnimationFrame(animateHandsCanvas);
+        }
       }
 
-      window.addEventListener('load', () => {
-        initHandsCanvas();
-        animateHandsCanvas();
-      });
-      initHandsCanvas();
-      animateHandsCanvas();
+      let canvasInitialized = false;
+      function startCanvasLoop() {
+        if (!canvasInitialized) {
+          canvasInitialized = true;
+          initHandsCanvas();
+          animateHandsCanvas();
+        }
+      }
+
+      window.addEventListener('load', startCanvasLoop);
+      if (document.readyState === 'complete' || document.readyState === 'interactive') {
+        startCanvasLoop();
+      }
     }
 
     /* -------------------------------------------------------------
@@ -1658,10 +1732,11 @@
 
     // Idle ambient audio energy meter animation
     setInterval(() => {
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
       const baseLvl = Math.random();
       bars.forEach((b, idx) => {
         const heightPct = Math.max(10, Math.min(95, Math.sin(idx * 0.25) * 40 + baseLvl * 50));
-        b.style.height = heightPct + '%';
+        b.style.transform = `scaleY(${heightPct / 100})`;
         if (heightPct > 45) {
           b.classList.add('active');
         } else {
@@ -1732,19 +1807,19 @@
       const actionText = document.getElementById('hudActionText');
 
       // Busy state
-      statusLed.style.backgroundColor = '#f59e0b';
+      statusLed.style.backgroundColor = 'var(--color-status-busy)';
       statusMsg.textContent = 'Analyzing rhetorical flaws...';
-      actionText.innerHTML = '<span style="color:#f59e0b">Processing speech...</span>';
+      actionText.innerHTML = '<span style="color:var(--color-status-busy)">Processing speech...</span>';
 
       setTimeout(() => {
         document.getElementById('hudTranscript').textContent = `"${data.text}"`;
         document.getElementById('hudFlaw').textContent = data.flaw;
-        document.getElementById('hudFlaw').style.color = data.tag === 'Note' ? '#a1a1aa' : '#fca5a5';
+        document.getElementById('hudFlaw').style.color = data.tag === 'Note' ? 'var(--color-smoke)' : 'var(--color-status-alert)';
         document.getElementById('hudTag').textContent = data.tag;
         document.getElementById('hudCounter').textContent = data.counter;
         document.getElementById('hudLatency').textContent = `${data.latency} latency`;
 
-        statusLed.style.backgroundColor = '#10b981';
+        statusLed.style.backgroundColor = 'var(--color-pulse-green)';
         statusMsg.textContent = 'Ready';
         actionText.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/></svg> Listen (Click or Space)';
       }, 350);
@@ -1801,10 +1876,25 @@
 
     function copyCommand() {
       navigator.clipboard.writeText(currentCmd).then(() => {
+        const btn = document.getElementById('copyBtn');
         const btnText = document.getElementById('copyBtnText');
-        btnText.textContent = 'Copied!';
+        const btnIcon = document.getElementById('copyBtnIcon');
+        const liveStatus = document.getElementById('copyLiveStatus');
+
+        if (btn) btn.classList.add('copied');
+        if (btnText) btnText.textContent = 'Copied!';
+        if (btnIcon) {
+          btnIcon.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>';
+        }
+        if (liveStatus) liveStatus.textContent = 'Installation command copied to clipboard.';
+
         setTimeout(() => {
-          btnText.textContent = 'Copy';
+          if (btn) btn.classList.remove('copied');
+          if (btnText) btnText.textContent = 'Copy';
+          if (btnIcon) {
+            btnIcon.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
+          }
+          if (liveStatus) liveStatus.textContent = '';
         }, 2000);
       });
     }
