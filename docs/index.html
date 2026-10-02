@@ -1202,7 +1202,6 @@
           <li><a href="#simulator">HUD Simulator</a></li>
           <li><a href="#architecture">Architecture</a></li>
           <li><a href="#distribution">Distribution</a></li>
-          <li><a href="#security">Security Audit</a></li>
         </ul>
       </div>
       <div class="nav-right">
@@ -1551,65 +1550,7 @@
     </div>
   </section>
 
-  <hr class="hairline-divider">
 
-  <!-- =============================================================
-       SECURITY AUDIT & THREAT REMEDIATION LEDGER
-       ============================================================= -->
-  <section class="section-spacing" id="security">
-    <div class="container">
-      <div class="section-header-block">
-        <h2 class="section-title">Security &amp; Vulnerability Remediation Ledger</h2>
-        <p class="section-subtitle">
-          Audited under Cloudflare's structured six-phase security methodology across memory safety, input sanitization, and execution boundaries.
-        </p>
-      </div>
-
-      <div class="dist-table-wrap">
-        <table class="dist-table">
-          <thead>
-            <tr>
-              <th>Finding Identifier</th>
-              <th>Attack Surface</th>
-              <th>Threat Classification</th>
-              <th>Remediation Implementation</th>
-              <th>Audit Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td class="mono">aenf-prompt-injection</td>
-              <td>Ollama Interface</td>
-              <td>Instruction Override</td>
-              <td>Transcript enclosed in <code>&lt;opponent_statement&gt;</code> with System Prompt Rule 6</td>
-              <td><span class="badge-ok">Verified</span></td>
-            </tr>
-            <tr>
-              <td class="mono">aenf-richtext-injection</td>
-              <td>PyQt6 Overlay Labels</td>
-              <td>RichText / HTML Spoofing</td>
-              <td>Mandatory <code>Qt.TextFormat.PlainText</code> enforcement on all dynamic widgets</td>
-              <td><span class="badge-ok">Verified</span></td>
-            </tr>
-            <tr>
-              <td class="mono">aenf-unbounded-buffer</td>
-              <td>Audio Capture Pipeline</td>
-              <td>Memory / CPU Exhaustion</td>
-              <td>Hard 60-second capture ceiling with automated commit and memory drain</td>
-              <td><span class="badge-ok">Verified</span></td>
-            </tr>
-            <tr>
-              <td class="mono">aenf-installer-digest</td>
-              <td>Release Distribution</td>
-              <td>Binary Tampering</td>
-              <td>Pre-execution SHA-256 checksum verification in install.ps1 and install.sh</td>
-              <td><span class="badge-ok">Verified</span></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </section>
 
   <!-- =============================================================
        FOOTER / BOTTOM BAR
