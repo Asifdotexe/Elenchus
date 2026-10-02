@@ -212,7 +212,7 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      height: 64px;
+      height: 56px;
     }
 
     .nav-left {
@@ -345,8 +345,8 @@
        HERO SECTION (Centered layout with ASCII Creation of Adam hands)
        ------------------------------------------------------------- */
     .hero-section {
-      padding-top: 100px;
-      padding-bottom: 40px;
+      padding-top: clamp(16px, 2.5vh, 28px);
+      padding-bottom: clamp(16px, 2.5vh, 28px);
       position: relative;
       text-align: center;
       overflow: hidden;
@@ -358,7 +358,7 @@
       flex-direction: column;
       align-items: center;
       text-align: center;
-      gap: 20px;
+      gap: clamp(8px, 1.4vh, 14px);
       max-width: 900px;
       margin: 0 auto;
       position: relative;
@@ -366,10 +366,10 @@
     }
 
     .hero-headline {
-      font-size: 72px;
+      font-size: clamp(48px, 5.2vw, 68px);
       font-weight: 400;
-      line-height: 1.02;
-      letter-spacing: -1.4px;
+      line-height: 1.0;
+      letter-spacing: -1.2px;
       color: var(--color-chalk);
       margin: 0;
       text-wrap: balance;
@@ -377,24 +377,24 @@
 
     @media (max-width: 768px) {
       .hero-headline {
-        font-size: 46px;
-        letter-spacing: -0.8px;
+        font-size: 38px;
+        letter-spacing: -0.6px;
       }
     }
 
     .hero-tagline {
-      font-size: var(--text-subheading);
+      font-size: clamp(15px, 1.4vw, 18px);
       font-weight: 400;
       line-height: 1.35;
       color: var(--color-smoke);
-      max-width: 680px;
+      max-width: 640px;
       margin: 0 auto;
       letter-spacing: -0.2px;
     }
 
     @media (max-width: 768px) {
       .hero-tagline {
-        font-size: 17px;
+        font-size: 15px;
       }
     }
 
@@ -402,9 +402,14 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 16px;
-      margin-top: 10px;
+      gap: 12px;
+      margin-top: 4px;
       flex-wrap: wrap;
+    }
+
+    .hero-actions .btn-pill {
+      padding: 10px 22px;
+      font-size: 13px;
     }
 
     .btn-pill-ghost {
@@ -416,8 +421,8 @@
       color: var(--color-smoke);
       border: 1px solid var(--color-graphite);
       border-radius: var(--radius-buttons);
-      padding: 12px 24px;
-      font-size: 14px;
+      padding: 10px 22px;
+      font-size: 13px;
       font-weight: 400;
       text-transform: uppercase;
       letter-spacing: 0.02em;
@@ -436,8 +441,10 @@
     .hero-hands-wrapper {
       position: relative;
       width: 100%;
-      max-width: 1200px;
-      margin: 48px auto 0 auto;
+      max-width: 980px;
+      aspect-ratio: 3217 / 935;
+      max-height: clamp(190px, 42vh, 320px);
+      margin: clamp(10px, 1.8vh, 18px) auto 0 auto;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -445,9 +452,15 @@
       user-select: none;
     }
 
+    .hero-hands-wrapper picture {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
     .hero-hands-img {
       width: 100%;
-      height: auto;
+      height: 100%;
       display: block;
       object-fit: contain;
       filter: contrast(1.05) brightness(1.0);
@@ -458,6 +471,14 @@
 
     .hero-hands-wrapper:hover .hero-hands-img {
       filter: contrast(1.12) brightness(1.06);
+    }
+
+    @media (max-width: 768px) {
+      .hero-hands-wrapper {
+        aspect-ratio: 3143 / 1209;
+        max-height: 38vh;
+        margin-top: 8px;
+      }
     }
 
     #handsCanvas {
