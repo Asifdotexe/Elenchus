@@ -489,6 +489,9 @@ class ElenchusOverlay(QWidget):
         self.collapse_btn.setIcon(
             get_icon("activity" if self.is_collapsed else "minus", color="#9c9c9c", size=12)
         )
+        self.card_layout.activate()
+        self.outer_layout.activate()
+        self.resize(self.width(), 0)
         self.adjustSize()
 
     def keyPressEvent(self, event: QKeyEvent) -> None:
