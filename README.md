@@ -23,9 +23,27 @@ The system is engineered to run on consumer hardware (8 GB system RAM and 4 GB G
 
 ---
 
-## Setup
+## Installation & Setup
 
-### Windows
+### 1-Line Standalone Binary (No Python or uv Required)
+
+#### Windows (PowerShell)
+```powershell
+irm https://raw.githubusercontent.com/Asifdotexe/aenf/main/install.ps1 | iex
+```
+
+#### Linux / macOS
+```bash
+curl -fsSL https://raw.githubusercontent.com/Asifdotexe/aenf/main/install.sh | bash
+```
+
+Once installed, launch Elenchus anytime by running `elenchus`.
+
+---
+
+### Local Source Setup (with uv)
+
+#### Windows
 Run the setup script in PowerShell:
 ```powershell
 .\setup.ps1

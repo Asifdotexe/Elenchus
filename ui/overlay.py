@@ -190,6 +190,7 @@ class ElenchusOverlay(QWidget):
         status_row = QHBoxLayout()
         status_row.setContentsMargins(0, 0, 0, 0)
         self.status_label = QLabel("Ready")
+        self.status_label.setTextFormat(Qt.TextFormat.PlainText)
         self.status_label.setStyleSheet(
             "color: #71717a; font-size: 11px; "
             "font-family: 'Inter', -apple-system, 'Segoe UI', sans-serif;"
@@ -235,6 +236,7 @@ class ElenchusOverlay(QWidget):
         content_layout.addLayout(opponent_row)
 
         self.transcript_label = QLabel("Awaiting opponent argument...")
+        self.transcript_label.setTextFormat(Qt.TextFormat.PlainText)
         self.transcript_label.setWordWrap(True)
         self.transcript_label.setStyleSheet(
             "color: #a1a1aa; font-size: 12px; font-style: italic; line-height: 1.45; padding-left: 2px;"
@@ -271,6 +273,7 @@ class ElenchusOverlay(QWidget):
         finding_row.addWidget(self.flaw_tag)
 
         self.flaw_label = QLabel("None detected yet")
+        self.flaw_label.setTextFormat(Qt.TextFormat.PlainText)
         self.flaw_label.setStyleSheet("color: #e4e4e7; font-size: 12px; font-weight: 600;")
         self.flaw_label.setWordWrap(True)
         finding_row.addWidget(self.flaw_label, 1)
@@ -278,6 +281,7 @@ class ElenchusOverlay(QWidget):
 
         # Counter Rebuttal text
         self.counter_label = QLabel("Rebuttal will appear here after analysis.")
+        self.counter_label.setTextFormat(Qt.TextFormat.PlainText)
         self.counter_label.setWordWrap(True)
         self.counter_label.setStyleSheet(
             "color: #fafafa; font-size: 13px; font-weight: 400; line-height: 1.5;"
