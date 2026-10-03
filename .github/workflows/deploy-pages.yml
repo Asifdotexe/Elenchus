@@ -1,0 +1,58 @@
+name: Deploy Website to GitHub Pages
+
+on:
+  push:
+    branches:
+      - master
+      - main
+    paths:
+      - 'docs/**'
+      - 'assets/branding/kit/**'
+      - '.github/workflows/deploy-pages.yml'
+  workflow_dispatch:
+
+# Set GITHUB_TOKEN permissions to allow GitHub Pages deployment and OIDC token creation
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Prevent concurrent deployments from conflicting
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Build site bundle
+        run: |
+          mkdir -p _site
+          # Copy website files (HTML, markdown, hero images, and root favicons)
+          cp -r docs/* _site/
+
+          # Include complete production branding kit
+          mkdir -p _site/assets/branding/kit
+          cp -r assets/branding/kit/* _site/assets/branding/kit/
+
+          # Disable Jekyll engine to ensure raw assets and dotfiles are served as-is
+          touch _site/.nojekyll
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
