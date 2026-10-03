@@ -4,14 +4,18 @@
 import os
 from PyInstaller.utils.hooks import collect_data_files, collect_dynamic_libs
 
-# Collect package data and dynamic libraries
-datas = collect_data_files("faster_whisper")
-binaries = collect_dynamic_libs("ctranslate2") + collect_dynamic_libs("sounddevice")
-
 # Locate root directory relative to this spec file
 spec_dir = os.path.dirname(os.path.abspath(SPEC))
 project_root = os.path.abspath(os.path.join(spec_dir, ".."))
 main_script = os.path.join(project_root, "main.py")
+
+# Collect package data and dynamic libraries
+datas = collect_data_files("faster_whisper")
+icon_file = os.path.join(project_root, "assets", "branding", "kit", "favicon.ico")
+if os.path.exists(icon_file):
+    datas.append((icon_file, "assets/branding/kit"))
+
+binaries = collect_dynamic_libs("ctranslate2") + collect_dynamic_libs("sounddevice")
 
 a = Analysis(
     [main_script],
@@ -69,4 +73,5 @@ exe = EXE(
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
+    icon=icon_file if os.path.exists(icon_file) else None,
 )
