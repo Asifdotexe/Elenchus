@@ -1,6 +1,7 @@
 """PyQt6 Heads-Up Display (HUD) overlay for Elenchus (ἔλεγχος)."""
 
 import os
+import sys
 
 from PyQt6.QtCore import QPoint, QSize, Qt
 from PyQt6.QtGui import QIcon, QKeyEvent, QMouseEvent
@@ -52,7 +53,9 @@ class ElenchusOverlay(QWidget):
         self.setWindowOpacity(self.config.opacity)
         self.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
 
-        base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        base_dir = getattr(
+            sys, "_MEIPASS", os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        )
         icon_path = os.path.join(base_dir, "assets", "branding", "kit", "favicon.ico")
         if os.path.exists(icon_path):
             self.setWindowIcon(QIcon(icon_path))
