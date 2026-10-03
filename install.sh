@@ -5,7 +5,7 @@ set -euo pipefail
 echo ""
 echo "=== Elenchus (ἔλεγχος) Installer ==="
 
-REPO="Asifdotexe/aenf"
+REPO="Asifdotexe/elenchus"
 INSTALL_DIR="$HOME/.local/bin"
 TARGET_FILE="$INSTALL_DIR/elenchus"
 
