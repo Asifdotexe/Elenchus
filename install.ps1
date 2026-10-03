@@ -3,7 +3,7 @@ $ErrorActionPreference = "Stop"
 
 Write-Host "`n=== Elenchus (ἔλεγχος) Installer ===" -ForegroundColor Cyan
 
-$Repo = "Asifdotexe/aenf"
+$Repo = "Asifdotexe/elenchus"
 $InstallDir = Join-Path $env:LOCALAPPDATA "Programs\Elenchus"
 $ExePath = Join-Path $InstallDir "elenchus.exe"
 
