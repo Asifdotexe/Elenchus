@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 256" width="100%" height="100%">
+  <title>Elenchus Lockup d-classical</title>
+  <!-- Symbol on left (centered in 256x256 box) -->
+  <g transform="translate(10, 0)">
+    <g fill="#000000" fill-rule="evenodd">
+    <!-- Polytonic Greek Diacritics: Psili + Oxia -->
+    <path d="M 104 32 C 114 32 120 38 120 46 C 120 49 117 51 114 51 C 111 51 110 49 110 46 C 110 42 106 39 104 40 Z" />
+    <polygon points="140,48 164,24 174,28 150,52" />
+
+    <!-- Mirrored-3 Lowercase Greek Epsilon Body -->
+    <path d="
+      M 182 82
+      C 168 64 146 54 122 54
+      C 82 54 54 84 54 114
+      C 54 134 70 144 94 144
+      C 70 144 50 156 50 178
+      C 50 208 82 232 124 232
+      C 152 232 176 220 190 200
+      L 170 182
+      C 158 196 142 206 124 206
+      C 96 206 76 190 76 174
+      C 76 156 96 150 120 150
+      L 144 150
+      L 144 136
+      L 120 136
+      C 96 136 80 128 80 112
+      C 80 94 98 80 122 80
+      C 142 80 158 88 166 98
+      Z
+    " />
+  </g>
+
+  </g>
+  <!-- Wordmark on right: elenchus in General Sans / Aeonik styling -->
+  <text x="270" y="156"
+        fill="#000000"
+        font-family="'General Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif"
+        font-size="82"
+        font-weight="400"
+        letter-spacing="-1.8">elenchus</text>
+</svg>

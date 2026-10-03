@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256"><title>Elenchus Logo</title><rect width="256" height="256" rx="57.6" fill="#101010"/><g transform="translate(34.26 31.99) scale(0.756)" fill="#ffffff">
+
+  <g fill="#ffffff" fill-rule="evenodd">
+    <!-- Diacritics: Slightly bolder for micro-scale rasterization -->
+    <path d="M 102 28 C 116 28 124 36 124 46 C 124 50 120 53 115 53 C 110 53 108 50 108 46 C 108 41 104 37 102 38 Z" />
+    <polygon points="142,48 168,22 180,34 154,60" />
+
+    <!-- Faceted Caliper Mirrored-3 Epsilon with reinforced stroke and exact 45-deg angles -->
+    <path d="
+      M 188 78
+      L 200 90
+      L 176 114
+      L 144 82
+      L 102 82
+      L 76 108
+      L 76 120
+      L 110 120
+      L 134 144
+      L 110 168
+      L 76 168
+      L 76 180
+      L 102 206
+      L 144 206
+      L 176 174
+      L 200 198
+      L 188 210
+      L 140 232
+      L 88 232
+      L 48 192
+      L 48 168
+      C 48 150 62 144 78 144
+      C 62 144 48 138 48 120
+      L 48 96
+      L 88 56
+      L 140 56
+      Z
+    " />
+  </g>
+</g></svg>

@@ -1,7 +1,9 @@
 """PyQt6 Heads-Up Display (HUD) overlay for Elenchus (ἔλεγχος)."""
 
+import os
+
 from PyQt6.QtCore import QPoint, QSize, Qt
-from PyQt6.QtGui import QKeyEvent, QMouseEvent
+from PyQt6.QtGui import QIcon, QKeyEvent, QMouseEvent
 from PyQt6.QtWidgets import (
     QApplication,
     QFrame,
@@ -49,6 +51,11 @@ class ElenchusOverlay(QWidget):
         self.setFixedWidth(self.config.window_width)
         self.setWindowOpacity(self.config.opacity)
         self.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
+
+        base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        icon_path = os.path.join(base_dir, "assets", "branding", "kit", "favicon.ico")
+        if os.path.exists(icon_path):
+            self.setWindowIcon(QIcon(icon_path))
 
     def _build_ui(self) -> None:
         """Construct Hyperstudio-inspired dark interface with precision hairline borders."""
