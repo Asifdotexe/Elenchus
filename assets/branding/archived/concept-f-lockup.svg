@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 256" width="100%" height="100%">
+  <title>Elenchus Lockup f-ribbon</title>
+  <!-- Symbol on left (centered in 256x256 box) -->
+  <g transform="translate(10, 0)">
+    <g fill="#000000" fill-rule="evenodd">
+    <!-- Diacritics -->
+    <circle cx="110" cy="42" r="7" />
+    <polygon points="142,48 166,24 176,28 152,52" />
+
+    <!-- Upper Lobe Path with 45° terminal -->
+    <path d="
+      M 184 84
+      C 168 64 144 54 122 54
+      C 76 54 52 86 52 118
+      C 52 142 74 154 104 154
+      L 132 154
+      L 140 144
+      L 132 134
+      L 104 134
+      C 84 134 76 126 76 116
+      C 76 96 94 78 122 78
+      C 140 78 156 86 166 98
+      Z
+    " />
+
+    <!-- Lower Lobe Path with Socratic nexus gap at center (148 to 156) -->
+    <path d="
+      M 152 144
+      L 144 154
+      L 122 154
+      C 96 154 76 166 76 182
+      C 76 196 94 208 124 208
+      C 144 208 162 198 172 184
+      L 190 202
+      C 174 222 150 232 124 232
+      C 76 232 52 208 52 180
+      C 52 156 74 140 106 138
+      L 122 138
+      Z
+    " />
+  </g>
+
+  </g>
+  <!-- Wordmark on right: elenchus in General Sans / Aeonik styling -->
+  <text x="270" y="156"
+        fill="#000000"
+        font-family="'General Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif"
+        font-size="82"
+        font-weight="400"
+        letter-spacing="-1.8">elenchus</text>
+</svg>

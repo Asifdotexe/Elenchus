@@ -1,11 +1,12 @@
 """PyQt6 Heads-Up Display (HUD) overlay for Elenchus (ἔλεγχος)."""
 
+import os
+
 from PyQt6.QtCore import QPoint, QSize, Qt
-from PyQt6.QtGui import QColor, QKeyEvent, QMouseEvent
+from PyQt6.QtGui import QIcon, QKeyEvent, QMouseEvent
 from PyQt6.QtWidgets import (
     QApplication,
     QFrame,
-    QGraphicsDropShadowEffect,
     QHBoxLayout,
     QLabel,
     QPushButton,
@@ -51,31 +52,29 @@ class ElenchusOverlay(QWidget):
         self.setWindowOpacity(self.config.opacity)
         self.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
 
-    def _build_ui(self) -> None:
-        """Construct ShadCN-inspired dark interface with Lucide icons and Monochart meters."""
-        self.outer_layout = QVBoxLayout(self)
-        self.outer_layout.setContentsMargins(12, 12, 12, 12)
+        base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        icon_path = os.path.join(base_dir, "assets", "branding", "kit", "favicon.ico")
+        if os.path.exists(icon_path):
+            self.setWindowIcon(QIcon(icon_path))
 
-        # Primary card container with directional top-down lighting
+    def _build_ui(self) -> None:
+        """Construct Hyperstudio-inspired dark interface with precision hairline borders."""
+        self.outer_layout = QVBoxLayout(self)
+        self.outer_layout.setContentsMargins(4, 4, 4, 4)
+
+        # Primary card container (Carbon #080808 with 1px Graphite #212121 hairline border)
         self.card = QFrame()
         self.card.setObjectName("HUDCard")
         self.card.setStyleSheet("""
             QFrame#HUDCard {
-                background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #151518, stop:1 #0c0c0e);
-                border: 1px solid rgba(255, 255, 255, 0.08);
-                border-radius: 12px;
+                background-color: #080808;
+                border: 1px solid #212121;
+                border-radius: 8px;
             }
         """)
 
-        # Soft diffused drop shadow
-        shadow = QGraphicsDropShadowEffect(self)
-        shadow.setBlurRadius(24)
-        shadow.setColor(QColor(0, 0, 0, 180))
-        shadow.setOffset(0, 6)
-        self.card.setGraphicsEffect(shadow)
-
         self.card_layout = QVBoxLayout(self.card)
-        self.card_layout.setContentsMargins(16, 14, 16, 16)
+        self.card_layout.setContentsMargins(18, 16, 18, 16)
         self.card_layout.setSpacing(12)
 
         # -------------------------------------------------------------
@@ -84,59 +83,36 @@ class ElenchusOverlay(QWidget):
         header_layout = QHBoxLayout()
         header_layout.setSpacing(8)
 
+        # Pulse Green status indicator LED
         self.status_dot = QLabel("●")
         self.status_dot.setObjectName("StatusDot")
-        self.status_dot.setStyleSheet("color: #10b981; font-size: 8px;")
+        self.status_dot.setStyleSheet("color: #98ff38; font-size: 8px;")
         header_layout.addWidget(self.status_dot)
 
         self.title_label = QLabel("elenchus")
         self.title_label.setStyleSheet(
-            "color: #fafafa; font-weight: 600; font-size: 13px; "
-            "font-family: 'Inter', -apple-system, 'Segoe UI Variable Text', 'Segoe UI', sans-serif; "
+            "color: #f3f3f3; font-weight: 500; font-size: 13px; "
+            "font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; "
             "letter-spacing: -0.01em;"
         )
         header_layout.addWidget(self.title_label)
 
         header_layout.addStretch()
 
-        # Latency badge pill
-        self.latency_label = QLabel("")
-        self.latency_label.setStyleSheet(
-            "color: #71717a; font-size: 10px; font-weight: 500; font-family: monospace; "
-            "background-color: rgba(255, 255, 255, 0.04); padding: 2px 6px; border-radius: 4px;"
+        # Topmost HUD label
+        hud_badge = QLabel("TOPMOST HUD")
+        hud_badge.setStyleSheet(
+            "color: #9c9c9c; font-size: 10px; font-weight: 500; "
+            "font-family: 'JetBrains Mono', 'IBM Plex Mono', 'Cascadia Code', monospace; "
+            "letter-spacing: 0.05em;"
         )
-        header_layout.addWidget(self.latency_label)
-
-        # Mode toggle button with Lucide sliders icon
-        self.mode_btn = QPushButton("Manual" if self.manual_mode else "Auto")
-        self.mode_btn.setIcon(get_icon("sliders", color="#a1a1aa", size=13))
-        self.mode_btn.setIconSize(QSize(13, 13))
-        self.mode_btn.setToolTip("Toggle Manual Push-to-Listen vs Continuous Auto VAD")
-        self.mode_btn.setCursor(Qt.CursorShape.PointingHandCursor)
-        self.mode_btn.setStyleSheet("""
-            QPushButton {
-                background-color: #18181b;
-                color: #a1a1aa;
-                border: 1px solid #27272a;
-                border-radius: 5px;
-                padding: 3px 8px;
-                font-size: 11px;
-                font-weight: 500;
-            }
-            QPushButton:hover {
-                background-color: #27272a;
-                color: #fafafa;
-                border-color: #3f3f46;
-            }
-        """)
-        self.mode_btn.clicked.connect(self._toggle_mode)
-        header_layout.addWidget(self.mode_btn)
+        header_layout.addWidget(hud_badge)
 
         # Collapse Button with Lucide minus icon
         self.collapse_btn = QPushButton()
-        self.collapse_btn.setIcon(get_icon("minus", color="#71717a", size=13))
-        self.collapse_btn.setIconSize(QSize(13, 13))
-        self.collapse_btn.setFixedSize(22, 22)
+        self.collapse_btn.setIcon(get_icon("minus", color="#9c9c9c", size=12))
+        self.collapse_btn.setIconSize(QSize(12, 12))
+        self.collapse_btn.setFixedSize(20, 20)
         self.collapse_btn.setCursor(Qt.CursorShape.PointingHandCursor)
         self.collapse_btn.setStyleSheet("""
             QPushButton {
@@ -145,7 +121,7 @@ class ElenchusOverlay(QWidget):
                 border-radius: 4px;
             }
             QPushButton:hover {
-                background-color: #27272a;
+                background-color: #212121;
             }
         """)
         self.collapse_btn.clicked.connect(self._toggle_collapse)
@@ -153,9 +129,9 @@ class ElenchusOverlay(QWidget):
 
         # Close Button with Lucide X icon
         self.close_btn = QPushButton()
-        self.close_btn.setIcon(get_icon("x", color="#71717a", size=13))
-        self.close_btn.setIconSize(QSize(13, 13))
-        self.close_btn.setFixedSize(22, 22)
+        self.close_btn.setIcon(get_icon("x", color="#9c9c9c", size=12))
+        self.close_btn.setIconSize(QSize(12, 12))
+        self.close_btn.setFixedSize(20, 20)
         self.close_btn.setCursor(Qt.CursorShape.PointingHandCursor)
         self.close_btn.setStyleSheet("""
             QPushButton {
@@ -164,7 +140,7 @@ class ElenchusOverlay(QWidget):
                 border-radius: 4px;
             }
             QPushButton:hover {
-                background-color: #27272a;
+                background-color: #212121;
             }
         """)
         self.close_btn.clicked.connect(self.close)
@@ -173,64 +149,85 @@ class ElenchusOverlay(QWidget):
         self.card_layout.addLayout(header_layout)
 
         # -------------------------------------------------------------
-        # 2. Main Action Button & Monochart Audio Level Meter
+        # 2. Action Bar & Mode Pill
         # -------------------------------------------------------------
+        self.action_bar = QFrame()
+        self.action_bar.setObjectName("ActionBar")
+        self.action_bar.setStyleSheet("""
+            QFrame#ActionBar {
+                background-color: #101010;
+                border: 1px solid #212121;
+                border-radius: 4px;
+            }
+        """)
+        action_bar_layout = QHBoxLayout(self.action_bar)
+        action_bar_layout.setContentsMargins(10, 6, 10, 6)
+        action_bar_layout.setSpacing(8)
+
+        # Action Trigger (Listen / Stop)
         self.action_btn = QPushButton()
-        self.action_btn.setFixedHeight(36)
         self.action_btn.setCursor(Qt.CursorShape.PointingHandCursor)
         self._apply_idle_button_style()
         self.action_btn.clicked.connect(self._on_action_button_clicked)
-        self.card_layout.addWidget(self.action_btn)
+        action_bar_layout.addWidget(self.action_btn, 1)
 
-        # Monocharts-inspired segmented audio activity meter
+        # Mode toggle pill (Manual Mode / Auto Mode)
+        self.mode_btn = QPushButton("Manual Mode" if self.manual_mode else "Auto Mode")
+        self.mode_btn.setCursor(Qt.CursorShape.PointingHandCursor)
+        self.mode_btn.setToolTip("Toggle Manual Push-to-Listen vs Continuous Auto VAD")
+        self.mode_btn.setStyleSheet("""
+            QPushButton {
+                background-color: rgba(255, 255, 255, 0.06);
+                color: #9c9c9c;
+                border: 1px solid #212121;
+                border-radius: 4px;
+                padding: 2px 7px;
+                font-size: 10px;
+                font-family: 'JetBrains Mono', 'IBM Plex Mono', 'Cascadia Code', monospace;
+                font-weight: 500;
+                letter-spacing: 0.02em;
+            }
+            QPushButton:hover {
+                border-color: #474747;
+                color: #f3f3f3;
+            }
+        """)
+        self.mode_btn.clicked.connect(self._toggle_mode)
+        action_bar_layout.addWidget(self.mode_btn)
+
+        self.card_layout.addWidget(self.action_bar)
+
+        # Monochart discrete audio activity meter (30 bars)
         self.audio_meter = MonochartMeter(bar_count=30)
         self.card_layout.addWidget(self.audio_meter)
-
-        # Status row
-        status_row = QHBoxLayout()
-        status_row.setContentsMargins(0, 0, 0, 0)
-        self.status_label = QLabel("Ready")
-        self.status_label.setTextFormat(Qt.TextFormat.PlainText)
-        self.status_label.setStyleSheet(
-            "color: #71717a; font-size: 11px; "
-            "font-family: 'Inter', -apple-system, 'Segoe UI', sans-serif;"
-        )
-        status_row.addWidget(self.status_label)
-        status_row.addStretch()
-
-        shortcut_label = QLabel("Space")
-        shortcut_label.setStyleSheet(
-            "color: #71717a; font-size: 10px; font-weight: 500; font-family: monospace; "
-            "background-color: #18181b; border: 1px solid #27272a; border-radius: 3px; padding: 1px 5px;"
-        )
-        status_row.addWidget(shortcut_label)
-        self.card_layout.addLayout(status_row)
 
         # -------------------------------------------------------------
         # 3. Collapsible Content Container
         # -------------------------------------------------------------
         self.content_widget = QWidget()
         content_layout = QVBoxLayout(self.content_widget)
-        content_layout.setContentsMargins(0, 4, 0, 0)
+        content_layout.setContentsMargins(0, 0, 0, 0)
         content_layout.setSpacing(12)
 
-        # Subtle 1px ShadCN separator
+        # Hairline divider
         divider = QFrame()
         divider.setFrameShape(QFrame.Shape.HLine)
-        divider.setStyleSheet(
-            "border: none; background-color: rgba(255, 255, 255, 0.07); max-height: 1px;"
-        )
+        divider.setStyleSheet("border: none; background-color: #212121; max-height: 1px;")
         content_layout.addWidget(divider)
 
         # Opponent Transcript Section
         opponent_row = QHBoxLayout()
         opponent_row.setSpacing(6)
         opponent_icon = QLabel()
-        opponent_icon.setPixmap(get_pixmap("message", color="#71717a", size=13))
+        opponent_icon.setPixmap(get_pixmap("message", color="#9c9c9c", size=12))
         opponent_row.addWidget(opponent_icon)
 
-        opponent_title = QLabel("Opponent Statement")
-        opponent_title.setStyleSheet("color: #71717a; font-size: 11px; font-weight: 500;")
+        opponent_title = QLabel("OPPONENT STATEMENT")
+        opponent_title.setStyleSheet(
+            "color: #9c9c9c; font-size: 11px; font-weight: 500; "
+            "font-family: 'JetBrains Mono', 'IBM Plex Mono', 'Cascadia Code', monospace; "
+            "letter-spacing: 0.05em;"
+        )
         opponent_row.addWidget(opponent_title)
         opponent_row.addStretch()
         content_layout.addLayout(opponent_row)
@@ -239,42 +236,45 @@ class ElenchusOverlay(QWidget):
         self.transcript_label.setTextFormat(Qt.TextFormat.PlainText)
         self.transcript_label.setWordWrap(True)
         self.transcript_label.setStyleSheet(
-            "color: #a1a1aa; font-size: 12px; font-style: italic; line-height: 1.45; padding-left: 2px;"
+            "color: #c1c1c1; font-size: 13px; font-style: italic; line-height: 1.45; padding-left: 2px;"
         )
         content_layout.addWidget(self.transcript_label)
 
         # Finding & Rebuttal Card Container
         self.rebuttal_card = QFrame()
+        self.rebuttal_card.setObjectName("RebuttalCard")
         self.rebuttal_card.setStyleSheet("""
-            QFrame {
-                background-color: #141417;
-                border: 1px solid rgba(255, 255, 255, 0.08);
+            QFrame#RebuttalCard {
+                background-color: #101010;
+                border: 1px solid #212121;
                 border-radius: 8px;
             }
         """)
         rebuttal_card_layout = QVBoxLayout(self.rebuttal_card)
-        rebuttal_card_layout.setContentsMargins(14, 12, 14, 14)
+        rebuttal_card_layout.setContentsMargins(14, 12, 14, 12)
         rebuttal_card_layout.setSpacing(8)
 
         # Finding Header Row
         finding_row = QHBoxLayout()
-        finding_row.setSpacing(6)
+        finding_row.setSpacing(8)
 
-        self.flaw_tag = QLabel("Finding")
+        self.flaw_tag = QLabel("FINDING")
         self.flaw_tag.setStyleSheet("""
             background-color: rgba(255, 255, 255, 0.06);
-            color: #a1a1aa;
+            color: #9c9c9c;
             font-size: 10px;
             font-weight: 500;
-            padding: 2px 7px;
+            font-family: 'JetBrains Mono', 'IBM Plex Mono', 'Cascadia Code', monospace;
+            padding: 2px 6px;
             border-radius: 4px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            border: 1px solid #212121;
+            letter-spacing: 0.04em;
         """)
         finding_row.addWidget(self.flaw_tag)
 
         self.flaw_label = QLabel("None detected yet")
         self.flaw_label.setTextFormat(Qt.TextFormat.PlainText)
-        self.flaw_label.setStyleSheet("color: #e4e4e7; font-size: 12px; font-weight: 600;")
+        self.flaw_label.setStyleSheet("color: #9c9c9c; font-size: 12px; font-weight: 500;")
         self.flaw_label.setWordWrap(True)
         finding_row.addWidget(self.flaw_label, 1)
         rebuttal_card_layout.addLayout(finding_row)
@@ -284,9 +284,36 @@ class ElenchusOverlay(QWidget):
         self.counter_label.setTextFormat(Qt.TextFormat.PlainText)
         self.counter_label.setWordWrap(True)
         self.counter_label.setStyleSheet(
-            "color: #fafafa; font-size: 13px; font-weight: 400; line-height: 1.5;"
+            "color: #f3f3f3; font-size: 13px; font-weight: 400; line-height: 1.5;"
         )
         rebuttal_card_layout.addWidget(self.counter_label)
+
+        # Footer Meta Row (Status & Latency)
+        card_divider = QFrame()
+        card_divider.setFrameShape(QFrame.Shape.HLine)
+        card_divider.setStyleSheet("border: none; background-color: #212121; max-height: 1px;")
+        rebuttal_card_layout.addWidget(card_divider)
+
+        footer_row = QHBoxLayout()
+        footer_row.setContentsMargins(0, 2, 0, 0)
+
+        self.status_label = QLabel("Ready")
+        self.status_label.setTextFormat(Qt.TextFormat.PlainText)
+        self.status_label.setStyleSheet(
+            "color: #9c9c9c; font-size: 11px; "
+            "font-family: 'JetBrains Mono', 'IBM Plex Mono', 'Cascadia Code', monospace;"
+        )
+        footer_row.addWidget(self.status_label)
+        footer_row.addStretch()
+
+        self.latency_label = QLabel("")
+        self.latency_label.setTextFormat(Qt.TextFormat.PlainText)
+        self.latency_label.setStyleSheet(
+            "color: #9c9c9c; font-size: 11px; "
+            "font-family: 'JetBrains Mono', 'IBM Plex Mono', 'Cascadia Code', monospace;"
+        )
+        footer_row.addWidget(self.latency_label)
+        rebuttal_card_layout.addLayout(footer_row)
 
         content_layout.addWidget(self.rebuttal_card)
         self.card_layout.addWidget(self.content_widget)
@@ -294,53 +321,41 @@ class ElenchusOverlay(QWidget):
 
     def _apply_idle_button_style(self) -> None:
         """Apply visual styling for the idle/ready listen button state."""
-        self.action_btn.setText("  Listen")
-        self.action_btn.setIcon(get_icon("mic", color="#fafafa", size=14))
-        self.action_btn.setIconSize(QSize(14, 14))
+        self.action_btn.setText("  Listen (Click or Space)")
+        self.action_btn.setIcon(get_icon("mic", color="#f3f3f3", size=13))
+        self.action_btn.setIconSize(QSize(13, 13))
         self.action_btn.setStyleSheet("""
             QPushButton {
-                background-color: #18181b;
-                color: #fafafa;
-                border: 1px solid #2e2e34;
-                border-radius: 7px;
-                font-weight: 500;
+                background: transparent;
+                color: #f3f3f3;
+                border: none;
                 font-size: 12px;
-                letter-spacing: 0.1px;
-                text-align: center;
+                font-weight: 400;
+                text-align: left;
+                padding: 2px 0px;
             }
             QPushButton:hover {
-                background-color: #222226;
-                border: 1px solid #3f3f46;
                 color: #ffffff;
-            }
-            QPushButton:pressed {
-                background-color: #121215;
             }
         """)
 
     def _apply_recording_button_style(self) -> None:
         """Apply visual styling for the active recording button state."""
         self.action_btn.setText("  Stop listening")
-        self.action_btn.setIcon(get_icon("square", color="#fca5a5", size=14))
-        self.action_btn.setIconSize(QSize(14, 14))
+        self.action_btn.setIcon(get_icon("square", color="#ef4444", size=13))
+        self.action_btn.setIconSize(QSize(13, 13))
         self.action_btn.setStyleSheet("""
             QPushButton {
-                background-color: #261215;
-                color: #fca5a5;
-                border: 1px solid #7f1d1d;
-                border-radius: 7px;
-                font-weight: 500;
+                background: transparent;
+                color: #ef4444;
+                border: none;
                 font-size: 12px;
-                letter-spacing: 0.1px;
-                text-align: center;
+                font-weight: 500;
+                text-align: left;
+                padding: 2px 0px;
             }
             QPushButton:hover {
-                background-color: #321519;
-                border: 1px solid #991b1b;
-                color: #fecaca;
-            }
-            QPushButton:pressed {
-                background-color: #1d0e10;
+                color: #f87171;
             }
         """)
 
@@ -371,26 +386,25 @@ class ElenchusOverlay(QWidget):
     def _toggle_mode(self) -> None:
         """Toggle between Manual button mode and Auto VAD silence-cut mode."""
         self.manual_mode = not self.manual_mode
-        self.mode_btn.setText("Manual" if self.manual_mode else "Auto")
+        self.mode_btn.setText("Manual Mode" if self.manual_mode else "Auto Mode")
         self.pipeline.set_mode(self.manual_mode)
 
         if not self.manual_mode:
             self.action_btn.setText("  Auto detecting speech")
-            self.action_btn.setIcon(get_icon("activity", color="#10b981", size=14))
-            self.action_btn.setIconSize(QSize(14, 14))
+            self.action_btn.setIcon(get_icon("activity", color="#98ff38", size=13))
+            self.action_btn.setIconSize(QSize(13, 13))
             self.action_btn.setStyleSheet("""
                 QPushButton {
-                    background-color: #121215;
-                    color: #a1a1aa;
-                    border: 1px solid #27272a;
-                    border-radius: 7px;
-                    font-size: 11px;
-                    font-weight: 500;
-                    text-align: center;
+                    background: transparent;
+                    color: #9c9c9c;
+                    border: none;
+                    font-size: 12px;
+                    font-weight: 400;
+                    text-align: left;
+                    padding: 2px 0px;
                 }
                 QPushButton:hover {
-                    background-color: #18181b;
-                    color: #d4d4d8;
+                    color: #f3f3f3;
                 }
             """)
         else:
@@ -404,9 +418,9 @@ class ElenchusOverlay(QWidget):
         """
         self.status_label.setText(text)
         if level == "ok":
-            self.status_dot.setStyleSheet("color: #10b981; font-size: 8px;")
+            self.status_dot.setStyleSheet("color: #98ff38; font-size: 8px;")
         elif level == "busy":
-            self.status_dot.setStyleSheet("color: #f59e0b; font-size: 8px;")
+            self.status_dot.setStyleSheet("color: #d97706; font-size: 8px;")
         elif level == "error":
             self.status_dot.setStyleSheet("color: #ef4444; font-size: 8px;")
 
@@ -434,50 +448,57 @@ class ElenchusOverlay(QWidget):
         """
         self.flaw_label.setText(flaw)
         self.counter_label.setText(counter)
-        self.latency_label.setText(f"{latency:.1f}s")
+        self.latency_label.setText(f"{latency:.1f}s latency")
 
         is_non_argument = flaw.lower().startswith("none") or "incomplete" in flaw.lower()
 
         if is_non_argument:
-            self.flaw_tag.setText("Note")
+            self.flaw_tag.setText("NOTE")
             self.flaw_tag.setStyleSheet("""
-                background-color: rgba(255, 255, 255, 0.05);
-                color: #71717a;
+                background-color: rgba(255, 255, 255, 0.06);
+                color: #9c9c9c;
                 font-size: 10px;
                 font-weight: 500;
-                padding: 2px 7px;
+                font-family: 'JetBrains Mono', 'IBM Plex Mono', 'Cascadia Code', monospace;
+                padding: 2px 6px;
                 border-radius: 4px;
-                border: 1px solid rgba(255, 255, 255, 0.08);
+                border: 1px solid #212121;
+                letter-spacing: 0.04em;
             """)
-            self.flaw_label.setStyleSheet("color: #a1a1aa; font-size: 12px; font-weight: 500;")
+            self.flaw_label.setStyleSheet("color: #9c9c9c; font-size: 12px; font-weight: 500;")
             self.counter_label.setStyleSheet(
-                "color: #71717a; font-size: 12px; font-style: italic; line-height: 1.45;"
+                "color: #9c9c9c; font-size: 13px; font-style: italic; line-height: 1.45;"
             )
         else:
-            self.flaw_tag.setText("Fallacy")
+            self.flaw_tag.setText("FINDING")
             self.flaw_tag.setStyleSheet("""
                 background-color: rgba(239, 68, 68, 0.12);
-                color: #f87171;
+                color: #ef4444;
                 font-size: 10px;
-                font-weight: 600;
-                padding: 2px 7px;
+                font-weight: 500;
+                font-family: 'JetBrains Mono', 'IBM Plex Mono', 'Cascadia Code', monospace;
+                padding: 2px 6px;
                 border-radius: 4px;
                 border: 1px solid rgba(239, 68, 68, 0.25);
+                letter-spacing: 0.04em;
             """)
-            self.flaw_label.setStyleSheet("color: #fafafa; font-size: 12px; font-weight: 600;")
+            self.flaw_label.setStyleSheet("color: #ef4444; font-size: 12px; font-weight: 500;")
             self.counter_label.setStyleSheet(
-                "color: #fafafa; font-size: 13px; font-weight: 400; line-height: 1.5;"
+                "color: #f3f3f3; font-size: 13px; font-weight: 400; line-height: 1.5;"
             )
 
     def _toggle_collapse(self) -> None:
         """Collapse or expand HUD content."""
         self.is_collapsed = not self.is_collapsed
         self.content_widget.setVisible(not self.is_collapsed)
-        self.action_btn.setVisible(not self.is_collapsed)
+        self.action_bar.setVisible(not self.is_collapsed)
         self.audio_meter.setVisible(not self.is_collapsed)
         self.collapse_btn.setIcon(
-            get_icon("activity" if self.is_collapsed else "minus", color="#71717a", size=13)
+            get_icon("activity" if self.is_collapsed else "minus", color="#9c9c9c", size=12)
         )
+        self.card_layout.activate()
+        self.outer_layout.activate()
+        self.resize(self.width(), 0)
         self.adjustSize()
 
     def keyPressEvent(self, event: QKeyEvent) -> None:

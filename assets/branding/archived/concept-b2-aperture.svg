@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="100%" height="100%">
+  <title>Elenchus Logo Concept B2 — The Diamond Prism Aperture</title>
+  <g fill="#000000" fill-rule="evenodd">
+    <!-- Polytonic Greek Diacritics (Psili + Oxia) as Precision Facets -->
+    <!-- Psili: Minimal geometric breathing mark -->
+    <path d="M 106 34 C 116 34 122 40 122 48 C 122 51 120 53 117 53 C 114 53 113 51 113 48 C 113 44 110 41 106 41 Z" />
+    <!-- Oxia: Diamond Refutation Shard at 45° -->
+    <polygon points="144,46 164,24 176,36 156,58" />
+
+    <!-- Main Architectural Epsilon with Central Diamond Aperture -->
+    <path d="
+      M 52 64
+      L 192 64
+      L 204 88
+      L 176 104
+      L 90 104
+      L 90 130
+      L 116 130
+      L 130 116
+      L 144 130
+      L 188 130
+      L 198 144
+      L 188 158
+      L 144 158
+      L 130 172
+      L 116 158
+      L 90 158
+      L 90 184
+      L 176 184
+      L 204 200
+      L 192 224
+      L 52 224
+      Z
+    " />
+
+    <!-- Central Diamond Negative Space Refraction Nexus (Rhombus inside beam) -->
+    <!-- The aperture in the crossbar: points=(130, 126; 142, 144; 130, 162; 118, 144) -->
+    <polygon points="130,126 142,144 130,162 118,144" fill="#ffffff" />
+  </g>
+</svg>

@@ -1,0 +1,47 @@
+{
+  "brand": "Elenchus",
+  "tagline": "Socratic Debate Analysis & Fallacy Detection Engine",
+  "brief": "A precision cognitive instrument that analyzes spoken dialectic in real time, detecting logical fallacies and formulating surgical Socratic cross-examinations. The identity blends ancient Greek dialectic rigor with high-tech obsidian CNC hardware precision.",
+  "adjectives": [
+    "precise",
+    "dialectic",
+    "rigorous",
+    "instrumental",
+    "obsidian"
+  ],
+  "criteria": "Success: Immediately recognisable lowercase Greek epsilon (ἔ) with polytonic diacritics, 45-degree CNC-milled instrument facets, ultra-crisp at 16px, and authoritative on dark obsidian UI.",
+  "industry": "developer-tools",
+  "mockups": [
+    "terminal",
+    "readme",
+    "app-icon",
+    "website",
+    "sticker",
+    "social"
+  ],
+  "nav": [
+    "Overview",
+    "Simulator",
+    "Architecture",
+    "Distribution"
+  ],
+  "brand_color": "#101010",
+  "greyscale": false,
+  "final": true,
+  "round": 2,
+  "concepts": [
+    {
+      "name": "The Faceted Caliper",
+      "symbol": "elenchus-symbol.svg",
+      "lockup": "elenchus-lockup-horizontal.svg",
+      "stacked": "elenchus-lockup-stacked.svg",
+      "idea": "A mirrored-3 lowercase Greek polytonic epsilon (ἔ) formed from 45-degree chamfered precision caliper facets.",
+      "rationale": [
+        "Typographic authenticity: Direct representation of the Greek root ἔλεγχος (elenchus) crowned with smooth breathing (psili) and acute spark (oxia)",
+        "Instrumental aesthetic: 45-degree architectural chamfers evoke high-end CNC-milled obsidian hardware, perfectly harmonizing with the dark desktop HUD",
+        "Scale resilience: 100/100 audited vector geometry that stays razor-sharp from 16px favicons to high-res display billboards"
+      ]
+    }
+  ],
+  "recommendation": "The Faceted Caliper is the definitive visual signature for Elenchus: mathematically precise, historically anchored in Socratic dialectic, and calibrated for dark-mode developer tools."
+}

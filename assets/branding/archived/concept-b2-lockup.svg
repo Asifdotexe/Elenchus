@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 256" width="100%" height="100%">
+  <title>Elenchus Lockup b2-prism</title>
+  <!-- Symbol on left (centered in 256x256 box) -->
+  <g transform="translate(10, 0)">
+    <g fill="#000000" fill-rule="evenodd">
+    <!-- Psili: Minimal geometric breathing mark -->
+    <path d="M 104 32 C 114 32 120 38 120 46 C 120 49 117 51 114 51 C 111 51 110 49 110 46 C 110 42 106 39 104 40 Z" />
+    <!-- Oxia: Precision Diamond Shard at 45° -->
+    <polygon points="144,46 166,24 176,34 154,56" />
+
+    <!-- Outer Caliper Epsilon Body with 45° Chamfered Jaws -->
+    <path d="M 182 86
+             L 194 98
+             L 174 118
+             C 162 100 146 90 126 90
+             C 92 90 68 114 68 142
+             C 68 170 92 194 126 194
+             C 146 194 162 184 174 166
+             L 194 186
+             L 182 198
+             C 166 218 144 228 126 228
+             C 74 228 40 190 40 142
+             C 40 94 74 56 126 56
+             C 144 56 166 66 182 86
+             Z" />
+
+    <!-- Continuous Center Crossbar with Central Diamond Aperture -->
+    <path d="M 68 130 L 186 130 L 186 154 L 68 154 Z
+             M 130 124 L 146 142 L 130 160 L 114 142 Z" />
+  </g>
+
+  </g>
+  <!-- Wordmark on right: elenchus in General Sans / Aeonik styling -->
+  <text x="270" y="156"
+        fill="#000000"
+        font-family="'General Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif"
+        font-size="82"
+        font-weight="400"
+        letter-spacing="-1.8">elenchus</text>
+</svg>

@@ -10,7 +10,7 @@ __pycache__/
 .Python
 build/
 develop-eggs/
-dist/
+/dist/
 downloads/
 eggs/
 .eggs/
@@ -215,3 +215,7 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+.impeccable/live/
+
+# Scratch & transient development files
+scratch/

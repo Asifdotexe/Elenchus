@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 256" width="100%" height="100%">
+  <title>Elenchus Lockup b3-nexus</title>
+  <!-- Symbol on left (centered in 256x256 box) -->
+  <g transform="translate(10, 0)">
+    <g fill="#000000" fill-rule="evenodd">
+    <!-- Unified Polytonic Diacritic (Breathing Curve + 45° Accent Blade) -->
+    <path d="M 104 32 C 114 32 120 38 120 46 C 120 49 117 51 114 51 C 111 51 110 49 110 46 C 110 42 106 39 104 40 Z" />
+    <polygon points="138,50 168,20 178,24 148,54" />
+
+    <!-- Caliper Epsilon Body with Chamfered Precision Terminals -->
+    <path d="M 186 86
+             L 198 98
+             L 174 122
+             C 162 104 146 94 126 94
+             C 92 94 68 118 68 142
+             C 68 166 92 190 126 190
+             C 146 190 162 180 174 162
+             L 198 186
+             L 186 198
+             C 168 220 144 230 126 230
+             C 74 230 40 190 40 142
+             C 40 94 74 54 126 54
+             C 144 54 168 64 186 86
+             Z" />
+
+    <!-- Center Compass Blade: Sharp Refutation Pointer (Left to Right) -->
+    <polygon points="68,130 138,130 150,142 138,154 68,154" />
+    <!-- Opposing Stationary Anvil from the right (6px gap) -->
+    <polygon points="156,142 164,134 186,134 186,150 164,150" />
+  </g>
+
+  </g>
+  <!-- Wordmark on right: elenchus in General Sans / Aeonik styling -->
+  <text x="270" y="156"
+        fill="#000000"
+        font-family="'General Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif"
+        font-size="82"
+        font-weight="400"
+        letter-spacing="-1.8">elenchus</text>
+</svg>

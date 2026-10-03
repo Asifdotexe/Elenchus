@@ -1,0 +1,982 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1600" height="1726" viewBox="0 0 1600 1726"><defs><filter id="grey"><feColorMatrix type="saturate" values="0"/></filter></defs><rect width="1600" height="1726" fill="#f7f7f4"/><text x="60" y="78" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="40" font-weight="700" fill="#161616">Elenchus (ἔλεγχος) — Logo Concepts</text><text x="60" y="116" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="20" fill="#6b6b6b">Comparative Study: Lunate Caliper (A–C) vs Mirrored-3 Epsilon (D–F)</text><rect x="60" y="150" width="474.667" height="744" rx="18" fill="#fff" stroke="#e4e4e0" stroke-width="1"/><g filter="url(#grey)"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" x="90" y="190" width="414.667" height="300" preserveAspectRatio="xMidYMid meet">
+  <title>Elenchus Logo Concept B1 — The Caliper Dialectic</title>
+  <g fill="#000000" fill-rule="evenodd">
+    <!-- Psili: Smooth breathing arc -->
+    <path d="M 104 32 C 114 32 120 38 120 46 C 120 49 117 51 114 51 C 111 51 110 49 110 46 C 110 42 106 39 104 40 Z" />
+    <!-- Oxia: 45° Acute Refutation Spark -->
+    <polygon points="140,48 164,24 174,28 150,52" />
+
+    <!-- Circular Lunate Caliper Epsilon Body -->
+    <path d="M 183.2 86.8
+             A 78 78 0 1 0 183.2 197.2
+             L 166.2 180.2
+             A 54 54 0 1 1 166.2 103.8
+             Z" />
+
+    <!-- Central Dialectic Nexus: Reaching Touch across 10px Gap -->
+    <!-- Left Thesis Beam (reaching from inner spine) -->
+    <polygon points="74,130 126,130 134,142 126,154 74,154" />
+    <!-- Right Antithesis Beam (reaching inward from right) -->
+    <polygon points="144,142 152,130 186,130 186,154 152,154" />
+  </g>
+</svg></g><g filter="url(#grey)"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 256" x="90" y="514" width="414.667" height="120" preserveAspectRatio="xMidYMid meet">
+  <title>Elenchus Lockup b1-lens</title>
+  <!-- Symbol on left (centered in 256x256 box) -->
+  <g transform="translate(10, 0)">
+    <g fill="#000000" fill-rule="evenodd">
+    <!-- Psili: Smooth breathing arc -->
+    <path d="M 104 32 C 114 32 120 38 120 46 C 120 49 117 51 114 51 C 111 51 110 49 110 46 C 110 42 106 39 104 40 Z" />
+    <!-- Oxia: 45° Acute Refutation Spark -->
+    <polygon points="140,48 164,24 174,28 150,52" />
+
+    <!-- Circular Lunate Caliper Epsilon Body -->
+    <path d="M 183.2 86.8
+             A 78 78 0 1 0 183.2 197.2
+             L 166.2 180.2
+             A 54 54 0 1 1 166.2 103.8
+             Z" />
+
+    <!-- Central Dialectic Nexus: Reaching Touch across 10px Gap -->
+    <!-- Left Thesis Beam (reaching from inner spine) -->
+    <polygon points="74,130 126,130 134,142 126,154 74,154" />
+    <!-- Right Antithesis Beam (reaching inward from right) -->
+    <polygon points="144,142 152,130 186,130 186,154 152,154" />
+  </g>
+
+  </g>
+  <!-- Wordmark on right: elenchus in General Sans / Aeonik styling -->
+  <text x="270" y="156"
+        fill="#000000"
+        font-family="'General Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif"
+        font-size="82"
+        font-weight="400"
+        letter-spacing="-1.8">elenchus</text>
+</svg></g><g filter="url(#grey)"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" x="90" y="660" width="64" height="64" preserveAspectRatio="xMidYMid meet">
+  <title>Elenchus Logo Concept B1 — The Caliper Dialectic</title>
+  <g fill="#000000" fill-rule="evenodd">
+    <!-- Psili: Smooth breathing arc -->
+    <path d="M 104 32 C 114 32 120 38 120 46 C 120 49 117 51 114 51 C 111 51 110 49 110 46 C 110 42 106 39 104 40 Z" />
+    <!-- Oxia: 45° Acute Refutation Spark -->
+    <polygon points="140,48 164,24 174,28 150,52" />
+
+    <!-- Circular Lunate Caliper Epsilon Body -->
+    <path d="M 183.2 86.8
+             A 78 78 0 1 0 183.2 197.2
+             L 166.2 180.2
+             A 54 54 0 1 1 166.2 103.8
+             Z" />
+
+    <!-- Central Dialectic Nexus: Reaching Touch across 10px Gap -->
+    <!-- Left Thesis Beam (reaching from inner spine) -->
+    <polygon points="74,130 126,130 134,142 126,154 74,154" />
+    <!-- Right Antithesis Beam (reaching inward from right) -->
+    <polygon points="144,142 152,130 186,130 186,154 152,154" />
+  </g>
+</svg></g><text x="122" y="744" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" fill="#8a8a8a" text-anchor="middle">64px</text><g filter="url(#grey)"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" x="180" y="692" width="32" height="32" preserveAspectRatio="xMidYMid meet">
+  <title>Elenchus Logo Concept B1 — The Caliper Dialectic</title>
+  <g fill="#000000" fill-rule="evenodd">
+    <!-- Psili: Smooth breathing arc -->
+    <path d="M 104 32 C 114 32 120 38 120 46 C 120 49 117 51 114 51 C 111 51 110 49 110 46 C 110 42 106 39 104 40 Z" />
+    <!-- Oxia: 45° Acute Refutation Spark -->
+    <polygon points="140,48 164,24 174,28 150,52" />
+
+    <!-- Circular Lunate Caliper Epsilon Body -->
+    <path d="M 183.2 86.8
+             A 78 78 0 1 0 183.2 197.2
+             L 166.2 180.2
+             A 54 54 0 1 1 166.2 103.8
+             Z" />
+
+    <!-- Central Dialectic Nexus: Reaching Touch across 10px Gap -->
+    <!-- Left Thesis Beam (reaching from inner spine) -->
+    <polygon points="74,130 126,130 134,142 126,154 74,154" />
+    <!-- Right Antithesis Beam (reaching inward from right) -->
+    <polygon points="144,142 152,130 186,130 186,154 152,154" />
+  </g>
+</svg></g><text x="196" y="744" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" fill="#8a8a8a" text-anchor="middle">32px</text><g filter="url(#grey)"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" x="238" y="708" width="16" height="16" preserveAspectRatio="xMidYMid meet">
+  <title>Elenchus Logo Concept B1 — The Caliper Dialectic</title>
+  <g fill="#000000" fill-rule="evenodd">
+    <!-- Psili: Smooth breathing arc -->
+    <path d="M 104 32 C 114 32 120 38 120 46 C 120 49 117 51 114 51 C 111 51 110 49 110 46 C 110 42 106 39 104 40 Z" />
+    <!-- Oxia: 45° Acute Refutation Spark -->
+    <polygon points="140,48 164,24 174,28 150,52" />
+
+    <!-- Circular Lunate Caliper Epsilon Body -->
+    <path d="M 183.2 86.8
+             A 78 78 0 1 0 183.2 197.2
+             L 166.2 180.2
+             A 54 54 0 1 1 166.2 103.8
+             Z" />
+
+    <!-- Central Dialectic Nexus: Reaching Touch across 10px Gap -->
+    <!-- Left Thesis Beam (reaching from inner spine) -->
+    <polygon points="74,130 126,130 134,142 126,154 74,154" />
+    <!-- Right Antithesis Beam (reaching inward from right) -->
+    <polygon points="144,142 152,130 186,130 186,154 152,154" />
+  </g>
+</svg></g><text x="246" y="744" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" fill="#8a8a8a" text-anchor="middle">16px</text><text x="90.0" y="780" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="26" font-weight="700" fill="#161616">A · The Caliper Dialectic</text><text x="90.0" y="814" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="19" fill="#555">Lunate epsilon with opposing reaching beams</text><text x="90.0" y="840" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="19" fill="#555">meeting at a calibrated gap.</text><rect x="562.667" y="150" width="474.667" height="744" rx="18" fill="#fff" stroke="#e4e4e0" stroke-width="1"/><g filter="url(#grey)"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" x="592.667" y="190" width="414.667" height="300" preserveAspectRatio="xMidYMid meet">
+  <title>Elenchus Logo Concept B2 — The Diamond Aperture</title>
+  <g fill="#000000" fill-rule="evenodd">
+    <!-- Psili: Minimal geometric breathing mark -->
+    <path d="M 104 32 C 114 32 120 38 120 46 C 120 49 117 51 114 51 C 111 51 110 49 110 46 C 110 42 106 39 104 40 Z" />
+    <!-- Oxia: Precision Diamond Shard at 45° -->
+    <polygon points="144,46 166,24 176,34 154,56" />
+
+    <!-- Outer Caliper Epsilon Body with 45° Chamfered Jaws -->
+    <path d="M 182 86
+             L 194 98
+             L 174 118
+             C 162 100 146 90 126 90
+             C 92 90 68 114 68 142
+             C 68 170 92 194 126 194
+             C 146 194 162 184 174 166
+             L 194 186
+             L 182 198
+             C 166 218 144 228 126 228
+             C 74 228 40 190 40 142
+             C 40 94 74 56 126 56
+             C 144 56 166 66 182 86
+             Z" />
+
+    <!-- Continuous Center Crossbar with Central Diamond Aperture -->
+    <path d="M 68 130 L 186 130 L 186 154 L 68 154 Z
+             M 130 124 L 146 142 L 130 160 L 114 142 Z" />
+  </g>
+</svg></g><g filter="url(#grey)"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 256" x="592.667" y="514" width="414.667" height="120" preserveAspectRatio="xMidYMid meet">
+  <title>Elenchus Lockup b2-prism</title>
+  <!-- Symbol on left (centered in 256x256 box) -->
+  <g transform="translate(10, 0)">
+    <g fill="#000000" fill-rule="evenodd">
+    <!-- Psili: Minimal geometric breathing mark -->
+    <path d="M 104 32 C 114 32 120 38 120 46 C 120 49 117 51 114 51 C 111 51 110 49 110 46 C 110 42 106 39 104 40 Z" />
+    <!-- Oxia: Precision Diamond Shard at 45° -->
+    <polygon points="144,46 166,24 176,34 154,56" />
+
+    <!-- Outer Caliper Epsilon Body with 45° Chamfered Jaws -->
+    <path d="M 182 86
+             L 194 98
+             L 174 118
+             C 162 100 146 90 126 90
+             C 92 90 68 114 68 142
+             C 68 170 92 194 126 194
+             C 146 194 162 184 174 166
+             L 194 186
+             L 182 198
+             C 166 218 144 228 126 228
+             C 74 228 40 190 40 142
+             C 40 94 74 56 126 56
+             C 144 56 166 66 182 86
+             Z" />
+
+    <!-- Continuous Center Crossbar with Central Diamond Aperture -->
+    <path d="M 68 130 L 186 130 L 186 154 L 68 154 Z
+             M 130 124 L 146 142 L 130 160 L 114 142 Z" />
+  </g>
+
+  </g>
+  <!-- Wordmark on right: elenchus in General Sans / Aeonik styling -->
+  <text x="270" y="156"
+        fill="#000000"
+        font-family="'General Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif"
+        font-size="82"
+        font-weight="400"
+        letter-spacing="-1.8">elenchus</text>
+</svg></g><g filter="url(#grey)"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" x="592.667" y="660" width="64" height="64" preserveAspectRatio="xMidYMid meet">
+  <title>Elenchus Logo Concept B2 — The Diamond Aperture</title>
+  <g fill="#000000" fill-rule="evenodd">
+    <!-- Psili: Minimal geometric breathing mark -->
+    <path d="M 104 32 C 114 32 120 38 120 46 C 120 49 117 51 114 51 C 111 51 110 49 110 46 C 110 42 106 39 104 40 Z" />
+    <!-- Oxia: Precision Diamond Shard at 45° -->
+    <polygon points="144,46 166,24 176,34 154,56" />
+
+    <!-- Outer Caliper Epsilon Body with 45° Chamfered Jaws -->
+    <path d="M 182 86
+             L 194 98
+             L 174 118
+             C 162 100 146 90 126 90
+             C 92 90 68 114 68 142
+             C 68 170 92 194 126 194
+             C 146 194 162 184 174 166
+             L 194 186
+             L 182 198
+             C 166 218 144 228 126 228
+             C 74 228 40 190 40 142
+             C 40 94 74 56 126 56
+             C 144 56 166 66 182 86
+             Z" />
+
+    <!-- Continuous Center Crossbar with Central Diamond Aperture -->
+    <path d="M 68 130 L 186 130 L 186 154 L 68 154 Z
+             M 130 124 L 146 142 L 130 160 L 114 142 Z" />
+  </g>
+</svg></g><text x="624.667" y="744" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" fill="#8a8a8a" text-anchor="middle">64px</text><g filter="url(#grey)"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" x="682.667" y="692" width="32" height="32" preserveAspectRatio="xMidYMid meet">
+  <title>Elenchus Logo Concept B2 — The Diamond Aperture</title>
+  <g fill="#000000" fill-rule="evenodd">
+    <!-- Psili: Minimal geometric breathing mark -->
+    <path d="M 104 32 C 114 32 120 38 120 46 C 120 49 117 51 114 51 C 111 51 110 49 110 46 C 110 42 106 39 104 40 Z" />
+    <!-- Oxia: Precision Diamond Shard at 45° -->
+    <polygon points="144,46 166,24 176,34 154,56" />
+
+    <!-- Outer Caliper Epsilon Body with 45° Chamfered Jaws -->
+    <path d="M 182 86
+             L 194 98
+             L 174 118
+             C 162 100 146 90 126 90
+             C 92 90 68 114 68 142
+             C 68 170 92 194 126 194
+             C 146 194 162 184 174 166
+             L 194 186
+             L 182 198
+             C 166 218 144 228 126 228
+             C 74 228 40 190 40 142
+             C 40 94 74 56 126 56
+             C 144 56 166 66 182 86
+             Z" />
+
+    <!-- Continuous Center Crossbar with Central Diamond Aperture -->
+    <path d="M 68 130 L 186 130 L 186 154 L 68 154 Z
+             M 130 124 L 146 142 L 130 160 L 114 142 Z" />
+  </g>
+</svg></g><text x="698.667" y="744" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" fill="#8a8a8a" text-anchor="middle">32px</text><g filter="url(#grey)"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" x="740.667" y="708" width="16" height="16" preserveAspectRatio="xMidYMid meet">
+  <title>Elenchus Logo Concept B2 — The Diamond Aperture</title>
+  <g fill="#000000" fill-rule="evenodd">
+    <!-- Psili: Minimal geometric breathing mark -->
+    <path d="M 104 32 C 114 32 120 38 120 46 C 120 49 117 51 114 51 C 111 51 110 49 110 46 C 110 42 106 39 104 40 Z" />
+    <!-- Oxia: Precision Diamond Shard at 45° -->
+    <polygon points="144,46 166,24 176,34 154,56" />
+
+    <!-- Outer Caliper Epsilon Body with 45° Chamfered Jaws -->
+    <path d="M 182 86
+             L 194 98
+             L 174 118
+             C 162 100 146 90 126 90
+             C 92 90 68 114 68 142
+             C 68 170 92 194 126 194
+             C 146 194 162 184 174 166
+             L 194 186
+             L 182 198
+             C 166 218 144 228 126 228
+             C 74 228 40 190 40 142
+             C 40 94 74 56 126 56
+             C 144 56 166 66 182 86
+             Z" />
+
+    <!-- Continuous Center Crossbar with Central Diamond Aperture -->
+    <path d="M 68 130 L 186 130 L 186 154 L 68 154 Z
+             M 130 124 L 146 142 L 130 160 L 114 142 Z" />
+  </g>
+</svg></g><text x="748.667" y="744" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" fill="#8a8a8a" text-anchor="middle">16px</text><text x="592.6666666666667" y="780" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="26" font-weight="700" fill="#161616">B · The Diamond Aperture</text><text x="592.6666666666667" y="814" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="19" fill="#555">Continuous crossbar with central diamond</text><text x="592.6666666666667" y="840" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="19" fill="#555">aperture through which truth is refracted.</text><rect x="1065.33" y="150" width="474.667" height="744" rx="18" fill="#fff" stroke="#e4e4e0" stroke-width="1"/><g filter="url(#grey)"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" x="1095.33" y="190" width="414.667" height="300" preserveAspectRatio="xMidYMid meet">
+  <title>Elenchus Logo Concept B3 — The Dialectic Spark</title>
+  <g fill="#000000" fill-rule="evenodd">
+    <!-- Unified Polytonic Diacritic (Breathing Curve + 45° Accent Blade) -->
+    <path d="M 104 32 C 114 32 120 38 120 46 C 120 49 117 51 114 51 C 111 51 110 49 110 46 C 110 42 106 39 104 40 Z" />
+    <polygon points="138,50 168,20 178,24 148,54" />
+
+    <!-- Caliper Epsilon Body with Chamfered Precision Terminals -->
+    <path d="M 186 86
+             L 198 98
+             L 174 122
+             C 162 104 146 94 126 94
+             C 92 94 68 118 68 142
+             C 68 166 92 190 126 190
+             C 146 190 162 180 174 162
+             L 198 186
+             L 186 198
+             C 168 220 144 230 126 230
+             C 74 230 40 190 40 142
+             C 40 94 74 54 126 54
+             C 144 54 168 64 186 86
+             Z" />
+
+    <!-- Center Compass Blade: Sharp Refutation Pointer (Left to Right) -->
+    <polygon points="68,130 138,130 150,142 138,154 68,154" />
+    <!-- Opposing Stationary Anvil from the right (6px gap) -->
+    <polygon points="156,142 164,134 186,134 186,150 164,150" />
+  </g>
+</svg></g><g filter="url(#grey)"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 256" x="1095.33" y="514" width="414.667" height="120" preserveAspectRatio="xMidYMid meet">
+  <title>Elenchus Lockup b3-nexus</title>
+  <!-- Symbol on left (centered in 256x256 box) -->
+  <g transform="translate(10, 0)">
+    <g fill="#000000" fill-rule="evenodd">
+    <!-- Unified Polytonic Diacritic (Breathing Curve + 45° Accent Blade) -->
+    <path d="M 104 32 C 114 32 120 38 120 46 C 120 49 117 51 114 51 C 111 51 110 49 110 46 C 110 42 106 39 104 40 Z" />
+    <polygon points="138,50 168,20 178,24 148,54" />
+
+    <!-- Caliper Epsilon Body with Chamfered Precision Terminals -->
+    <path d="M 186 86
+             L 198 98
+             L 174 122
+             C 162 104 146 94 126 94
+             C 92 94 68 118 68 142
+             C 68 166 92 190 126 190
+             C 146 190 162 180 174 162
+             L 198 186
+             L 186 198
+             C 168 220 144 230 126 230
+             C 74 230 40 190 40 142
+             C 40 94 74 54 126 54
+             C 144 54 168 64 186 86
+             Z" />
+
+    <!-- Center Compass Blade: Sharp Refutation Pointer (Left to Right) -->
+    <polygon points="68,130 138,130 150,142 138,154 68,154" />
+    <!-- Opposing Stationary Anvil from the right (6px gap) -->
+    <polygon points="156,142 164,134 186,134 186,150 164,150" />
+  </g>
+
+  </g>
+  <!-- Wordmark on right: elenchus in General Sans / Aeonik styling -->
+  <text x="270" y="156"
+        fill="#000000"
+        font-family="'General Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif"
+        font-size="82"
+        font-weight="400"
+        letter-spacing="-1.8">elenchus</text>
+</svg></g><g filter="url(#grey)"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" x="1095.33" y="660" width="64" height="64" preserveAspectRatio="xMidYMid meet">
+  <title>Elenchus Logo Concept B3 — The Dialectic Spark</title>
+  <g fill="#000000" fill-rule="evenodd">
+    <!-- Unified Polytonic Diacritic (Breathing Curve + 45° Accent Blade) -->
+    <path d="M 104 32 C 114 32 120 38 120 46 C 120 49 117 51 114 51 C 111 51 110 49 110 46 C 110 42 106 39 104 40 Z" />
+    <polygon points="138,50 168,20 178,24 148,54" />
+
+    <!-- Caliper Epsilon Body with Chamfered Precision Terminals -->
+    <path d="M 186 86
+             L 198 98
+             L 174 122
+             C 162 104 146 94 126 94
+             C 92 94 68 118 68 142
+             C 68 166 92 190 126 190
+             C 146 190 162 180 174 162
+             L 198 186
+             L 186 198
+             C 168 220 144 230 126 230
+             C 74 230 40 190 40 142
+             C 40 94 74 54 126 54
+             C 144 54 168 64 186 86
+             Z" />
+
+    <!-- Center Compass Blade: Sharp Refutation Pointer (Left to Right) -->
+    <polygon points="68,130 138,130 150,142 138,154 68,154" />
+    <!-- Opposing Stationary Anvil from the right (6px gap) -->
+    <polygon points="156,142 164,134 186,134 186,150 164,150" />
+  </g>
+</svg></g><text x="1127.33" y="744" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" fill="#8a8a8a" text-anchor="middle">64px</text><g filter="url(#grey)"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" x="1185.33" y="692" width="32" height="32" preserveAspectRatio="xMidYMid meet">
+  <title>Elenchus Logo Concept B3 — The Dialectic Spark</title>
+  <g fill="#000000" fill-rule="evenodd">
+    <!-- Unified Polytonic Diacritic (Breathing Curve + 45° Accent Blade) -->
+    <path d="M 104 32 C 114 32 120 38 120 46 C 120 49 117 51 114 51 C 111 51 110 49 110 46 C 110 42 106 39 104 40 Z" />
+    <polygon points="138,50 168,20 178,24 148,54" />
+
+    <!-- Caliper Epsilon Body with Chamfered Precision Terminals -->
+    <path d="M 186 86
+             L 198 98
+             L 174 122
+             C 162 104 146 94 126 94
+             C 92 94 68 118 68 142
+             C 68 166 92 190 126 190
+             C 146 190 162 180 174 162
+             L 198 186
+             L 186 198
+             C 168 220 144 230 126 230
+             C 74 230 40 190 40 142
+             C 40 94 74 54 126 54
+             C 144 54 168 64 186 86
+             Z" />
+
+    <!-- Center Compass Blade: Sharp Refutation Pointer (Left to Right) -->
+    <polygon points="68,130 138,130 150,142 138,154 68,154" />
+    <!-- Opposing Stationary Anvil from the right (6px gap) -->
+    <polygon points="156,142 164,134 186,134 186,150 164,150" />
+  </g>
+</svg></g><text x="1201.33" y="744" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" fill="#8a8a8a" text-anchor="middle">32px</text><g filter="url(#grey)"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" x="1243.33" y="708" width="16" height="16" preserveAspectRatio="xMidYMid meet">
+  <title>Elenchus Logo Concept B3 — The Dialectic Spark</title>
+  <g fill="#000000" fill-rule="evenodd">
+    <!-- Unified Polytonic Diacritic (Breathing Curve + 45° Accent Blade) -->
+    <path d="M 104 32 C 114 32 120 38 120 46 C 120 49 117 51 114 51 C 111 51 110 49 110 46 C 110 42 106 39 104 40 Z" />
+    <polygon points="138,50 168,20 178,24 148,54" />
+
+    <!-- Caliper Epsilon Body with Chamfered Precision Terminals -->
+    <path d="M 186 86
+             L 198 98
+             L 174 122
+             C 162 104 146 94 126 94
+             C 92 94 68 118 68 142
+             C 68 166 92 190 126 190
+             C 146 190 162 180 174 162
+             L 198 186
+             L 186 198
+             C 168 220 144 230 126 230
+             C 74 230 40 190 40 142
+             C 40 94 74 54 126 54
+             C 144 54 168 64 186 86
+             Z" />
+
+    <!-- Center Compass Blade: Sharp Refutation Pointer (Left to Right) -->
+    <polygon points="68,130 138,130 150,142 138,154 68,154" />
+    <!-- Opposing Stationary Anvil from the right (6px gap) -->
+    <polygon points="156,142 164,134 186,134 186,150 164,150" />
+  </g>
+</svg></g><text x="1251.33" y="744" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" fill="#8a8a8a" text-anchor="middle">16px</text><text x="1095.3333333333335" y="780" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="26" font-weight="700" fill="#161616">C · The Dialectic Spark</text><text x="1095.3333333333335" y="814" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="19" fill="#555">Chamfered caliper jaws converging on a</text><text x="1095.3333333333335" y="840" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="19" fill="#555">sharp refutation needle pointer.</text><rect x="60" y="922" width="474.667" height="744" rx="18" fill="#fff" stroke="#e4e4e0" stroke-width="1"/><g filter="url(#grey)"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" x="90" y="962" width="414.667" height="300" preserveAspectRatio="xMidYMid meet">
+  <title>Elenchus Logo Concept D — The Classical Dual-Lobe</title>
+  <g fill="#000000" fill-rule="evenodd">
+    <!-- Polytonic Greek Diacritics: Psili + Oxia -->
+    <path d="M 104 32 C 114 32 120 38 120 46 C 120 49 117 51 114 51 C 111 51 110 49 110 46 C 110 42 106 39 104 40 Z" />
+    <polygon points="140,48 164,24 174,28 150,52" />
+
+    <!-- Mirrored-3 Lowercase Greek Epsilon Body -->
+    <path d="
+      M 182 82
+      C 168 64 146 54 122 54
+      C 82 54 54 84 54 114
+      C 54 134 70 144 94 144
+      C 70 144 50 156 50 178
+      C 50 208 82 232 124 232
+      C 152 232 176 220 190 200
+      L 170 182
+      C 158 196 142 206 124 206
+      C 96 206 76 190 76 174
+      C 76 156 96 150 120 150
+      L 144 150
+      L 144 136
+      L 120 136
+      C 96 136 80 128 80 112
+      C 80 94 98 80 122 80
+      C 142 80 158 88 166 98
+      Z
+    " />
+  </g>
+</svg></g><g filter="url(#grey)"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 256" x="90" y="1286" width="414.667" height="120" preserveAspectRatio="xMidYMid meet">
+  <title>Elenchus Lockup d-classical</title>
+  <!-- Symbol on left (centered in 256x256 box) -->
+  <g transform="translate(10, 0)">
+    <g fill="#000000" fill-rule="evenodd">
+    <!-- Polytonic Greek Diacritics: Psili + Oxia -->
+    <path d="M 104 32 C 114 32 120 38 120 46 C 120 49 117 51 114 51 C 111 51 110 49 110 46 C 110 42 106 39 104 40 Z" />
+    <polygon points="140,48 164,24 174,28 150,52" />
+
+    <!-- Mirrored-3 Lowercase Greek Epsilon Body -->
+    <path d="
+      M 182 82
+      C 168 64 146 54 122 54
+      C 82 54 54 84 54 114
+      C 54 134 70 144 94 144
+      C 70 144 50 156 50 178
+      C 50 208 82 232 124 232
+      C 152 232 176 220 190 200
+      L 170 182
+      C 158 196 142 206 124 206
+      C 96 206 76 190 76 174
+      C 76 156 96 150 120 150
+      L 144 150
+      L 144 136
+      L 120 136
+      C 96 136 80 128 80 112
+      C 80 94 98 80 122 80
+      C 142 80 158 88 166 98
+      Z
+    " />
+  </g>
+
+  </g>
+  <!-- Wordmark on right: elenchus in General Sans / Aeonik styling -->
+  <text x="270" y="156"
+        fill="#000000"
+        font-family="'General Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif"
+        font-size="82"
+        font-weight="400"
+        letter-spacing="-1.8">elenchus</text>
+</svg></g><g filter="url(#grey)"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" x="90" y="1432" width="64" height="64" preserveAspectRatio="xMidYMid meet">
+  <title>Elenchus Logo Concept D — The Classical Dual-Lobe</title>
+  <g fill="#000000" fill-rule="evenodd">
+    <!-- Polytonic Greek Diacritics: Psili + Oxia -->
+    <path d="M 104 32 C 114 32 120 38 120 46 C 120 49 117 51 114 51 C 111 51 110 49 110 46 C 110 42 106 39 104 40 Z" />
+    <polygon points="140,48 164,24 174,28 150,52" />
+
+    <!-- Mirrored-3 Lowercase Greek Epsilon Body -->
+    <path d="
+      M 182 82
+      C 168 64 146 54 122 54
+      C 82 54 54 84 54 114
+      C 54 134 70 144 94 144
+      C 70 144 50 156 50 178
+      C 50 208 82 232 124 232
+      C 152 232 176 220 190 200
+      L 170 182
+      C 158 196 142 206 124 206
+      C 96 206 76 190 76 174
+      C 76 156 96 150 120 150
+      L 144 150
+      L 144 136
+      L 120 136
+      C 96 136 80 128 80 112
+      C 80 94 98 80 122 80
+      C 142 80 158 88 166 98
+      Z
+    " />
+  </g>
+</svg></g><text x="122" y="1516" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" fill="#8a8a8a" text-anchor="middle">64px</text><g filter="url(#grey)"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" x="180" y="1464" width="32" height="32" preserveAspectRatio="xMidYMid meet">
+  <title>Elenchus Logo Concept D — The Classical Dual-Lobe</title>
+  <g fill="#000000" fill-rule="evenodd">
+    <!-- Polytonic Greek Diacritics: Psili + Oxia -->
+    <path d="M 104 32 C 114 32 120 38 120 46 C 120 49 117 51 114 51 C 111 51 110 49 110 46 C 110 42 106 39 104 40 Z" />
+    <polygon points="140,48 164,24 174,28 150,52" />
+
+    <!-- Mirrored-3 Lowercase Greek Epsilon Body -->
+    <path d="
+      M 182 82
+      C 168 64 146 54 122 54
+      C 82 54 54 84 54 114
+      C 54 134 70 144 94 144
+      C 70 144 50 156 50 178
+      C 50 208 82 232 124 232
+      C 152 232 176 220 190 200
+      L 170 182
+      C 158 196 142 206 124 206
+      C 96 206 76 190 76 174
+      C 76 156 96 150 120 150
+      L 144 150
+      L 144 136
+      L 120 136
+      C 96 136 80 128 80 112
+      C 80 94 98 80 122 80
+      C 142 80 158 88 166 98
+      Z
+    " />
+  </g>
+</svg></g><text x="196" y="1516" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" fill="#8a8a8a" text-anchor="middle">32px</text><g filter="url(#grey)"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" x="238" y="1480" width="16" height="16" preserveAspectRatio="xMidYMid meet">
+  <title>Elenchus Logo Concept D — The Classical Dual-Lobe</title>
+  <g fill="#000000" fill-rule="evenodd">
+    <!-- Polytonic Greek Diacritics: Psili + Oxia -->
+    <path d="M 104 32 C 114 32 120 38 120 46 C 120 49 117 51 114 51 C 111 51 110 49 110 46 C 110 42 106 39 104 40 Z" />
+    <polygon points="140,48 164,24 174,28 150,52" />
+
+    <!-- Mirrored-3 Lowercase Greek Epsilon Body -->
+    <path d="
+      M 182 82
+      C 168 64 146 54 122 54
+      C 82 54 54 84 54 114
+      C 54 134 70 144 94 144
+      C 70 144 50 156 50 178
+      C 50 208 82 232 124 232
+      C 152 232 176 220 190 200
+      L 170 182
+      C 158 196 142 206 124 206
+      C 96 206 76 190 76 174
+      C 76 156 96 150 120 150
+      L 144 150
+      L 144 136
+      L 120 136
+      C 96 136 80 128 80 112
+      C 80 94 98 80 122 80
+      C 142 80 158 88 166 98
+      Z
+    " />
+  </g>
+</svg></g><text x="246" y="1516" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" fill="#8a8a8a" text-anchor="middle">16px</text><text x="90.0" y="1552" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="26" font-weight="700" fill="#161616">D · The Classical Dual-Lobe</text><text x="90.0" y="1586" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="19" fill="#555">Classical double-lobe mirrored-3 epsilon</text><text x="90.0" y="1612" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="19" fill="#555">with central cusp and polytonic diacritics.</text><rect x="562.667" y="922" width="474.667" height="744" rx="18" fill="#fff" stroke="#e4e4e0" stroke-width="1"/><g filter="url(#grey)"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" x="592.667" y="962" width="414.667" height="300" preserveAspectRatio="xMidYMid meet">
+  <title>Elenchus Logo Concept E — The Faceted Caliper</title>
+  <g fill="#000000" fill-rule="evenodd">
+    <!-- Diacritics: Precision Geometric Shards -->
+    <path d="M 104 32 C 114 32 120 38 120 46 C 120 49 117 51 114 51 C 111 51 110 49 110 46 C 110 42 106 39 104 40 Z" />
+    <polygon points="144,46 166,24 176,34 154,56" />
+
+    <!-- Faceted Caliper Mirrored-3 -->
+    <path d="
+      M 186 80
+      L 198 92
+      L 176 114
+      L 146 84
+      L 102 84
+      L 78 108
+      L 78 120
+      L 110 120
+      L 134 144
+      L 110 168
+      L 78 168
+      L 78 180
+      L 102 204
+      L 146 204
+      L 176 174
+      L 198 196
+      L 186 208
+      L 140 230
+      L 90 230
+      L 52 192
+      L 52 168
+      C 52 152 64 144 80 144
+      C 64 144 52 136 52 120
+      L 52 96
+      L 90 58
+      L 140 58
+      Z
+    " />
+  </g>
+</svg></g><g filter="url(#grey)"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 256" x="592.667" y="1286" width="414.667" height="120" preserveAspectRatio="xMidYMid meet">
+  <title>Elenchus Lockup e-faceted</title>
+  <!-- Symbol on left (centered in 256x256 box) -->
+  <g transform="translate(10, 0)">
+    <g fill="#000000" fill-rule="evenodd">
+    <!-- Diacritics: Precision Geometric Shards -->
+    <path d="M 104 32 C 114 32 120 38 120 46 C 120 49 117 51 114 51 C 111 51 110 49 110 46 C 110 42 106 39 104 40 Z" />
+    <polygon points="144,46 166,24 176,34 154,56" />
+
+    <!-- Faceted Caliper Mirrored-3 -->
+    <path d="
+      M 186 80
+      L 198 92
+      L 176 114
+      L 146 84
+      L 102 84
+      L 78 108
+      L 78 120
+      L 110 120
+      L 134 144
+      L 110 168
+      L 78 168
+      L 78 180
+      L 102 204
+      L 146 204
+      L 176 174
+      L 198 196
+      L 186 208
+      L 140 230
+      L 90 230
+      L 52 192
+      L 52 168
+      C 52 152 64 144 80 144
+      C 64 144 52 136 52 120
+      L 52 96
+      L 90 58
+      L 140 58
+      Z
+    " />
+  </g>
+
+  </g>
+  <!-- Wordmark on right: elenchus in General Sans / Aeonik styling -->
+  <text x="270" y="156"
+        fill="#000000"
+        font-family="'General Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif"
+        font-size="82"
+        font-weight="400"
+        letter-spacing="-1.8">elenchus</text>
+</svg></g><g filter="url(#grey)"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" x="592.667" y="1432" width="64" height="64" preserveAspectRatio="xMidYMid meet">
+  <title>Elenchus Logo Concept E — The Faceted Caliper</title>
+  <g fill="#000000" fill-rule="evenodd">
+    <!-- Diacritics: Precision Geometric Shards -->
+    <path d="M 104 32 C 114 32 120 38 120 46 C 120 49 117 51 114 51 C 111 51 110 49 110 46 C 110 42 106 39 104 40 Z" />
+    <polygon points="144,46 166,24 176,34 154,56" />
+
+    <!-- Faceted Caliper Mirrored-3 -->
+    <path d="
+      M 186 80
+      L 198 92
+      L 176 114
+      L 146 84
+      L 102 84
+      L 78 108
+      L 78 120
+      L 110 120
+      L 134 144
+      L 110 168
+      L 78 168
+      L 78 180
+      L 102 204
+      L 146 204
+      L 176 174
+      L 198 196
+      L 186 208
+      L 140 230
+      L 90 230
+      L 52 192
+      L 52 168
+      C 52 152 64 144 80 144
+      C 64 144 52 136 52 120
+      L 52 96
+      L 90 58
+      L 140 58
+      Z
+    " />
+  </g>
+</svg></g><text x="624.667" y="1516" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" fill="#8a8a8a" text-anchor="middle">64px</text><g filter="url(#grey)"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" x="682.667" y="1464" width="32" height="32" preserveAspectRatio="xMidYMid meet">
+  <title>Elenchus Logo Concept E — The Faceted Caliper</title>
+  <g fill="#000000" fill-rule="evenodd">
+    <!-- Diacritics: Precision Geometric Shards -->
+    <path d="M 104 32 C 114 32 120 38 120 46 C 120 49 117 51 114 51 C 111 51 110 49 110 46 C 110 42 106 39 104 40 Z" />
+    <polygon points="144,46 166,24 176,34 154,56" />
+
+    <!-- Faceted Caliper Mirrored-3 -->
+    <path d="
+      M 186 80
+      L 198 92
+      L 176 114
+      L 146 84
+      L 102 84
+      L 78 108
+      L 78 120
+      L 110 120
+      L 134 144
+      L 110 168
+      L 78 168
+      L 78 180
+      L 102 204
+      L 146 204
+      L 176 174
+      L 198 196
+      L 186 208
+      L 140 230
+      L 90 230
+      L 52 192
+      L 52 168
+      C 52 152 64 144 80 144
+      C 64 144 52 136 52 120
+      L 52 96
+      L 90 58
+      L 140 58
+      Z
+    " />
+  </g>
+</svg></g><text x="698.667" y="1516" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" fill="#8a8a8a" text-anchor="middle">32px</text><g filter="url(#grey)"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" x="740.667" y="1480" width="16" height="16" preserveAspectRatio="xMidYMid meet">
+  <title>Elenchus Logo Concept E — The Faceted Caliper</title>
+  <g fill="#000000" fill-rule="evenodd">
+    <!-- Diacritics: Precision Geometric Shards -->
+    <path d="M 104 32 C 114 32 120 38 120 46 C 120 49 117 51 114 51 C 111 51 110 49 110 46 C 110 42 106 39 104 40 Z" />
+    <polygon points="144,46 166,24 176,34 154,56" />
+
+    <!-- Faceted Caliper Mirrored-3 -->
+    <path d="
+      M 186 80
+      L 198 92
+      L 176 114
+      L 146 84
+      L 102 84
+      L 78 108
+      L 78 120
+      L 110 120
+      L 134 144
+      L 110 168
+      L 78 168
+      L 78 180
+      L 102 204
+      L 146 204
+      L 176 174
+      L 198 196
+      L 186 208
+      L 140 230
+      L 90 230
+      L 52 192
+      L 52 168
+      C 52 152 64 144 80 144
+      C 64 144 52 136 52 120
+      L 52 96
+      L 90 58
+      L 140 58
+      Z
+    " />
+  </g>
+</svg></g><text x="748.667" y="1516" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" fill="#8a8a8a" text-anchor="middle">16px</text><text x="592.6666666666667" y="1552" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="26" font-weight="700" fill="#161616">E · The Faceted Caliper</text><text x="592.6666666666667" y="1586" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="19" fill="#555">Architectural 45-deg chamfered mirrored-3</text><text x="592.6666666666667" y="1612" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="19" fill="#555">with precision CNC-milled instrument</text><text x="592.6666666666667" y="1638" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="19" fill="#555">facets.</text><rect x="1065.33" y="922" width="474.667" height="744" rx="18" fill="#fff" stroke="#e4e4e0" stroke-width="1"/><g filter="url(#grey)"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" x="1095.33" y="962" width="414.667" height="300" preserveAspectRatio="xMidYMid meet">
+  <title>Elenchus Logo Concept F — The Continuous Ribbon Nexus</title>
+  <g fill="#000000" fill-rule="evenodd">
+    <!-- Diacritics -->
+    <circle cx="110" cy="42" r="7" />
+    <polygon points="142,48 166,24 176,28 152,52" />
+
+    <!-- Upper Lobe Path with 45° terminal -->
+    <path d="
+      M 184 84
+      C 168 64 144 54 122 54
+      C 76 54 52 86 52 118
+      C 52 142 74 154 104 154
+      L 132 154
+      L 140 144
+      L 132 134
+      L 104 134
+      C 84 134 76 126 76 116
+      C 76 96 94 78 122 78
+      C 140 78 156 86 166 98
+      Z
+    " />
+
+    <!-- Lower Lobe Path with Socratic nexus gap at center (148 to 156) -->
+    <path d="
+      M 152 144
+      L 144 154
+      L 122 154
+      C 96 154 76 166 76 182
+      C 76 196 94 208 124 208
+      C 144 208 162 198 172 184
+      L 190 202
+      C 174 222 150 232 124 232
+      C 76 232 52 208 52 180
+      C 52 156 74 140 106 138
+      L 122 138
+      Z
+    " />
+  </g>
+</svg></g><g filter="url(#grey)"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 256" x="1095.33" y="1286" width="414.667" height="120" preserveAspectRatio="xMidYMid meet">
+  <title>Elenchus Lockup f-ribbon</title>
+  <!-- Symbol on left (centered in 256x256 box) -->
+  <g transform="translate(10, 0)">
+    <g fill="#000000" fill-rule="evenodd">
+    <!-- Diacritics -->
+    <circle cx="110" cy="42" r="7" />
+    <polygon points="142,48 166,24 176,28 152,52" />
+
+    <!-- Upper Lobe Path with 45° terminal -->
+    <path d="
+      M 184 84
+      C 168 64 144 54 122 54
+      C 76 54 52 86 52 118
+      C 52 142 74 154 104 154
+      L 132 154
+      L 140 144
+      L 132 134
+      L 104 134
+      C 84 134 76 126 76 116
+      C 76 96 94 78 122 78
+      C 140 78 156 86 166 98
+      Z
+    " />
+
+    <!-- Lower Lobe Path with Socratic nexus gap at center (148 to 156) -->
+    <path d="
+      M 152 144
+      L 144 154
+      L 122 154
+      C 96 154 76 166 76 182
+      C 76 196 94 208 124 208
+      C 144 208 162 198 172 184
+      L 190 202
+      C 174 222 150 232 124 232
+      C 76 232 52 208 52 180
+      C 52 156 74 140 106 138
+      L 122 138
+      Z
+    " />
+  </g>
+
+  </g>
+  <!-- Wordmark on right: elenchus in General Sans / Aeonik styling -->
+  <text x="270" y="156"
+        fill="#000000"
+        font-family="'General Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif"
+        font-size="82"
+        font-weight="400"
+        letter-spacing="-1.8">elenchus</text>
+</svg></g><g filter="url(#grey)"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" x="1095.33" y="1432" width="64" height="64" preserveAspectRatio="xMidYMid meet">
+  <title>Elenchus Logo Concept F — The Continuous Ribbon Nexus</title>
+  <g fill="#000000" fill-rule="evenodd">
+    <!-- Diacritics -->
+    <circle cx="110" cy="42" r="7" />
+    <polygon points="142,48 166,24 176,28 152,52" />
+
+    <!-- Upper Lobe Path with 45° terminal -->
+    <path d="
+      M 184 84
+      C 168 64 144 54 122 54
+      C 76 54 52 86 52 118
+      C 52 142 74 154 104 154
+      L 132 154
+      L 140 144
+      L 132 134
+      L 104 134
+      C 84 134 76 126 76 116
+      C 76 96 94 78 122 78
+      C 140 78 156 86 166 98
+      Z
+    " />
+
+    <!-- Lower Lobe Path with Socratic nexus gap at center (148 to 156) -->
+    <path d="
+      M 152 144
+      L 144 154
+      L 122 154
+      C 96 154 76 166 76 182
+      C 76 196 94 208 124 208
+      C 144 208 162 198 172 184
+      L 190 202
+      C 174 222 150 232 124 232
+      C 76 232 52 208 52 180
+      C 52 156 74 140 106 138
+      L 122 138
+      Z
+    " />
+  </g>
+</svg></g><text x="1127.33" y="1516" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" fill="#8a8a8a" text-anchor="middle">64px</text><g filter="url(#grey)"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" x="1185.33" y="1464" width="32" height="32" preserveAspectRatio="xMidYMid meet">
+  <title>Elenchus Logo Concept F — The Continuous Ribbon Nexus</title>
+  <g fill="#000000" fill-rule="evenodd">
+    <!-- Diacritics -->
+    <circle cx="110" cy="42" r="7" />
+    <polygon points="142,48 166,24 176,28 152,52" />
+
+    <!-- Upper Lobe Path with 45° terminal -->
+    <path d="
+      M 184 84
+      C 168 64 144 54 122 54
+      C 76 54 52 86 52 118
+      C 52 142 74 154 104 154
+      L 132 154
+      L 140 144
+      L 132 134
+      L 104 134
+      C 84 134 76 126 76 116
+      C 76 96 94 78 122 78
+      C 140 78 156 86 166 98
+      Z
+    " />
+
+    <!-- Lower Lobe Path with Socratic nexus gap at center (148 to 156) -->
+    <path d="
+      M 152 144
+      L 144 154
+      L 122 154
+      C 96 154 76 166 76 182
+      C 76 196 94 208 124 208
+      C 144 208 162 198 172 184
+      L 190 202
+      C 174 222 150 232 124 232
+      C 76 232 52 208 52 180
+      C 52 156 74 140 106 138
+      L 122 138
+      Z
+    " />
+  </g>
+</svg></g><text x="1201.33" y="1516" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" fill="#8a8a8a" text-anchor="middle">32px</text><g filter="url(#grey)"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" x="1243.33" y="1480" width="16" height="16" preserveAspectRatio="xMidYMid meet">
+  <title>Elenchus Logo Concept F — The Continuous Ribbon Nexus</title>
+  <g fill="#000000" fill-rule="evenodd">
+    <!-- Diacritics -->
+    <circle cx="110" cy="42" r="7" />
+    <polygon points="142,48 166,24 176,28 152,52" />
+
+    <!-- Upper Lobe Path with 45° terminal -->
+    <path d="
+      M 184 84
+      C 168 64 144 54 122 54
+      C 76 54 52 86 52 118
+      C 52 142 74 154 104 154
+      L 132 154
+      L 140 144
+      L 132 134
+      L 104 134
+      C 84 134 76 126 76 116
+      C 76 96 94 78 122 78
+      C 140 78 156 86 166 98
+      Z
+    " />
+
+    <!-- Lower Lobe Path with Socratic nexus gap at center (148 to 156) -->
+    <path d="
+      M 152 144
+      L 144 154
+      L 122 154
+      C 96 154 76 166 76 182
+      C 76 196 94 208 124 208
+      C 144 208 162 198 172 184
+      L 190 202
+      C 174 222 150 232 124 232
+      C 76 232 52 208 52 180
+      C 52 156 74 140 106 138
+      L 122 138
+      Z
+    " />
+  </g>
+</svg></g><text x="1251.33" y="1516" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" fill="#8a8a8a" text-anchor="middle">16px</text><text x="1095.3333333333335" y="1552" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="26" font-weight="700" fill="#161616">F · The Continuous Ribbon</text><text x="1095.3333333333335" y="1586" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="19" fill="#555">Continuous monoline ribbon mirrored-3 with</text><text x="1095.3333333333335" y="1612" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="19" fill="#555">an optical spark gap at the central waist.</text></svg>
