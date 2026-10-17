@@ -92,7 +92,7 @@ class ElenchusOverlay(QWidget):
         self.status_dot.setStyleSheet("color: #98ff38; font-size: 8px;")
         header_layout.addWidget(self.status_dot)
 
-        self.title_label = QLabel("elenchus")
+        self.title_label = QLabel("Elenchus")
         self.title_label.setStyleSheet(
             "color: #f3f3f3; font-weight: 500; font-size: 13px; "
             "font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; "
