@@ -26,6 +26,9 @@ only-include = ["core", "ui", "config.py", "main.py"]
 dev = [
     "ruff>=0.16.9",
 ]
+docs = [
+    "mkdocs-material>=9.5.0",
+]
 
 [tool.ruff]
 line-length = 100
