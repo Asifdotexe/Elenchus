@@ -108,6 +108,9 @@
     }
 
     html {
+      color-scheme: dark;
+      scrollbar-color: var(--color-graphite) var(--color-obsidian);
+      scrollbar-width: thin;
       background-color: var(--color-obsidian);
       color: var(--color-chalk);
       font-family: var(--font-body);
@@ -116,6 +119,41 @@
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
       scroll-behavior: smooth;
+    }
+
+    /* Global Obsidian Dark Scrollbar Discipline (Prevents bright white OS system scrollbars) */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--color-obsidian);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--color-graphite);
+      border-radius: var(--radius-tags);
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--color-iron);
+    }
+
+    ::-webkit-scrollbar-corner {
+      background: var(--color-obsidian);
+    }
+
+    /* Utility to completely eliminate scrollbars while retaining scroll/swipe interactivity */
+    .no-scrollbar {
+      scrollbar-width: none !important;
+      -ms-overflow-style: none !important;
+    }
+
+    .no-scrollbar::-webkit-scrollbar {
+      display: none !important;
+      width: 0 !important;
+      height: 0 !important;
     }
 
     body {
@@ -982,157 +1020,14 @@
       max-width: 62ch;
     }
 
-    /* System Pipeline Flow */
-    .pipeline-flow {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
-      gap: 16px;
-      margin-top: 24px;
-    }
-
-    .pipeline-step {
-      background: var(--color-carbon);
-      border: 1px solid var(--color-graphite);
-      border-radius: var(--radius-cards);
-      padding: 24px 20px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      transition: border-color 0.2s ease;
-    }
-
-    .pipeline-step:hover {
-      border-color: var(--color-iron);
-    }
-
-    .pipeline-step-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .pipeline-step-label {
-      font-family: var(--font-mono);
-      font-size: 11px;
-      color: var(--color-compass-gold);
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-    }
-
-    .pipeline-step-badge {
-      font-family: var(--font-mono);
-      font-size: 11px;
-      color: var(--color-smoke);
-      background: var(--color-surface);
-      border: 1px solid var(--color-graphite);
-      padding: 2px 7px;
-      border-radius: var(--radius-tags);
-    }
-
-    .pipeline-step-title {
-      font-size: 15px;
-      font-weight: 500;
-      color: var(--color-chalk);
-      letter-spacing: -0.01em;
-    }
-
-    .pipeline-step-desc {
-      font-size: 13px;
-      color: var(--color-smoke);
-      line-height: 1.55;
-    }
-
     /* -------------------------------------------------------------
-       SYSTEM RATIONALE & RUNTIME SPECS
+       DOWNLOAD & QUICK START COMPONENT
        ------------------------------------------------------------- */
-    .manifesto-block {
-      max-width: 680px;
+    .download-container {
+      max-width: 860px;
       margin: 0 auto;
-      text-align: left;
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
     }
 
-    .manifesto-title {
-      font-size: 24px;
-      font-weight: 400;
-      color: var(--color-chalk);
-      letter-spacing: -0.4px;
-      text-wrap: balance;
-    }
-
-    .manifesto-body {
-      font-size: 15px;
-      color: var(--color-smoke);
-      line-height: 1.6;
-      text-wrap: pretty;
-      max-width: 65ch;
-    }
-
-    .runtime-specs {
-      width: 100%;
-      margin-top: 16px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      background: var(--color-carbon);
-      border: 1px solid var(--color-graphite);
-      border-radius: var(--radius-cards);
-      padding: clamp(16px, 4vw, 24px);
-      container-type: inline-size;
-    }
-
-    .spec-row {
-      display: flex;
-      align-items: baseline;
-      gap: 12px;
-      font-size: 13px;
-    }
-
-    .spec-name {
-      color: var(--color-smoke);
-      white-space: nowrap;
-      min-width: 0;
-    }
-
-    .spec-line {
-      flex: 1;
-      border-bottom: 1px dashed var(--color-graphite);
-      min-width: 16px;
-    }
-
-    .spec-data {
-      font-family: var(--font-mono);
-      color: var(--color-chalk);
-      white-space: nowrap;
-      font-size: 12px;
-      min-width: 0;
-    }
-
-    @container (max-width: 480px) {
-      .spec-row {
-        flex-direction: column;
-        gap: 4px;
-      }
-      .spec-line {
-        display: none;
-      }
-    }
-
-    @media (max-width: 580px) {
-      .spec-row {
-        flex-direction: column;
-        gap: 4px;
-      }
-      .spec-line {
-        display: none;
-      }
-    }
-
-    /* -------------------------------------------------------------
-       QUICK START & STANDALONE PLATFORM TABS
-       ------------------------------------------------------------- */
     .platform-tabs-header {
       display: flex;
       gap: 8px;
@@ -1142,47 +1037,166 @@
       overflow-x: auto;
       -webkit-overflow-scrolling: touch;
       scroll-snap-type: x mandatory;
-      scrollbar-width: thin;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+
+    .platform-tabs-header::-webkit-scrollbar {
+      display: none;
+      width: 0;
+      height: 0;
     }
 
     .platform-tab-btn {
       background: transparent;
       border: 1px solid transparent;
       color: var(--color-smoke);
-      padding: 8px 16px;
+      padding: 10px 18px;
+      min-height: 40px;
       border-radius: var(--radius-cards);
       font-size: 13px;
       font-family: var(--font-mono);
       cursor: pointer;
-      transition: all 0.15s ease;
+      transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
       white-space: nowrap;
       scroll-snap-align: start;
       flex-shrink: 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1.2;
     }
 
-    .platform-tab-btn.active, .platform-tab-btn:hover {
+    .platform-tab-btn:hover:not(.active) {
       border-color: var(--color-graphite);
       color: var(--color-chalk);
-      background-color: var(--color-surface);
+      background-color: rgba(255, 255, 255, 0.03);
     }
 
-    .terminal-card {
+    .platform-tab-btn.active {
+      border-color: var(--color-ash);
+      color: var(--color-signal-white);
+      background-color: var(--color-surface);
+      font-weight: 500;
+    }
+
+    .platform-tab-btn:focus-visible,
+    .copy-btn:focus-visible,
+    .download-direct-btn:focus-visible,
+    .docs-callout-link:focus-visible {
+      outline: 2px solid var(--color-pulse-green);
+      outline-offset: 2px;
+    }
+
+    .download-card {
       background-color: var(--color-carbon);
       border: 1px solid var(--color-graphite);
       border-radius: var(--radius-cards);
-      padding: clamp(16px, 4vw, 24px);
-      margin-bottom: 32px;
+      padding: clamp(20px, 4vw, 32px);
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .download-primary-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 20px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--color-border-subtle);
+    }
+
+    .download-os-info {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .download-os-title {
+      font-size: clamp(20px, 2.5vw, 22px);
+      font-weight: 500;
+      color: var(--color-chalk);
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 0;
+    }
+
+    .download-arch-badge {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--color-ash);
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--color-graphite);
+      padding: 3px 9px;
+      border-radius: var(--radius-tags);
+      letter-spacing: 0.02em;
+    }
+
+    .download-os-meta {
+      font-size: 13px;
+      color: var(--color-smoke);
+      line-height: 1.5;
+      margin: 0;
+    }
+
+    .download-direct-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      background-color: var(--color-signal-white);
+      color: var(--color-carbon);
+      border: 1px solid var(--color-signal-white);
+      min-height: 46px;
+      padding: 12px 24px;
+      border-radius: var(--radius-buttons);
+      font-size: 14px;
+      font-weight: 500;
+      text-decoration: none;
+      transition: transform 0.15s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.15s ease, border-color 0.15s ease;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .download-direct-btn:hover {
+      background-color: var(--color-ash);
+      border-color: var(--color-ash);
+      transform: translateY(-1px);
+    }
+
+    .download-direct-btn:active {
+      transform: translateY(0);
+      background-color: var(--color-smoke);
+      border-color: var(--color-smoke);
+    }
+
+    .download-size-badge {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--color-carbon);
+      background: var(--color-ash);
+      padding: 2px 7px;
+      border-radius: var(--radius-tags);
+    }
+
+    /* Terminal integrated panel inside card */
+    .download-terminal-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
     }
 
     .terminal-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 16px;
-      padding-bottom: 12px;
-      border-bottom: 1px solid var(--color-border-subtle);
+      gap: 12px;
       flex-wrap: wrap;
-      gap: 8px;
     }
 
     .terminal-title {
@@ -1192,6 +1206,17 @@
       display: flex;
       align-items: center;
       gap: 8px;
+      letter-spacing: 0.02em;
+    }
+
+    .terminal-artifact-badge {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--color-ash);
+      background: var(--color-surface);
+      border: 1px solid var(--color-graphite);
+      padding: 2px 8px;
+      border-radius: var(--radius-tags);
     }
 
     .terminal-content {
@@ -1202,8 +1227,25 @@
       background: var(--color-obsidian);
       border: 1px solid var(--color-graphite);
       border-radius: var(--radius-cards);
-      padding: 14px 18px;
+      padding: 10px 14px 10px 16px;
+      min-height: 52px;
+    }
+
+    .terminal-code-scroll {
+      flex: 1 1 auto;
+      min-width: 0;
       overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      display: flex;
+      align-items: center;
+    }
+
+    .terminal-code-scroll::-webkit-scrollbar {
+      display: none;
+      width: 0;
+      height: 0;
     }
 
     .terminal-code {
@@ -1211,6 +1253,7 @@
       font-family: var(--font-mono);
       font-size: 13px;
       white-space: nowrap;
+      line-height: 1.5;
     }
 
     .terminal-code span.prompt {
@@ -1219,21 +1262,40 @@
       margin-right: 8px;
     }
 
+    .terminal-note {
+      font-size: 13px;
+      color: var(--color-smoke);
+      line-height: 1.6;
+      margin: 0;
+    }
+
+    .terminal-note code {
+      color: var(--color-ash);
+      background: var(--color-surface);
+      border: 1px solid var(--color-border-subtle);
+      padding: 1px 6px;
+      border-radius: var(--radius-tags);
+      font-size: 12px;
+      font-family: var(--font-mono);
+    }
+
     .copy-btn {
       background: var(--color-surface);
       border: 1px solid var(--color-graphite);
       color: var(--color-chalk);
       border-radius: var(--radius-tags);
-      padding: 6px 14px;
+      padding: 7px 14px;
+      min-height: 36px;
       font-size: 11px;
       font-family: var(--font-mono);
       text-transform: uppercase;
       letter-spacing: 0.04em;
       cursor: pointer;
-      display: flex;
+      display: inline-flex;
       align-items: center;
+      justify-content: center;
       gap: 6px;
-      transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease, transform 0.15s ease;
       white-space: nowrap;
       flex-shrink: 0;
     }
@@ -1252,14 +1314,75 @@
       color: var(--color-pulse-green);
     }
 
+    /* Documentation Callout Banner */
+    .docs-callout-banner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      padding: 16px 20px;
+      border-radius: var(--radius-cards);
+      background: rgba(111, 103, 89, 0.08);
+      border: 1px solid rgba(111, 103, 89, 0.25);
+    }
+
+    .docs-callout-text {
+      font-size: 13px;
+      color: var(--color-smoke);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      line-height: 1.5;
+    }
+
+    .docs-callout-icon {
+      color: var(--color-compass-gold);
+      flex-shrink: 0;
+    }
+
+    .docs-callout-link {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--color-chalk);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      min-height: 38px;
+      border-radius: var(--radius-tags);
+      background: var(--color-surface);
+      border: 1px solid var(--color-graphite);
+      transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .docs-callout-link:hover {
+      border-color: var(--color-ash);
+      color: var(--color-signal-white);
+    }
+
     @media (max-width: 600px) {
+      .download-primary-row {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 16px;
+      }
+      .download-direct-btn {
+        width: 100%;
+        justify-content: center;
+        min-height: 48px;
+      }
       .terminal-content {
         flex-direction: column;
         align-items: stretch;
         gap: 12px;
         padding: 14px;
       }
-      .terminal-code {
+      .terminal-code-scroll {
+        width: 100%;
         overflow-x: auto;
         padding-bottom: 4px;
       }
@@ -1268,112 +1391,16 @@
         justify-content: center;
         min-height: 44px;
       }
-    }
-
-    /* Distribution Matrix Table -> Responsive Card Pattern */
-    .dist-table-wrap {
-      width: 100%;
-      overflow-x: auto;
-      border: 1px solid var(--color-graphite);
-      border-radius: var(--radius-cards);
-    }
-
-    .dist-table {
-      width: 100%;
-      border-collapse: collapse;
-      text-align: left;
-      font-size: 13px;
-    }
-
-    .dist-table th {
-      background-color: var(--color-carbon);
-      color: var(--color-smoke);
-      font-family: var(--font-mono);
-      font-weight: 400;
-      text-transform: uppercase;
-      font-size: 11px;
-      letter-spacing: 0.05em;
-      padding: 14px 18px;
-      border-bottom: 1px solid var(--color-graphite);
-    }
-
-    .dist-table td {
-      padding: 14px 18px;
-      border-bottom: 1px solid var(--color-graphite);
-      color: var(--color-chalk);
-    }
-
-    .dist-table tr:last-child td {
-      border-bottom: none;
-    }
-
-    .dist-table .mono {
-      font-family: var(--font-mono);
-      color: var(--color-ash);
-    }
-
-    .dist-table .badge-ok {
-      font-family: var(--font-mono);
-      font-size: 11px;
-      color: var(--color-pulse-green);
-      background: rgba(152, 255, 56, 0.08);
-      border: 1px solid rgba(152, 255, 56, 0.25);
-      padding: 2px 6px;
-      border-radius: var(--radius-tags);
-    }
-
-    /* Responsive Table Card Reflow on Mobile */
-    @media (max-width: 720px) {
-      .dist-table-wrap {
-        border: none;
-        overflow-x: visible;
-        background: transparent;
-      }
-      .dist-table,
-      .dist-table tbody,
-      .dist-table tr,
-      .dist-table td {
-        display: block;
-        width: 100%;
-      }
-      .dist-table thead {
-        display: none;
-      }
-      .dist-table tr {
-        background-color: var(--color-carbon);
-        border: 1px solid var(--color-graphite);
-        border-radius: var(--radius-cards);
+      .docs-callout-banner {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 14px;
         padding: 16px;
-        margin-bottom: 12px;
       }
-      .dist-table td {
-        padding: 8px 0;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        text-align: right;
-        gap: 12px;
-        min-width: 0;
-        overflow-wrap: break-word;
-        word-break: break-word;
-      }
-      .dist-table .mono {
-        word-break: break-all;
-      }
-      .dist-table td:last-child {
-        border-bottom: none;
-        padding-bottom: 0;
-      }
-      .dist-table td::before {
-        content: attr(data-label);
-        font-family: var(--font-mono);
-        font-size: 11px;
-        color: var(--color-smoke);
-        text-transform: uppercase;
-        letter-spacing: 0.04em;
-        text-align: left;
-        flex-shrink: 0;
+      .docs-callout-link {
+        width: 100%;
+        justify-content: center;
+        min-height: 44px;
       }
     }
 
@@ -1385,7 +1412,8 @@
       .btn-ghost,
       .btn-pill-ghost,
       .copy-btn,
-      .platform-tab-btn {
+      .platform-tab-btn,
+      .docs-callout-link {
         min-height: 44px;
       }
       .preset-btn {
@@ -1502,31 +1530,23 @@
         background-color: var(--color-ash) !important;
       }
       .hud-device-window,
-      .pipeline-step,
-      .runtime-specs,
-      .terminal-card,
-      .dist-table tr {
+      .download-card,
+      .terminal-card {
         background: var(--color-signal-white) !important;
         border: 1px solid var(--color-ash) !important;
         page-break-inside: avoid;
       }
       .hero-headline,
-      .section-title,
-      .pipeline-step-title,
-      .manifesto-title {
+      .section-title {
         color: var(--color-carbon) !important;
       }
       .hero-tagline,
       .section-subtitle,
-      .pipeline-step-desc,
-      .manifesto-body,
-      .spec-name {
+      .download-os-meta,
+      .terminal-note {
         color: var(--color-iron) !important;
       }
-      .spec-data,
-      .terminal-code,
-      .dist-table td,
-      .dist-table th {
+      .terminal-code {
         color: var(--color-carbon) !important;
       }
       a[href^="http"]::after {
@@ -1557,13 +1577,14 @@
         </a>
         <ul class="nav-links">
           <li><a href="#overview">Overview</a></li>
-          <li><a href="#simulator">HUD Simulator</a></li>
-          <li><a href="#architecture">Architecture</a></li>
-          <li><a href="#distribution">Distribution</a></li>
+          <li><a href="#simulator">Simulator</a></li>
+          <li><a href="#download">Download</a></li>
+          <li><a href="docs/">Documentation ↗</a></li>
         </ul>
       </div>
       <div class="nav-right">
-        <a href="#quickstart" class="btn-ghost nav-desktop-action" style="padding: 6px 14px; font-size: 12px;">Quick Start</a>
+        <a href="#download" class="btn-ghost nav-desktop-action" style="padding: 6px 14px; font-size: 12px;">Download</a>
+        <a href="docs/" class="btn-ghost nav-desktop-action" style="padding: 6px 14px; font-size: 12px;">Docs ↗</a>
         <a href="https://github.com/Asifdotexe/elenchus" target="_blank" rel="noopener noreferrer" class="btn-ghost nav-desktop-action" style="padding: 6px 14px; font-size: 12px;">GitHub ↗</a>
         <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="navMobileMenu">
           <span class="nav-toggle-bar"></span>
@@ -1576,11 +1597,12 @@
       <ul class="nav-mobile-links">
         <li><a href="#overview" class="nav-mobile-link">Overview</a></li>
         <li><a href="#simulator" class="nav-mobile-link">HUD Simulator</a></li>
-        <li><a href="#architecture" class="nav-mobile-link">Architecture</a></li>
-        <li><a href="#distribution" class="nav-mobile-link">Distribution</a></li>
+        <li><a href="#download" class="nav-mobile-link">Download</a></li>
+        <li><a href="docs/" class="nav-mobile-link">Documentation ↗</a></li>
       </ul>
       <div class="nav-mobile-actions">
-        <a href="#quickstart" class="btn-pill nav-mobile-cta">Quick Start</a>
+        <a href="#download" class="btn-pill nav-mobile-cta">Download</a>
+        <a href="docs/" class="btn-pill-ghost nav-mobile-cta">Documentation ↗</a>
         <a href="https://github.com/Asifdotexe/elenchus" target="_blank" rel="noopener noreferrer" class="btn-pill-ghost nav-mobile-cta">GitHub ↗</a>
       </div>
     </div>
@@ -1597,12 +1619,13 @@
         </h1>
 
         <p class="hero-tagline">
-          Local speech recognition and Socratic argument analysis for live debates.
+          Help to polish your argument formation for debates
         </p>
 
         <div class="hero-actions">
-          <a href="#quickstart" class="btn-pill">Get Started</a>
-          <a href="#simulator" class="btn-pill-ghost">Live HUD Demo</a>
+          <a href="#download" class="btn-pill">Download v1.0.0</a>
+          <a href="#simulator" class="btn-pill-ghost">Live Demo</a>
+          <a href="docs/" class="btn-pill-ghost">Docs ↗</a>
         </div>
       </div>
 
@@ -1727,204 +1750,96 @@
        SERVICES / 2x2 FEATURE GRID
        ============================================================= -->
   <!-- =============================================================
-       ARCHITECTURE / SYSTEM PIPELINE FLOW
+       DOWNLOAD & QUICK START SECTION
        ============================================================= -->
-  <section class="section-spacing" id="architecture">
-    <div class="container">
+  <section class="section-spacing" id="download">
+    <div class="container download-container">
       <div class="section-header-block">
-        <h2 class="section-title">System Pipeline &amp; Data Flow</h2>
+        <h2 class="section-title">Download &amp; Quick Start</h2>
         <p class="section-subtitle">
-          Four stages executing locally on CPU cores with zero external network dependencies.
-        </p>
-      </div>
-
-      <div class="pipeline-flow">
-        <div class="pipeline-step">
-          <div class="pipeline-step-header">
-            <span class="pipeline-step-label">Stage 1</span>
-            <span class="pipeline-step-badge">Loopback Capture</span>
-          </div>
-          <h3 class="pipeline-step-title">Audio Ingestion</h3>
-          <p class="pipeline-step-desc">
-            Captures opponent speech directly from Discord, Zoom, or web browser calls using WASAPI loopback. Audio arrays remain solely in volatile RAM.
-          </p>
-        </div>
-
-        <div class="pipeline-step">
-          <div class="pipeline-step-header">
-            <span class="pipeline-step-label">Stage 2</span>
-            <span class="pipeline-step-badge">INT8 CPU</span>
-          </div>
-          <h3 class="pipeline-step-title">Whisper Transcription</h3>
-          <p class="pipeline-step-desc">
-            faster-whisper quantized on CPU. Discards hallucinated fillers, silences, and background chatter in sub-500ms bursts.
-          </p>
-        </div>
-
-        <div class="pipeline-step">
-          <div class="pipeline-step-header">
-            <span class="pipeline-step-label">Stage 3</span>
-            <span class="pipeline-step-badge">Ollama Local</span>
-          </div>
-          <h3 class="pipeline-step-title">Fallacy Classification</h3>
-          <p class="pipeline-step-desc">
-            Interfaces with local model weights (qwen2.5-coder:3b) to evaluate premises and generate crisp, under-30-word refutations.
-          </p>
-        </div>
-
-        <div class="pipeline-step">
-          <div class="pipeline-step-header">
-            <span class="pipeline-step-label">Stage 4</span>
-            <span class="pipeline-step-badge">PyQt6 HUD</span>
-          </div>
-          <h3 class="pipeline-step-title">Desktop Overlay</h3>
-          <p class="pipeline-step-desc">
-            Lightweight floating widget hovering above active applications with live audio energy meters and latency telemetry.
-          </p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <hr class="hairline-divider">
-
-  <!-- =============================================================
-       SYSTEM RATIONALE & RUNTIME SPECS
-       ============================================================= -->
-  <section class="section-spacing">
-    <div class="container">
-      <div class="manifesto-block">
-        <h2 class="manifesto-title">Designed for real-time arguments.</h2>
-        <p class="manifesto-body">
-          Conversations move faster than memory. When an opponent shifts premises, uses a false dilemma, or attacks character rather than evidence, you usually realize it seconds after the moment has passed. Elenchus runs quietly in the background, listening to system audio, parsing arguments into formal logic, and displaying targeted refutations directly in your peripheral field of view before you take your turn to speak.
-        </p>
-
-        <!-- Runtime Specifications -->
-        <div class="runtime-specs">
-          <div class="spec-row">
-            <span class="spec-name">Peak resident memory</span>
-            <span class="spec-line"></span>
-            <span class="spec-data">&lt; 380 MB RSS (CPU quantized)</span>
-          </div>
-          <div class="spec-row">
-            <span class="spec-name">Speech chunk transcription</span>
-            <span class="spec-line"></span>
-            <span class="spec-data">~ 550 ms on CPU</span>
-          </div>
-          <div class="spec-row">
-            <span class="spec-name">External network transmission</span>
-            <span class="spec-line"></span>
-            <span class="spec-data">Zero bytes (fully airgapped)</span>
-          </div>
-          <div class="spec-row">
-            <span class="spec-name">Binary digest verification</span>
-            <span class="spec-line"></span>
-            <span class="spec-data">Cryptographic SHA-256</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <hr class="hairline-divider">
-
-  <!-- =============================================================
-       CROSS-PLATFORM DISTRIBUTION & QUICKSTART
-       ============================================================= -->
-  <section class="section-spacing" id="quickstart">
-    <div class="container">
-      <div class="section-header-block">
-        <h2 class="section-title">Distribution &amp; Quick Start</h2>
-        <p class="section-subtitle">
-          Single-command standalone installers configured with automated cryptographic SHA-256 checksum verification.
+          Standalone native binaries with zero external network dependencies.
         </p>
       </div>
 
       <!-- Platform Selector Tabs -->
-      <div class="platform-tabs-header">
-        <button class="platform-tab-btn active" onclick="switchPlatform('win')">Windows (x86_64)</button>
-        <button class="platform-tab-btn" onclick="switchPlatform('mac-arm')">macOS (Apple Silicon)</button>
-        <button class="platform-tab-btn" onclick="switchPlatform('mac-intel')">macOS (Intel)</button>
-        <button class="platform-tab-btn" onclick="switchPlatform('linux')">Linux (x86_64)</button>
-        <button class="platform-tab-btn" onclick="switchPlatform('dev')">Developer (uv)</button>
+      <div class="platform-tabs-header" role="tablist" aria-label="Operating System Selection" id="platformTabsHeader">
+        <button class="platform-tab-btn active" role="tab" aria-selected="true" aria-controls="downloadCard" tabindex="0" id="tab-win" onclick="switchPlatform('win')">Windows</button>
+        <button class="platform-tab-btn" role="tab" aria-selected="false" aria-controls="downloadCard" tabindex="-1" id="tab-mac-arm" onclick="switchPlatform('mac-arm')">macOS (Apple Silicon)</button>
+        <button class="platform-tab-btn" role="tab" aria-selected="false" aria-controls="downloadCard" tabindex="-1" id="tab-mac-intel" onclick="switchPlatform('mac-intel')">macOS (Intel)</button>
+        <button class="platform-tab-btn" role="tab" aria-selected="false" aria-controls="downloadCard" tabindex="-1" id="tab-linux" onclick="switchPlatform('linux')">Linux</button>
+        <button class="platform-tab-btn" role="tab" aria-selected="false" aria-controls="downloadCard" tabindex="-1" id="tab-dev" onclick="switchPlatform('dev')">Developer (uv)</button>
       </div>
 
-      <!-- Terminal Command Card -->
-      <div class="terminal-card">
-        <div class="terminal-header">
-          <div class="terminal-title">
-            <span class="pulse-dot" style="background-color: var(--color-pulse-green);"></span>
-            <span id="platformTitle">Windows PowerShell 1-Line Installer</span>
+      <!-- Dynamic OS Card -->
+      <div class="download-card" id="downloadCard" role="tabpanel" aria-labelledby="tab-win">
+        <!-- Direct Download Primary Row -->
+        <div class="download-primary-row">
+          <div class="download-os-info">
+            <div class="download-os-title">
+              <span id="osTitle">Windows</span>
+              <span class="download-arch-badge" id="osArch">x86_64</span>
+            </div>
+            <p class="download-os-meta" id="osMeta">Standalone executable · SHA-256 verified</p>
           </div>
-          <span style="font-family: var(--font-mono); font-size: 11px; color: var(--color-smoke);" id="artifactLabel">elenchus-windows-x86_64.exe</span>
+
+          <a href="https://github.com/Asifdotexe/elenchus/releases/latest/download/elenchus-windows-x86_64.exe" class="download-direct-btn" id="directDownloadBtn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="7 10 12 15 17 10"/>
+              <line x1="12" y1="15" x2="12" y2="3"/>
+            </svg>
+            <span id="directDownloadText">Download .exe</span>
+            <span class="download-size-badge" id="directDownloadSize">~18 MB</span>
+          </a>
         </div>
 
-        <div class="terminal-content">
-          <code class="terminal-code" id="terminalCommand">
-            <span class="prompt">&gt;</span>irm https://github.com/Asifdotexe/elenchus/releases/latest/download/install.ps1 | iex
-          </code>
-          <button class="copy-btn" id="copyBtn" onclick="copyCommand()" aria-label="Copy installation command to clipboard">
-            <span id="copyBtnIcon" aria-hidden="true" style="display:inline-flex;align-items:center;">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-            </span>
-            <span id="copyBtnText">Copy</span>
-            <span class="sr-only" id="copyLiveStatus" aria-live="polite"></span>
-          </button>
+        <!-- Automated 1-Line Terminal (Integrated Quick Start panel) -->
+        <div class="download-terminal-wrap">
+          <div class="terminal-header">
+            <div class="terminal-title">
+              <span class="pulse-dot" style="background-color: var(--color-pulse-green);"></span>
+              <span id="platformTitle">PowerShell 1-Liner</span>
+            </div>
+            <span class="terminal-artifact-badge" id="artifactLabel">install.ps1</span>
+          </div>
+
+          <div class="terminal-content">
+            <div class="terminal-code-scroll">
+              <code class="terminal-code" id="terminalCommand">
+                <span class="prompt">&gt;</span>irm https://github.com/Asifdotexe/elenchus/releases/latest/download/install.ps1 | iex
+              </code>
+            </div>
+            <button class="copy-btn" id="copyBtn" onclick="copyCommand()" aria-label="Copy installation command to clipboard">
+              <span id="copyBtnIcon" aria-hidden="true" style="display:inline-flex;align-items:center;">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              </span>
+              <span id="copyBtnText">Copy</span>
+              <span class="sr-only" id="copyLiveStatus" aria-live="polite"></span>
+            </button>
+          </div>
+
+          <p class="terminal-note" id="platformNote">
+            Installs to <code>$env:LOCALAPPDATA\Programs\Elenchus</code> and configures PATH.
+          </p>
         </div>
 
-        <p style="font-size: 13px; color: var(--color-smoke); margin-top: 14px; max-width: 65ch;" id="platformNote">
-          Downloads standalone executable directly to <code style="color: var(--color-ash); font-size: 12px;">$env:LOCALAPPDATA\Programs\Elenchus</code>, verifies cryptographic SHA-256 release digest, and configures user PATH automatically.
-        </p>
-      </div>
-
-      <!-- Binary Artifacts Matrix Table -->
-      <div class="dist-table-wrap" id="distribution">
-        <table class="dist-table">
-          <thead>
-            <tr>
-              <th>Target Platform</th>
-              <th>Architecture</th>
-              <th>Release Artifact</th>
-              <th>Integrity</th>
-              <th>Installation Path</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td data-label="Target Platform">Windows (64-bit)</td>
-              <td data-label="Architecture" class="mono">x86_64</td>
-              <td data-label="Release Artifact" class="mono">elenchus-windows-x86_64.exe</td>
-              <td data-label="Integrity"><span class="badge-ok">SHA-256 Verified</span></td>
-              <td data-label="Installation Path" class="mono">%LOCALAPPDATA%\Programs\Elenchus\</td>
-            </tr>
-            <tr>
-              <td data-label="Target Platform">macOS (Apple Silicon)</td>
-              <td data-label="Architecture" class="mono">arm64 (M1/M2/M3/M4)</td>
-              <td data-label="Release Artifact" class="mono">elenchus-darwin-arm64</td>
-              <td data-label="Integrity"><span class="badge-ok">SHA-256 Verified</span></td>
-              <td data-label="Installation Path" class="mono">~/.local/bin/elenchus</td>
-            </tr>
-            <tr>
-              <td data-label="Target Platform">macOS (Intel)</td>
-              <td data-label="Architecture" class="mono">x86_64</td>
-              <td data-label="Release Artifact" class="mono">elenchus-darwin-x86_64</td>
-              <td data-label="Integrity"><span class="badge-ok">SHA-256 Verified</span></td>
-              <td data-label="Installation Path" class="mono">~/.local/bin/elenchus</td>
-            </tr>
-            <tr>
-              <td data-label="Target Platform">Linux (Ubuntu, Fedora, Arch)</td>
-              <td data-label="Architecture" class="mono">x86_64</td>
-              <td data-label="Release Artifact" class="mono">elenchus-linux-x86_64</td>
-              <td data-label="Integrity"><span class="badge-ok">SHA-256 Verified</span></td>
-              <td data-label="Installation Path" class="mono">~/.local/bin/elenchus</td>
-            </tr>
-          </tbody>
-        </table>
+        <!-- Docs Callout Banner -->
+        <div class="docs-callout-banner">
+          <div class="docs-callout-text">
+            <svg class="docs-callout-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+              <polyline points="9 12 11 14 15 10"/>
+            </svg>
+            <span>Package managers, verification checksums, and airgapped deployment</span>
+          </div>
+          <a href="docs/installation/" class="docs-callout-link">
+            <span>Installation Docs</span>
+            <span aria-hidden="true">→</span>
+          </a>
+        </div>
       </div>
     </div>
   </section>
-
-
 
   <!-- =============================================================
        FOOTER / BOTTOM BAR
@@ -1934,13 +1849,17 @@
       <div>
         <span style="color: var(--color-chalk); font-weight: 500;">Elenchus (ἔλεγχος)</span>
         <span style="margin: 0 8px; color: var(--color-iron);">·</span>
-        <span>Socratic Debate Analysis & Fallacy Detection</span>
+        <span>Socratic Debate Analysis &amp; Fallacy Detection</span>
       </div>
 
       <div class="footer-links">
-        <a href="https://github.com/Asifdotexe/elenchus/blob/master/LICENSE" target="_blank">MIT License</a>
-        <a href="https://github.com/Asifdotexe/elenchus/blob/master/docs/ARCHITECTURE.md" target="_blank">Architecture Spec</a>
-        <a href="https://github.com/Asifdotexe/elenchus" target="_blank">GitHub Repository ↗</a>
+        <a href="docs/">Documentation</a>
+        <a href="docs/philosophy/">Philosophy</a>
+        <a href="docs/architecture/">Architecture</a>
+        <a href="docs/specifications/">Specifications</a>
+        <a href="docs/installation/">Installation &amp; SHA-256</a>
+        <a href="https://github.com/Asifdotexe/elenchus" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+        <a href="https://github.com/Asifdotexe/elenchus/blob/master/LICENSE" target="_blank" rel="noopener noreferrer">MIT License</a>
       </div>
     </div>
   </footer>
@@ -2190,52 +2109,127 @@
     }
 
     /* -------------------------------------------------------------
-       3. CROSS-PLATFORM TABS
+       3. CROSS-PLATFORM DOWNLOADS & QUICK START
        ------------------------------------------------------------- */
     const platforms = {
       'win': {
-        title: 'Windows PowerShell 1-Line Installer',
+        os: 'Windows',
+        arch: 'x86_64',
+        meta: 'Standalone executable · SHA-256 verified',
+        directUrl: 'https://github.com/Asifdotexe/elenchus/releases/latest/download/elenchus-windows-x86_64.exe',
+        directText: 'Download .exe',
+        directSize: '~18 MB',
+        title: 'PowerShell 1-Liner',
+        artifact: 'install.ps1',
         cmd: 'irm https://github.com/Asifdotexe/elenchus/releases/latest/download/install.ps1 | iex',
-        artifact: 'elenchus-windows-x86_64.exe',
-        note: 'Downloads standalone executable directly to $env:LOCALAPPDATA\\Programs\\Elenchus, verifies cryptographic SHA-256 release digest, and configures user PATH automatically.'
+        note: 'Installs to <code>$env:LOCALAPPDATA\\Programs\\Elenchus</code> and configures PATH.'
       },
       'mac-arm': {
-        title: 'macOS Apple Silicon (M1/M2/M3/M4) 1-Line Installer',
+        os: 'macOS',
+        arch: 'Apple Silicon',
+        meta: 'Native ARM64 Mach-O binary · SHA-256 verified',
+        directUrl: 'https://github.com/Asifdotexe/elenchus/releases/latest/download/elenchus-darwin-arm64',
+        directText: 'Download Binary',
+        directSize: '~16 MB',
+        title: 'Terminal 1-Liner',
+        artifact: 'install.sh',
         cmd: 'curl -fsSL https://github.com/Asifdotexe/elenchus/releases/latest/download/install.sh | bash',
-        artifact: 'elenchus-darwin-arm64',
-        note: 'Downloads native ARM64 binary into ~/.local/bin/elenchus, performs SHA-256 digest validation, and marks executable.'
+        note: 'Installs to <code>~/.local/bin/elenchus</code> and configures PATH.'
       },
       'mac-intel': {
-        title: 'macOS Intel (x86_64) 1-Line Installer',
+        os: 'macOS',
+        arch: 'Intel x86_64',
+        meta: 'Native x86_64 Mach-O binary · SHA-256 verified',
+        directUrl: 'https://github.com/Asifdotexe/elenchus/releases/latest/download/elenchus-darwin-x86_64',
+        directText: 'Download Binary',
+        directSize: '~17 MB',
+        title: 'Terminal 1-Liner',
+        artifact: 'install.sh',
         cmd: 'curl -fsSL https://github.com/Asifdotexe/elenchus/releases/latest/download/install.sh | bash',
-        artifact: 'elenchus-darwin-x86_64',
-        note: 'Downloads native x86_64 binary into ~/.local/bin/elenchus with SHA-256 verification.'
+        note: 'Installs to <code>~/.local/bin/elenchus</code> and configures PATH.'
       },
       'linux': {
-        title: 'Linux (Ubuntu / Debian / Fedora / Arch) 1-Line Installer',
+        os: 'Linux',
+        arch: 'x86_64',
+        meta: 'Standalone ELF 64-bit binary · Fully airgapped',
+        directUrl: 'https://github.com/Asifdotexe/elenchus/releases/latest/download/elenchus-linux-x86_64',
+        directText: 'Download Binary',
+        directSize: '~17 MB',
+        title: 'Terminal 1-Liner',
+        artifact: 'install.sh',
         cmd: 'curl -fsSL https://github.com/Asifdotexe/elenchus/releases/latest/download/install.sh | bash',
-        artifact: 'elenchus-linux-x86_64',
-        note: 'Downloads precompiled Linux binary into ~/.local/bin/elenchus, verifies SHA-256 checksum against release digest, and configures executable permissions.'
+        note: 'Installs to <code>~/.local/bin/elenchus</code> and configures PATH.'
       },
       'dev': {
-        title: 'Developer Source Installation (Python 3.12 + Astral uv)',
+        os: 'Developer',
+        arch: 'Python 3.12+ (uv)',
+        meta: 'Source development environment · Automated venv',
+        directUrl: 'https://github.com/Asifdotexe/elenchus',
+        directText: 'GitHub Repository ↗',
+        directSize: 'Source',
+        title: 'Astral uv 1-Liner',
+        artifact: 'pyproject.toml',
         cmd: 'git clone https://github.com/Asifdotexe/elenchus.git && cd elenchus && uv run elenchus',
-        artifact: 'uv pyproject.toml',
-        note: 'Full Python development setup with PyQt6, faster-whisper, and automated virtual environment resolution via uv.'
+        note: 'Clones repository and runs locally with faster-whisper and PyQt6.'
       }
     };
 
     let currentCmd = platforms['win'].cmd;
 
-    function switchPlatform(key) {
-      document.querySelectorAll('.platform-tab-btn').forEach(btn => btn.classList.remove('active'));
-      event.currentTarget.classList.add('active');
+    function switchPlatform(key, shouldFocus = false) {
+      document.querySelectorAll('.platform-tab-btn').forEach(btn => {
+        btn.classList.remove('active');
+        btn.setAttribute('aria-selected', 'false');
+        btn.setAttribute('tabindex', '-1');
+      });
+
+      const activeTab = document.getElementById(`tab-${key}`);
+      if (activeTab) {
+        activeTab.classList.add('active');
+        activeTab.setAttribute('aria-selected', 'true');
+        activeTab.setAttribute('tabindex', '0');
+        if (shouldFocus) activeTab.focus();
+      }
+
+      const card = document.getElementById('downloadCard');
+      if (card) {
+        card.setAttribute('aria-labelledby', `tab-${key}`);
+      }
+
       const p = platforms[key];
+      if (!p) return;
       currentCmd = p.cmd;
-      document.getElementById('platformTitle').textContent = p.title;
-      document.getElementById('artifactLabel').textContent = p.artifact;
-      document.getElementById('terminalCommand').innerHTML = `<span class="prompt">&gt;</span>${p.cmd}`;
-      document.getElementById('platformNote').innerHTML = p.note;
+
+      const osTitle = document.getElementById('osTitle');
+      const osArch = document.getElementById('osArch');
+      const osMeta = document.getElementById('osMeta');
+      const directBtn = document.getElementById('directDownloadBtn');
+      const directText = document.getElementById('directDownloadText');
+      const directSize = document.getElementById('directDownloadSize');
+      const platformTitle = document.getElementById('platformTitle');
+      const artifactLabel = document.getElementById('artifactLabel');
+      const terminalCommand = document.getElementById('terminalCommand');
+      const platformNote = document.getElementById('platformNote');
+
+      if (osTitle) osTitle.textContent = p.os;
+      if (osArch) osArch.textContent = p.arch;
+      if (osMeta) osMeta.textContent = p.meta;
+      if (directBtn) {
+        directBtn.href = p.directUrl;
+        if (key === 'dev') {
+          directBtn.target = '_blank';
+          directBtn.rel = 'noopener noreferrer';
+        } else {
+          directBtn.removeAttribute('target');
+          directBtn.removeAttribute('rel');
+        }
+      }
+      if (directText) directText.textContent = p.directText;
+      if (directSize) directSize.textContent = p.directSize;
+      if (platformTitle) platformTitle.textContent = p.title;
+      if (artifactLabel) artifactLabel.textContent = p.artifact;
+      if (terminalCommand) terminalCommand.innerHTML = `<span class="prompt">&gt;</span>${p.cmd}`;
+      if (platformNote) platformNote.innerHTML = p.note;
     }
 
     function copyCommand() {
@@ -2260,6 +2254,52 @@
           }
           if (liveStatus) liveStatus.textContent = '';
         }, 2000);
+      });
+    }
+
+    // Initialize platform tabs and format pills on load (with progressive OS detection)
+    const platformTabKeys = ['win', 'mac-arm', 'mac-intel', 'linux', 'dev'];
+    try {
+      let detectedKey = 'win';
+      const ua = navigator.userAgent || '';
+      if (/Macintosh|Mac OS X/i.test(ua)) {
+        detectedKey = 'mac-arm';
+      } else if (/Linux/i.test(ua) && !/Android/i.test(ua)) {
+        detectedKey = 'linux';
+      }
+      switchPlatform(detectedKey);
+    } catch (e) {
+      switchPlatform('win');
+    }
+
+    // Accessible arrow-key navigation for WAI-ARIA tablist
+    const tabsHeaderEl = document.getElementById('platformTabsHeader');
+    if (tabsHeaderEl) {
+      tabsHeaderEl.addEventListener('keydown', (e) => {
+        const activeBtn = tabsHeaderEl.querySelector('.platform-tab-btn.active');
+        if (!activeBtn) return;
+        const currentKey = activeBtn.id.replace('tab-', '');
+        let idx = platformTabKeys.indexOf(currentKey);
+        if (idx === -1) return;
+
+        let targetKey = null;
+        if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+          e.preventDefault();
+          targetKey = platformTabKeys[(idx + 1) % platformTabKeys.length];
+        } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+          e.preventDefault();
+          targetKey = platformTabKeys[(idx - 1 + platformTabKeys.length) % platformTabKeys.length];
+        } else if (e.key === 'Home') {
+          e.preventDefault();
+          targetKey = platformTabKeys[0];
+        } else if (e.key === 'End') {
+          e.preventDefault();
+          targetKey = platformTabKeys[platformTabKeys.length - 1];
+        }
+
+        if (targetKey) {
+          switchPlatform(targetKey, true);
+        }
       });
     }
 

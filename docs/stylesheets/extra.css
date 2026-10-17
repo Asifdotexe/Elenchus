@@ -1,0 +1,161 @@
+/* -------------------------------------------------------------
+   ELENCHUS OBSIDIAN & PULSE GREEN MKDOCS THEME OVERRIDES
+   ------------------------------------------------------------- */
+@import url('https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root > * {
+  --md-primary-fg-color: #101010;
+  --md-primary-bg-color: #f3f3f3;
+  --md-accent-fg-color: #98ff38;
+}
+
+[data-md-color-scheme="slate"] {
+  --md-default-bg-color: #101010;
+  --md-default-bg-color--light: #141414;
+  --md-default-bg-color--lighter: #1c1c1c;
+  --md-default-fg-color: #f3f3f3;
+  --md-default-fg-color--light: #c1c1c1;
+  --md-default-fg-color--lighter: #9c9c9c;
+  --md-default-fg-color--lightest: #6f6759;
+
+  --md-code-bg-color: #080808;
+  --md-code-fg-color: #f3f3f3;
+
+  --md-typeset-a-color: #98ff38;
+  --md-accent-fg-color: #98ff38;
+
+  --md-typeset-font-family: 'General Sans', ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --md-code-font-family: 'JetBrains Mono', ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+}
+
+/* Header & Navigation Bar */
+.md-header {
+  background-color: rgba(16, 16, 16, 0.92) !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid #212121;
+}
+
+.md-header__button.md-logo img {
+  height: 24px;
+  width: 24px;
+  object-fit: contain;
+  vertical-align: middle;
+}
+
+
+.md-tabs {
+  background-color: #0c0c0c !important;
+  border-bottom: 1px solid #212121;
+}
+
+.md-tabs__link--active,
+.md-tabs__link:hover {
+  color: #98ff38 !important;
+}
+
+/* Code Blocks */
+.md-typeset code {
+  border-radius: 4px;
+  background-color: #141414;
+  border: 1px solid #212121;
+}
+
+.md-typeset pre > code {
+  border: 1px solid #212121;
+}
+
+/* Tables */
+.md-typeset table:not([class]) {
+  border: 1px solid #212121;
+  border-radius: 6px;
+  overflow: hidden;
+  background-color: #080808;
+}
+
+.md-typeset table:not([class]) th {
+  background-color: #141414;
+  color: #9c9c9c;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid #212121;
+}
+
+.md-typeset table:not([class]) td {
+  border-bottom: 1px solid #1c1c1c;
+  font-size: 0.85rem;
+}
+
+/* Back to Website Button */
+.elenchus-home-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  font-size: 0.8rem;
+  border-radius: 9999px;
+  background-color: #141414;
+  border: 1px solid #212121;
+  color: #f3f3f3 !important;
+  transition: all 0.15s ease;
+}
+
+.elenchus-home-link:hover {
+  border-color: #98ff38;
+  color: #98ff38 !important;
+}
+
+/* Global Dark Scrollbars for Documentation */
+:root, html {
+  color-scheme: dark;
+  scrollbar-color: #212121 #101010;
+  scrollbar-width: thin;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #101010;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #212121;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #474747;
+}
+
+/* Centered Mermaid Diagrams */
+.mermaid {
+  display: flex !important;
+  justify-content: center !important;
+  text-align: center !important;
+  margin: 1.5rem auto !important;
+  background-color: #080808;
+  border: 1px solid #212121;
+  border-radius: 8px;
+  padding: 1.5rem 1rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.mermaid::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+.mermaid svg {
+  max-width: 100%;
+  height: auto;
+  margin: 0 auto;
+}

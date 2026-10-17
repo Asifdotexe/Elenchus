@@ -7,6 +7,9 @@ on:
       - main
     paths:
       - 'docs/**'
+      - 'site/**'
+      - 'mkdocs.yml'
+      - 'pyproject.toml'
       - 'assets/branding/kit/**'
       - '.github/workflows/deploy-pages.yml'
   workflow_dispatch:
@@ -35,11 +38,18 @@ jobs:
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
 
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v5
+
+      - name: Build MkDocs documentation
+        run: |
+          uv run --with mkdocs-material mkdocs build
+
       - name: Build site bundle
         run: |
           mkdir -p _site
-          # Copy website files (HTML, markdown, hero images, and root favicons)
-          cp -r docs/* _site/
+          # Copy website bundle (simplified landing page + compiled MkDocs at /docs)
+          cp -r site/* _site/
 
           # Include complete production branding kit
           mkdir -p _site/assets/branding/kit
