@@ -221,7 +221,7 @@ class TestElenchusOverlay(unittest.TestCase):
         cfg = Config()
         pipeline = PipelineWorker(cfg)
         overlay = ElenchusOverlay(cfg, pipeline)
-        self.assertEqual(overlay.title_label.text(), "elenchus")
+        self.assertEqual(overlay.title_label.text(), "Elenchus")
         self.assertEqual(overlay.audio_meter.bar_count, 30)
         self.assertEqual(overlay.mode_btn.text(), "Manual Mode")
         self.assertIn("Listen (Click or Space)", overlay.action_btn.text())

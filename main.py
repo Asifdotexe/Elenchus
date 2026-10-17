@@ -231,7 +231,7 @@ def main() -> None:
     signal.signal(signal.SIGINT, signal.SIG_DFL)
 
     app = QApplication(sys.argv)
-    app.setApplicationName("elenchus")
+    app.setApplicationName("Elenchus")
 
     pipeline = PipelineWorker(config)
     overlay = ElenchusOverlay(config, pipeline)
