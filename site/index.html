@@ -757,39 +757,6 @@
       text-transform: uppercase;
     }
 
-    .hud-input-row {
-      display: flex;
-      gap: 12px;
-    }
-
-    @media (max-width: 480px) {
-      .hud-input-row {
-        flex-direction: column;
-      }
-      .hud-input-row .btn-pill {
-        width: 100%;
-        min-height: 44px;
-      }
-    }
-
-    .hud-input {
-      flex: 1;
-      background: var(--color-obsidian);
-      border: 1px solid var(--color-graphite);
-      border-radius: var(--radius-cards);
-      padding: 12px 16px;
-      color: var(--color-chalk);
-      font-family: var(--font-body);
-      font-size: max(16px, 1rem);
-      outline: none;
-      transition: border-color 0.15s ease;
-      min-height: 44px;
-    }
-
-    .hud-input:focus {
-      border-color: var(--color-ash);
-    }
-
     /* Virtual HUD Mockup */
     .hud-preview-wrapper {
       order: -1;
@@ -1661,7 +1628,7 @@
         <div class="hud-controls-card">
           <div class="hud-controls-title">Feed Opponent Speech Slices</div>
           <p class="hud-controls-desc">
-            Select a classic rhetorical fallacy or enter custom speech to observe the Socratic parser, latency budget, and counter-argument generator in real-time.
+            Select a classic rhetorical fallacy to observe the Socratic parser, latency budget, and counter-argument generator in real-time.
           </p>
 
           <div class="preset-buttons">
@@ -1681,11 +1648,6 @@
               <span class="tag">Valid Claim</span>
               <span>"Public transit investments lower per-capita emissions and reduce highway maintenance costs."</span>
             </button>
-          </div>
-
-          <div class="hud-input-row">
-            <input type="text" id="customInput" class="hud-input" placeholder="Type custom opponent argument..." onkeydown="if(event.key==='Enter') runSimulation()">
-            <button class="btn-pill" style="padding: 10px 18px; font-size: 13px;" onclick="runSimulation()">Evaluate</button>
           </div>
         </div>
 
@@ -2061,27 +2023,11 @@
 
     function loadPreset(key) {
       document.querySelectorAll('.preset-btn').forEach(btn => btn.classList.remove('active'));
-      event.currentTarget.classList.add('active');
+      if (window.event && window.event.currentTarget) {
+        window.event.currentTarget.classList.add('active');
+      }
       const item = presets[key];
-      document.getElementById('customInput').value = '';
-      applySimulation(item);
-    }
-
-    function runSimulation() {
-      const input = document.getElementById('customInput').value.trim();
-      if (!input) return;
-
-      // Simulated Socratic inference for custom input
-      const customItem = {
-        text: input,
-        flaw: input.length < 20 ? 'Incomplete / Truncated Argument' : 'Rhetorical Scrutiny Target',
-        tag: input.length < 20 ? 'Note' : 'Finding',
-        counter: input.length < 20
-          ? 'Premise is insufficient to form an inferred conclusion.'
-          : 'What evidence demonstrates that this causal relationship holds under counter-examples?',
-        latency: '0.7s'
-      };
-      applySimulation(customItem);
+      if (item) applySimulation(item);
     }
 
     function applySimulation(data) {
@@ -2372,7 +2318,6 @@
         if (presetButtons[nextIndex]) {
           presetButtons[nextIndex].classList.add('active');
         }
-        document.getElementById('customInput').value = '';
         applySimulation(presets[nextKey]);
       }
 
@@ -2389,7 +2334,7 @@
 
       // Global Spacebar shortcut when simulator section is in viewport
       document.addEventListener('keydown', (e) => {
-        if (e.key === ' ' && document.activeElement !== document.getElementById('customInput') && !['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) {
+        if (e.key === ' ' && !['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) {
           const simEl = document.getElementById('simulator');
           if (simEl) {
             const rect = simEl.getBoundingClientRect();
