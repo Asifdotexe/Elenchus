@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Elenchus (ἔλεγχος) — Socratic Debate Analysis Engine</title>
   <meta name="description" content="Real-time Socratic debate analysis and fallacy detection engine. Local Whisper speech-to-text and Ollama reasoning rendered over your desktop.">
 
@@ -90,6 +90,12 @@
 
       /* Layout */
       --page-max-width: 1200px;
+
+      /* Safe Area Inset Support */
+      --safe-top: env(safe-area-inset-top, 0px);
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+      --safe-left: env(safe-area-inset-left, 0px);
+      --safe-right: env(safe-area-inset-right, 0px);
     }
 
     /* -------------------------------------------------------------
@@ -115,8 +121,11 @@
     body {
       background-color: var(--color-obsidian);
       min-height: 100vh;
+      min-height: 100dvh;
       overflow-x: hidden;
       position: relative;
+      padding-left: var(--safe-left);
+      padding-right: var(--safe-right);
     }
 
     /* Selection */
@@ -159,7 +168,7 @@
         transition-duration: 0.01ms !important;
         scroll-behavior: auto !important;
       }
-      .hands-nexus-spark, .pulse-dot {
+      .pulse-dot {
         animation: none !important;
       }
     }
@@ -176,8 +185,8 @@
       max-width: var(--page-max-width);
       margin-left: auto;
       margin-right: auto;
-      padding-left: 24px;
-      padding-right: 24px;
+      padding-left: clamp(16px, 4vw, 24px);
+      padding-right: clamp(16px, 4vw, 24px);
       position: relative;
       z-index: 2;
     }
@@ -191,19 +200,19 @@
     }
 
     .section-spacing {
-      padding-top: clamp(64px, 7vh, 96px);
-      padding-bottom: clamp(64px, 7vh, 96px);
+      padding-top: clamp(48px, 6vh, 96px);
+      padding-bottom: clamp(48px, 6vh, 96px);
     }
 
     @media (max-width: 768px) {
       .section-spacing {
-        padding-top: 56px;
-        padding-bottom: 56px;
+        padding-top: 48px;
+        padding-bottom: 48px;
       }
     }
 
     /* -------------------------------------------------------------
-       TOP NAVIGATION BAR
+       TOP NAVIGATION BAR & ADAPTIVE MOBILE DRAWER
        ------------------------------------------------------------- */
     .nav-bar {
       position: sticky;
@@ -213,6 +222,7 @@
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
       border-bottom: 1px solid var(--color-graphite);
+      padding-top: var(--safe-top);
     }
 
     .nav-content {
@@ -225,7 +235,7 @@
     .nav-left {
       display: flex;
       align-items: center;
-      gap: 32px;
+      gap: clamp(16px, 3vw, 32px);
     }
 
     .nav-wordmark {
@@ -236,6 +246,7 @@
       display: flex;
       align-items: center;
       gap: 8px;
+      flex-shrink: 0;
     }
 
     .nav-wordmark .greek {
@@ -262,12 +273,6 @@
       list-style: none;
     }
 
-    @media (max-width: 860px) {
-      .nav-links {
-        display: none;
-      }
-    }
-
     .nav-links a {
       font-size: 13px;
       font-weight: 400;
@@ -283,7 +288,138 @@
     .nav-right {
       display: flex;
       align-items: center;
-      gap: 16px;
+      gap: 12px;
+    }
+
+    /* Mobile Hamburger Button */
+    .nav-toggle {
+      display: none;
+      background: transparent;
+      border: 1px solid var(--color-graphite);
+      border-radius: var(--radius-tags);
+      width: 42px;
+      height: 42px;
+      cursor: pointer;
+      padding: 0;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      color: var(--color-chalk);
+      transition: border-color 0.15s ease, background-color 0.15s ease;
+    }
+
+    .nav-toggle:hover, .nav-toggle:focus-visible {
+      border-color: var(--color-ash);
+      background-color: var(--color-surface);
+    }
+
+    .nav-toggle-bar {
+      width: 18px;
+      height: 1.5px;
+      background-color: var(--color-chalk);
+      transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease;
+      transform-origin: center;
+    }
+
+    .nav-toggle[aria-expanded="true"] .nav-toggle-bar:first-child {
+      transform: translateY(3.25px) rotate(45deg);
+    }
+
+    .nav-toggle[aria-expanded="true"] .nav-toggle-bar:last-child {
+      transform: translateY(-3.25px) rotate(-45deg);
+    }
+
+    /* Mobile Sheet Menu */
+    .nav-mobile-sheet {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      width: 100%;
+      background-color: rgba(16, 16, 16, 0.98);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--color-graphite);
+      box-shadow: 0 20px 40px rgba(8, 8, 8, 0.85);
+      overflow-y: auto;
+      max-height: calc(100vh - 56px - var(--safe-top));
+      max-height: calc(100dvh - 56px - var(--safe-top));
+      padding: 20px clamp(16px, 4vw, 24px) max(24px, calc(16px + var(--safe-bottom)));
+      z-index: 99;
+      opacity: 0;
+      transform: translateY(-8px);
+      transition: opacity 0.2s ease, transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .nav-mobile-sheet.is-open {
+      display: block;
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .nav-mobile-links {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      margin-bottom: 20px;
+    }
+
+    .nav-mobile-link {
+      display: flex;
+      align-items: center;
+      padding: 12px 14px;
+      font-size: 15px;
+      color: var(--color-smoke);
+      border-radius: var(--radius-tags);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      transition: color 0.15s ease, background-color 0.15s ease;
+      min-height: 48px;
+    }
+
+    .nav-mobile-link:hover, .nav-mobile-link:focus-visible {
+      color: var(--color-chalk);
+      background-color: var(--color-surface);
+    }
+
+    .nav-mobile-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      border-top: 1px solid var(--color-graphite);
+      padding-top: 16px;
+    }
+
+    .nav-mobile-cta {
+      width: 100%;
+      text-align: center;
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    @media (max-width: 860px) {
+      .nav-links, .nav-desktop-action {
+        display: none !important;
+      }
+      .nav-toggle {
+        display: flex;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .nav-wordmark .greek {
+        display: none;
+      }
+    }
+
+    @media (max-width: 360px) {
+      .nav-version-tag {
+        display: none;
+      }
     }
 
     /* -------------------------------------------------------------
@@ -357,7 +493,8 @@
       height: 6px;
       border-radius: 50%;
       background-color: var(--color-pulse-green);
-      box-shadow: 0 0 6px var(--color-pulse-green);
+      display: inline-block;
+      flex-shrink: 0;
     }
 
     /* -------------------------------------------------------------
@@ -385,36 +522,24 @@
     }
 
     .hero-headline {
-      font-size: clamp(48px, 5.2vw, 68px);
+      font-size: clamp(32px, 5.5vw, 68px);
       font-weight: 400;
-      line-height: 1.0;
-      letter-spacing: -1.2px;
+      line-height: 1.05;
+      letter-spacing: clamp(-0.5px, -0.02em, -1.2px);
       color: var(--color-chalk);
       margin: 0;
       text-wrap: balance;
     }
 
-    @media (max-width: 768px) {
-      .hero-headline {
-        font-size: 38px;
-        letter-spacing: -0.6px;
-      }
-    }
-
     .hero-tagline {
-      font-size: clamp(15px, 1.4vw, 18px);
+      font-size: clamp(14px, 1.8vw, 18px);
       font-weight: 400;
-      line-height: 1.35;
+      line-height: 1.4;
       color: var(--color-smoke);
       max-width: 640px;
       margin: 0 auto;
       letter-spacing: -0.2px;
-    }
-
-    @media (max-width: 768px) {
-      .hero-tagline {
-        font-size: 15px;
-      }
+      text-wrap: pretty;
     }
 
     .hero-actions {
@@ -424,6 +549,21 @@
       gap: 12px;
       margin-top: 4px;
       flex-wrap: wrap;
+    }
+
+    @media (max-width: 480px) {
+      .hero-actions {
+        flex-direction: column;
+        width: 100%;
+        max-width: 320px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+      .hero-actions .btn-pill,
+      .hero-actions .btn-pill-ghost {
+        width: 100%;
+        text-align: center;
+      }
     }
 
     .hero-actions .btn-pill {
@@ -496,6 +636,7 @@
       .hero-hands-wrapper {
         aspect-ratio: 3143 / 1209;
         max-height: 38vh;
+        max-height: 38dvh;
         margin-top: 8px;
       }
     }
@@ -510,66 +651,21 @@
       pointer-events: none;
     }
 
-    /* Socratic Nexus Spark between the reaching fingertips */
-    .hands-nexus-spark {
-      position: absolute;
-      top: 59%;
-      left: 49.8%;
-      transform: translate(-50%, -50%);
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background-color: var(--color-compass-gold);
-      box-shadow: 0 0 16px 4px rgba(111, 103, 89, 0.7), 0 0 32px 10px rgba(243, 243, 243, 0.25);
-      animation: nexus-pulse 3s infinite ease-in-out;
-      pointer-events: none;
-      z-index: 3;
-    }
-
-    .hands-nexus-spark::after {
-      content: '✦';
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      font-size: 13px;
-      color: #ffffff;
-      opacity: 0.85;
-      text-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
-    }
-
-    @keyframes nexus-pulse {
-      0%, 100% {
-        transform: translate(-50%, -50%) scale(0.9);
-        opacity: 0.6;
-      }
-      50% {
-        transform: translate(-50%, -50%) scale(1.35);
-        opacity: 1;
-        box-shadow: 0 0 24px 8px rgba(111, 103, 89, 0.95), 0 0 44px 14px rgba(243, 243, 243, 0.45);
-      }
-    }
-
     /* -------------------------------------------------------------
        INTERACTIVE HUD SIMULATION ("THE WIREFRAME IN LIGHT")
        ------------------------------------------------------------- */
     .hud-demo-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 32px;
+      grid-template-columns: 1fr;
+      gap: 24px;
       align-items: start;
     }
 
-    @media (max-width: 900px) {
-      .hud-demo-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-
     .hud-controls-card {
+      order: 1;
       border: 1px solid var(--color-graphite);
       border-radius: var(--radius-cards);
-      padding: 32px;
+      padding: clamp(16px, 4vw, 32px);
       background-color: var(--color-carbon);
     }
 
@@ -585,6 +681,7 @@
       font-size: 14px;
       color: var(--color-smoke);
       margin-bottom: 24px;
+      max-width: 58ch;
     }
 
     .preset-buttons {
@@ -627,6 +724,16 @@
       gap: 12px;
     }
 
+    @media (max-width: 480px) {
+      .hud-input-row {
+        flex-direction: column;
+      }
+      .hud-input-row .btn-pill {
+        width: 100%;
+        min-height: 44px;
+      }
+    }
+
     .hud-input {
       flex: 1;
       background: var(--color-obsidian);
@@ -635,9 +742,10 @@
       padding: 12px 16px;
       color: var(--color-chalk);
       font-family: var(--font-body);
-      font-size: 14px;
+      font-size: max(16px, 1rem);
       outline: none;
       transition: border-color 0.15s ease;
+      min-height: 44px;
     }
 
     .hud-input:focus {
@@ -646,18 +754,41 @@
 
     /* Virtual HUD Mockup */
     .hud-preview-wrapper {
-      position: sticky;
-      top: 96px;
+      order: -1;
+      position: static;
+      top: auto;
+      width: 100%;
+    }
+
+    /* Desktop View (min-width: 901px): 2 columns with side-by-side sticky HUD */
+    @media (min-width: 901px) {
+      .hud-demo-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 32px;
+      }
+
+      .hud-controls-card {
+        order: 1;
+        padding: 32px;
+      }
+
+      .hud-preview-wrapper {
+        order: 2;
+        position: sticky;
+        top: 96px;
+        align-self: start;
+      }
     }
 
     .hud-device-window {
       background-color: var(--color-carbon);
       border: 1px solid var(--color-graphite);
       border-radius: var(--radius-cards);
-      padding: var(--spacing-20);
+      padding: clamp(14px, 3.5vw, 20px);
       width: 100%;
       max-width: 440px;
       margin: 0 auto;
+      box-sizing: border-box;
     }
 
     .hud-header {
@@ -691,6 +822,8 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
       background: var(--color-surface);
       border: 1px solid var(--color-graphite);
       border-radius: var(--radius-tags);
@@ -723,6 +856,7 @@
       align-items: flex-end;
       margin-bottom: var(--spacing-16);
       padding: 0 2px;
+      overflow: hidden;
     }
 
     .monochart-bar {
@@ -764,6 +898,8 @@
       color: var(--color-ash);
       line-height: 1.45;
       min-height: 38px;
+      overflow-wrap: break-word;
+      word-break: break-word;
     }
 
     .hud-rebuttal-card {
@@ -804,6 +940,8 @@
       color: var(--color-chalk);
       line-height: 1.5;
       margin-bottom: var(--spacing-8);
+      overflow-wrap: break-word;
+      word-break: break-word;
     }
 
     .hud-footer-meta {
@@ -822,12 +960,8 @@
        SERVICES / FEATURE 2x2 GRID
        ------------------------------------------------------------- */
     .section-header-block {
-      margin-bottom: 48px;
-    }
-
-    .section-header-block {
       margin-bottom: 32px;
-      max-width: 760px;
+      max-width: 680px;
     }
 
     .section-title {
@@ -845,26 +979,15 @@
       margin-top: 8px;
       line-height: 1.5;
       text-wrap: pretty;
+      max-width: 62ch;
     }
 
     /* System Pipeline Flow */
     .pipeline-flow {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
       gap: 16px;
       margin-top: 24px;
-    }
-
-    @media (max-width: 960px) {
-      .pipeline-flow {
-        grid-template-columns: 1fr 1fr;
-      }
-    }
-
-    @media (max-width: 600px) {
-      .pipeline-flow {
-        grid-template-columns: 1fr;
-      }
     }
 
     .pipeline-step {
@@ -923,7 +1046,7 @@
        SYSTEM RATIONALE & RUNTIME SPECS
        ------------------------------------------------------------- */
     .manifesto-block {
-      max-width: 720px;
+      max-width: 680px;
       margin: 0 auto;
       text-align: left;
       display: flex;
@@ -944,6 +1067,7 @@
       color: var(--color-smoke);
       line-height: 1.6;
       text-wrap: pretty;
+      max-width: 65ch;
     }
 
     .runtime-specs {
@@ -955,7 +1079,8 @@
       background: var(--color-carbon);
       border: 1px solid var(--color-graphite);
       border-radius: var(--radius-cards);
-      padding: 20px 24px;
+      padding: clamp(16px, 4vw, 24px);
+      container-type: inline-size;
     }
 
     .spec-row {
@@ -968,12 +1093,13 @@
     .spec-name {
       color: var(--color-smoke);
       white-space: nowrap;
+      min-width: 0;
     }
 
     .spec-line {
       flex: 1;
       border-bottom: 1px dashed var(--color-graphite);
-      min-width: 20px;
+      min-width: 16px;
     }
 
     .spec-data {
@@ -981,6 +1107,17 @@
       color: var(--color-chalk);
       white-space: nowrap;
       font-size: 12px;
+      min-width: 0;
+    }
+
+    @container (max-width: 480px) {
+      .spec-row {
+        flex-direction: column;
+        gap: 4px;
+      }
+      .spec-line {
+        display: none;
+      }
     }
 
     @media (max-width: 580px) {
@@ -1003,6 +1140,9 @@
       padding-bottom: 12px;
       margin-bottom: 24px;
       overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: thin;
     }
 
     .platform-tab-btn {
@@ -1016,6 +1156,8 @@
       cursor: pointer;
       transition: all 0.15s ease;
       white-space: nowrap;
+      scroll-snap-align: start;
+      flex-shrink: 0;
     }
 
     .platform-tab-btn.active, .platform-tab-btn:hover {
@@ -1028,7 +1170,7 @@
       background-color: var(--color-carbon);
       border: 1px solid var(--color-graphite);
       border-radius: var(--radius-cards);
-      padding: 24px;
+      padding: clamp(16px, 4vw, 24px);
       margin-bottom: 32px;
     }
 
@@ -1039,6 +1181,8 @@
       margin-bottom: 16px;
       padding-bottom: 12px;
       border-bottom: 1px solid var(--color-border-subtle);
+      flex-wrap: wrap;
+      gap: 8px;
     }
 
     .terminal-title {
@@ -1091,6 +1235,7 @@
       gap: 6px;
       transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
       white-space: nowrap;
+      flex-shrink: 0;
     }
 
     .copy-btn:hover {
@@ -1107,7 +1252,25 @@
       color: var(--color-pulse-green);
     }
 
-    /* Distribution Matrix Table */
+    @media (max-width: 600px) {
+      .terminal-content {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+        padding: 14px;
+      }
+      .terminal-code {
+        overflow-x: auto;
+        padding-bottom: 4px;
+      }
+      .copy-btn {
+        width: 100%;
+        justify-content: center;
+        min-height: 44px;
+      }
+    }
+
+    /* Distribution Matrix Table -> Responsive Card Pattern */
     .dist-table-wrap {
       width: 100%;
       overflow-x: auto;
@@ -1159,7 +1322,108 @@
       border-radius: var(--radius-tags);
     }
 
+    /* Responsive Table Card Reflow on Mobile */
+    @media (max-width: 720px) {
+      .dist-table-wrap {
+        border: none;
+        overflow-x: visible;
+        background: transparent;
+      }
+      .dist-table,
+      .dist-table tbody,
+      .dist-table tr,
+      .dist-table td {
+        display: block;
+        width: 100%;
+      }
+      .dist-table thead {
+        display: none;
+      }
+      .dist-table tr {
+        background-color: var(--color-carbon);
+        border: 1px solid var(--color-graphite);
+        border-radius: var(--radius-cards);
+        padding: 16px;
+        margin-bottom: 12px;
+      }
+      .dist-table td {
+        padding: 8px 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        text-align: right;
+        gap: 12px;
+        min-width: 0;
+        overflow-wrap: break-word;
+        word-break: break-word;
+      }
+      .dist-table .mono {
+        word-break: break-all;
+      }
+      .dist-table td:last-child {
+        border-bottom: none;
+        padding-bottom: 0;
+      }
+      .dist-table td::before {
+        content: attr(data-label);
+        font-family: var(--font-mono);
+        font-size: 11px;
+        color: var(--color-smoke);
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        text-align: left;
+        flex-shrink: 0;
+      }
+    }
 
+    /* -------------------------------------------------------------
+       TOUCH & INPUT METHOD ADAPTATIONS (Coarse Pointer & Hover)
+       ------------------------------------------------------------- */
+    @media (pointer: coarse) {
+      .btn-pill,
+      .btn-ghost,
+      .btn-pill-ghost,
+      .copy-btn,
+      .platform-tab-btn {
+        min-height: 44px;
+      }
+      .preset-btn {
+        min-height: 52px;
+        padding: 14px 16px;
+      }
+      .nav-toggle {
+        width: 44px;
+        height: 44px;
+      }
+      .platform-tab-btn {
+        padding: 10px 18px;
+      }
+    }
+
+    @media (hover: none) {
+      .btn-pill:hover {
+        background-color: var(--color-signal-white);
+        border-color: var(--color-signal-white);
+      }
+      .btn-ghost:hover {
+        border-color: var(--color-graphite);
+        background-color: transparent;
+      }
+      .btn-pill:active {
+        background-color: var(--color-ash);
+        border-color: var(--color-ash);
+        transform: scale(0.97);
+      }
+      .btn-ghost:active {
+        border-color: var(--color-chalk);
+        background-color: rgba(255, 255, 255, 0.05);
+        transform: scale(0.97);
+      }
+      .pipeline-step:hover {
+        border-color: var(--color-graphite);
+      }
+    }
 
     /* -------------------------------------------------------------
        FOOTER / BOTTOM BAR
@@ -1167,7 +1431,7 @@
     .footer {
       border-top: 1px solid var(--color-graphite);
       padding-top: 48px;
-      padding-bottom: 48px;
+      padding-bottom: max(48px, calc(32px + var(--safe-bottom)));
       font-size: 13px;
       color: var(--color-smoke);
     }
@@ -1188,6 +1452,88 @@
 
     .footer-links a:hover {
       color: var(--color-chalk);
+    }
+
+    @media (max-width: 640px) {
+      .footer-content {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+      }
+      .footer-links {
+        flex-wrap: wrap;
+        gap: 16px;
+      }
+    }
+
+    /* -------------------------------------------------------------
+       PRINT ADAPTATION (SCREEN -> PRINT)
+       ------------------------------------------------------------- */
+    @media print {
+      *, *::before, *::after {
+        background: transparent !important;
+        color: var(--color-obsidian) !important;
+        box-shadow: none !important;
+        text-shadow: none !important;
+      }
+      html, body {
+        background: var(--color-signal-white) !important;
+        color: var(--color-obsidian) !important;
+      }
+      .nav-bar,
+      .nav-mobile-sheet,
+      .hero-actions,
+      .hud-controls-card,
+      .platform-tabs-header,
+      .copy-btn,
+      #handsCanvas,
+      .footer {
+        display: none !important;
+      }
+      .container {
+        max-width: 100% !important;
+        padding: 0 !important;
+      }
+      .section-spacing {
+        padding-top: 24px !important;
+        padding-bottom: 24px !important;
+      }
+      .hairline-divider {
+        background-color: var(--color-ash) !important;
+      }
+      .hud-device-window,
+      .pipeline-step,
+      .runtime-specs,
+      .terminal-card,
+      .dist-table tr {
+        background: var(--color-signal-white) !important;
+        border: 1px solid var(--color-ash) !important;
+        page-break-inside: avoid;
+      }
+      .hero-headline,
+      .section-title,
+      .pipeline-step-title,
+      .manifesto-title {
+        color: var(--color-carbon) !important;
+      }
+      .hero-tagline,
+      .section-subtitle,
+      .pipeline-step-desc,
+      .manifesto-body,
+      .spec-name {
+        color: var(--color-iron) !important;
+      }
+      .spec-data,
+      .terminal-code,
+      .dist-table td,
+      .dist-table th {
+        color: var(--color-carbon) !important;
+      }
+      a[href^="http"]::after {
+        content: " (" attr(href) ")";
+        font-size: 11px;
+        color: var(--color-smoke);
+      }
     }
   </style>
 </head>
@@ -1217,8 +1563,25 @@
         </ul>
       </div>
       <div class="nav-right">
-        <a href="#quickstart" class="btn-ghost" style="padding: 6px 14px; font-size: 12px;">Quick Start</a>
-        <a href="https://github.com/Asifdotexe/elenchus" target="_blank" rel="noopener noreferrer" class="btn-ghost" style="padding: 6px 14px; font-size: 12px;">GitHub ↗</a>
+        <a href="#quickstart" class="btn-ghost nav-desktop-action" style="padding: 6px 14px; font-size: 12px;">Quick Start</a>
+        <a href="https://github.com/Asifdotexe/elenchus" target="_blank" rel="noopener noreferrer" class="btn-ghost nav-desktop-action" style="padding: 6px 14px; font-size: 12px;">GitHub ↗</a>
+        <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="navMobileMenu">
+          <span class="nav-toggle-bar"></span>
+          <span class="nav-toggle-bar"></span>
+        </button>
+      </div>
+    </div>
+    <!-- Adaptive Mobile Menu Sheet -->
+    <div class="nav-mobile-sheet" id="navMobileMenu" aria-hidden="true">
+      <ul class="nav-mobile-links">
+        <li><a href="#overview" class="nav-mobile-link">Overview</a></li>
+        <li><a href="#simulator" class="nav-mobile-link">HUD Simulator</a></li>
+        <li><a href="#architecture" class="nav-mobile-link">Architecture</a></li>
+        <li><a href="#distribution" class="nav-mobile-link">Distribution</a></li>
+      </ul>
+      <div class="nav-mobile-actions">
+        <a href="#quickstart" class="btn-pill nav-mobile-cta">Quick Start</a>
+        <a href="https://github.com/Asifdotexe/elenchus" target="_blank" rel="noopener noreferrer" class="btn-pill-ghost nav-mobile-cta">GitHub ↗</a>
       </div>
     </div>
   </nav>
@@ -1250,9 +1613,8 @@
           <source media="(max-width: 767px)" srcset="assets/hero-hands-mobile.webp" type="image/webp">
           <source media="(max-width: 767px)" srcset="assets/hero-hands-mobile.png" type="image/png">
           <source srcset="assets/hero-hands.webp" type="image/webp">
-          <img src="assets/hero-hands.png" alt="ASCII art of Creation of Adam hands reaching towards each other" class="hero-hands-img" loading="eager" fetchpriority="high">
+          <img src="assets/hero-hands.png" alt="ASCII art of Creation of Adam hands reaching towards each other" class="hero-hands-img" width="3217" height="935" loading="eager" fetchpriority="high">
         </picture>
-        <div class="hands-nexus-spark" title="Socratic Invariant Spark"></div>
       </div>
     </div>
   </section>
@@ -1315,10 +1677,10 @@
               <div style="font-size: 11px; color: var(--color-smoke); font-family: var(--font-mono);">TOPMOST HUD</div>
             </div>
 
-            <div class="hud-action-bar">
+            <div class="hud-action-bar" id="hudActionBar" style="cursor: pointer;" tabindex="0" role="button" aria-label="Simulate Socratic listening or cycle refutations" title="Click or tap to simulate live Socratic listening">
               <span id="hudActionText">
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/></svg>
-                Listen (Click or Space)
+                Listen (Click, Tap or Space)
               </span>
               <span class="hud-mode-pill">Manual Mode</span>
             </div>
@@ -1510,7 +1872,7 @@
           </button>
         </div>
 
-        <p style="font-size: 13px; color: var(--color-smoke); margin-top: 14px;" id="platformNote">
+        <p style="font-size: 13px; color: var(--color-smoke); margin-top: 14px; max-width: 65ch;" id="platformNote">
           Downloads standalone executable directly to <code style="color: var(--color-ash); font-size: 12px;">$env:LOCALAPPDATA\Programs\Elenchus</code>, verifies cryptographic SHA-256 release digest, and configures user PATH automatically.
         </p>
       </div>
@@ -1529,32 +1891,32 @@
           </thead>
           <tbody>
             <tr>
-              <td>Windows (64-bit)</td>
-              <td class="mono">x86_64</td>
-              <td class="mono">elenchus-windows-x86_64.exe</td>
-              <td><span class="badge-ok">SHA-256 Verified</span></td>
-              <td class="mono">%LOCALAPPDATA%\Programs\Elenchus\</td>
+              <td data-label="Target Platform">Windows (64-bit)</td>
+              <td data-label="Architecture" class="mono">x86_64</td>
+              <td data-label="Release Artifact" class="mono">elenchus-windows-x86_64.exe</td>
+              <td data-label="Integrity"><span class="badge-ok">SHA-256 Verified</span></td>
+              <td data-label="Installation Path" class="mono">%LOCALAPPDATA%\Programs\Elenchus\</td>
             </tr>
             <tr>
-              <td>macOS (Apple Silicon)</td>
-              <td class="mono">arm64 (M1/M2/M3/M4)</td>
-              <td class="mono">elenchus-darwin-arm64</td>
-              <td><span class="badge-ok">SHA-256 Verified</span></td>
-              <td class="mono">~/.local/bin/elenchus</td>
+              <td data-label="Target Platform">macOS (Apple Silicon)</td>
+              <td data-label="Architecture" class="mono">arm64 (M1/M2/M3/M4)</td>
+              <td data-label="Release Artifact" class="mono">elenchus-darwin-arm64</td>
+              <td data-label="Integrity"><span class="badge-ok">SHA-256 Verified</span></td>
+              <td data-label="Installation Path" class="mono">~/.local/bin/elenchus</td>
             </tr>
             <tr>
-              <td>macOS (Intel)</td>
-              <td class="mono">x86_64</td>
-              <td class="mono">elenchus-darwin-x86_64</td>
-              <td><span class="badge-ok">SHA-256 Verified</span></td>
-              <td class="mono">~/.local/bin/elenchus</td>
+              <td data-label="Target Platform">macOS (Intel)</td>
+              <td data-label="Architecture" class="mono">x86_64</td>
+              <td data-label="Release Artifact" class="mono">elenchus-darwin-x86_64</td>
+              <td data-label="Integrity"><span class="badge-ok">SHA-256 Verified</span></td>
+              <td data-label="Installation Path" class="mono">~/.local/bin/elenchus</td>
             </tr>
             <tr>
-              <td>Linux (Ubuntu, Fedora, Arch)</td>
-              <td class="mono">x86_64</td>
-              <td class="mono">elenchus-linux-x86_64</td>
-              <td><span class="badge-ok">SHA-256 Verified</span></td>
-              <td class="mono">~/.local/bin/elenchus</td>
+              <td data-label="Target Platform">Linux (Ubuntu, Fedora, Arch)</td>
+              <td data-label="Architecture" class="mono">x86_64</td>
+              <td data-label="Release Artifact" class="mono">elenchus-linux-x86_64</td>
+              <td data-label="Integrity"><span class="badge-ok">SHA-256 Verified</span></td>
+              <td data-label="Installation Path" class="mono">~/.local/bin/elenchus</td>
             </tr>
           </tbody>
         </table>
@@ -1632,6 +1994,23 @@
         handsMouse.y = -1000;
         handsMouse.active = false;
       });
+
+      // Touch handlers for mobile/tablet interactive particle physics
+      function handleHandsTouch(e) {
+        if (!e.touches || e.touches.length === 0) return;
+        const touch = e.touches[0];
+        const rect = handsContainer.getBoundingClientRect();
+        handsMouse.x = touch.clientX - rect.left;
+        handsMouse.y = touch.clientY - rect.top;
+        handsMouse.active = true;
+      }
+      handsContainer.addEventListener('touchstart', handleHandsTouch, { passive: true });
+      handsContainer.addEventListener('touchmove', handleHandsTouch, { passive: true });
+      handsContainer.addEventListener('touchend', () => {
+        handsMouse.x = -1000;
+        handsMouse.y = -1000;
+        handsMouse.active = false;
+      }, { passive: true });
 
       let handsFrame = 0;
       function animateHandsCanvas() {
@@ -1881,6 +2260,105 @@
           }
           if (liveStatus) liveStatus.textContent = '';
         }, 2000);
+      });
+    }
+
+    /* -------------------------------------------------------------
+       4. MOBILE NAVIGATION DRAWER & ACCESSIBILITY
+       ------------------------------------------------------------- */
+    const navToggle = document.getElementById('navToggle');
+    const navMobileMenu = document.getElementById('navMobileMenu');
+
+    if (navToggle && navMobileMenu) {
+      function setMobileMenuState(open) {
+        navToggle.setAttribute('aria-expanded', String(open));
+        navMobileMenu.setAttribute('aria-hidden', String(!open));
+        navMobileMenu.classList.toggle('is-open', open);
+        document.body.style.overflow = open ? 'hidden' : '';
+      }
+
+      navToggle.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const isCurrentlyOpen = navToggle.getAttribute('aria-expanded') === 'true';
+        setMobileMenuState(!isCurrentlyOpen);
+      });
+
+      // Close mobile menu on any navigation link click
+      navMobileMenu.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', () => {
+          setMobileMenuState(false);
+        });
+      });
+
+      // Close mobile menu when clicking outside
+      document.addEventListener('click', (e) => {
+        if (navMobileMenu.classList.contains('is-open') && !navMobileMenu.contains(e.target) && !navToggle.contains(e.target)) {
+          setMobileMenuState(false);
+        }
+      });
+
+      // Close on Escape key
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && navMobileMenu.classList.contains('is-open')) {
+          setMobileMenuState(false);
+          navToggle.focus();
+        }
+      });
+
+      // Auto-close on viewport resize to desktop
+      window.addEventListener('resize', () => {
+        if (window.innerWidth > 860 && navMobileMenu.classList.contains('is-open')) {
+          setMobileMenuState(false);
+        }
+      });
+    }
+
+    /* -------------------------------------------------------------
+       5. HUD ACTION BAR DIRECT INTERACTION (TAP / CLICK / SPACE)
+       ------------------------------------------------------------- */
+    const hudActionBar = document.getElementById('hudActionBar');
+    if (hudActionBar) {
+      function triggerNextSimulation() {
+        const presetKeys = Object.keys(presets);
+        const presetButtons = Array.from(document.querySelectorAll('.preset-btn'));
+        const activeBtn = document.querySelector('.preset-btn.active');
+        let nextIndex = 0;
+        if (activeBtn) {
+          const currentIndex = presetButtons.indexOf(activeBtn);
+          nextIndex = (currentIndex + 1) % presetKeys.length;
+        }
+        const nextKey = presetKeys[nextIndex];
+        presetButtons.forEach(btn => btn.classList.remove('active'));
+        if (presetButtons[nextIndex]) {
+          presetButtons[nextIndex].classList.add('active');
+        }
+        document.getElementById('customInput').value = '';
+        applySimulation(presets[nextKey]);
+      }
+
+      hudActionBar.addEventListener('click', () => {
+        triggerNextSimulation();
+      });
+
+      hudActionBar.addEventListener('keydown', (e) => {
+        if (e.key === ' ' || e.key === 'Enter') {
+          e.preventDefault();
+          triggerNextSimulation();
+        }
+      });
+
+      // Global Spacebar shortcut when simulator section is in viewport
+      document.addEventListener('keydown', (e) => {
+        if (e.key === ' ' && document.activeElement !== document.getElementById('customInput') && !['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) {
+          const simEl = document.getElementById('simulator');
+          if (simEl) {
+            const rect = simEl.getBoundingClientRect();
+            if (rect.top < window.innerHeight && rect.bottom > 0) {
+              e.preventDefault();
+              triggerNextSimulation();
+            }
+          }
+        }
       });
     }
   </script>
