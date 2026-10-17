@@ -1,8 +1,8 @@
 site_name: Elenchus Documentation
 site_description: "Socratic debate analysis and fallacy detection engine. System architecture, installation, and technical specifications."
-site_url: "https://asifdotexe.github.io/elenchus/docs/"
-repo_name: "Asifdotexe/elenchus"
-repo_url: "https://github.com/Asifdotexe/elenchus"
+site_url: "https://asifdotexe.github.io/Elenchus/docs/"
+repo_name: "Asifdotexe/Elenchus"
+repo_url: "https://github.com/Asifdotexe/Elenchus"
 docs_dir: "docs"
 site_dir: "site/docs"
 
@@ -26,10 +26,10 @@ theme:
     repo: fontawesome/brands/github
 
 extra:
-  homepage: "https://asifdotexe.github.io/elenchus/"
+  homepage: "https://asifdotexe.github.io/Elenchus/"
   social:
     - icon: fontawesome/brands/github
-      link: "https://github.com/Asifdotexe/elenchus"
+      link: "https://github.com/Asifdotexe/Elenchus"
       name: GitHub Repository
 
 extra_css:
